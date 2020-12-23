@@ -1,6 +1,6 @@
-<?php
-//entry.php  
+<?php 
 session_start();
+// if the user is not logged in, redirrect him
 if (!isset($_SESSION["username"])) {
      header("location:index.php?action=login");
 }
@@ -23,11 +23,20 @@ if (!isset($_SESSION["username"])) {
 <body>
      <!--Navigation bar-->
      <div class="topnav">
-          <a class="active" href="#home">Home</a>
+          <a href="index.php">Home</a>
           <a href="#news">News</a>
           <a href="#contact">Contact</a>
           <a href="#about">About</a>
-     </div>
+
+          <?php
+          if (!isset($_SESSION["username"])) {
+               // User is not logged in
+               echo '<a class="active" href="login.php?action=login">Login</a>';
+          } else {
+               // User is  logged in
+               echo '<a class="active" href="userInfo.php">' . $_SESSION["username"] . '</a>';
+          }
+          ?> </div>
      <br /><br />
      <div class="container" style="width:500px;">
           <h3 align="center">Welcome</h3>
@@ -46,8 +55,8 @@ if (!isset($_SESSION["username"])) {
           if ($result->num_rows > 0) {
                // output data of each row
                while ($row = $result->fetch_assoc()) {
-                    if($row["username"] == $_SESSION["username"])
-                    echo "id: " . $row["id"] . " - username: " . $row["username"] . " " . $row["role"] . "<br>";
+                    if ($row["username"] == $_SESSION["username"])
+                         echo "id: " . $row["id"] . " - username: " . $row["username"] . " " . $row["role"] . "<br>";
                }
           } else {
                echo "0 results";
