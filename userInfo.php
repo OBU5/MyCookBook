@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 // if the user is not logged in, redirrect him
 if (!isset($_SESSION["username"])) {
@@ -39,8 +39,8 @@ if (!isset($_SESSION["username"])) {
           ?> </div>
      <br /><br />
      <div class="container" style="width:500px;">
-          <h3 align="center">Welcome</h3>
-          <br />
+          <h3 align="center">Informace o Vás</h3>
+          <br>
           <?php
           // Create connection
           $connect = mysqli_connect("localhost", "root", "", "test");
@@ -49,14 +49,36 @@ if (!isset($_SESSION["username"])) {
           if ($connect->connect_error) {
                die("Connection failed: " . $conn->connect_error);
           }
-          $sql = "SELECT id, username, role FROM users";
+          $sql = "SELECT id, name, lastname, email, username, role FROM users";
           $result = $connect->query($sql);
 
           if ($result->num_rows > 0) {
                // output data of each row
                while ($row = $result->fetch_assoc()) {
                     if ($row["username"] == $_SESSION["username"])
-                         echo "id: " . $row["id"] . " - username: " . $row["username"] . " " . $row["role"] . "<br>";
+                         echo "<table>
+                              <tr>
+                                   <th> jméno </th>
+                                   <th>" . $row["name"] . "</th>
+                              <tr/>
+                              <tr>
+                                   <th> Příjmení </th>
+                                   <th>" . $row["lastname"] . "</th>
+                              <tr/>
+                              <tr>
+                                   <th> email </th>
+                                   <th>" . $row["email"] . "</th>
+                              <tr/>
+                              <tr>
+                                   <th> Username </th>
+                                   <th>" . $row["username"] . "</th>
+                              <tr/>
+                              <tr>
+                                   <th> Role </th>
+                                   <th>" . $row["role"] . "</th>
+                              <tr/>
+                              
+                         <table/>";
                }
           } else {
                echo "0 results";
@@ -64,7 +86,7 @@ if (!isset($_SESSION["username"])) {
 
 
 
-          echo '<h1>Welcome - ' . $_SESSION["username"] . '</h1>';
+          echo '<br><br>';
           echo '<label><a href="logout.php">Logout</a></label>';
           ?>
      </div>

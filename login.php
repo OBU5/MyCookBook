@@ -11,6 +11,9 @@ if (isset($_POST["register"])) {
      } else {
 
           $username = mysqli_real_escape_string($connect, $_POST["username"]);
+          $email = mysqli_real_escape_string($connect, $_POST["email"]);
+          $name = mysqli_real_escape_string($connect, $_POST["name"]);
+          $lastname = mysqli_real_escape_string($connect, $_POST["lastname"]);
           // check if the username really doesn't exist
           $query = "SELECT * FROM users WHERE username = '$username'";
           $result = mysqli_query($connect, $query);
@@ -20,7 +23,7 @@ if (isset($_POST["register"])) {
                // the username is OK
                $password = mysqli_real_escape_string($connect, $_POST["password"]);
                $password = password_hash($password, PASSWORD_DEFAULT);
-               $query = "INSERT INTO users(username, password, role) VALUES('$username', '$password', 'Regular user')";
+               $query = "INSERT INTO users(name, lastname, email, username, password, role) VALUES('$name', '$lastname', '$email', '$username', '$password', 'Regular user')";
                if (mysqli_query($connect, $query)) {
                     echo '<script>alert("Registration Done")</script>';
                }
@@ -93,7 +96,7 @@ if (isset($_POST["login"])) {
                <h3 align="center">Přihlášení</h3>
                <br />
                <form method="post">
-                    <label>Enter Username</label>
+                                       <label>Enter Username</label>
                     <input type="text" name="username" class="form-control" />
                     <br />
                     <label>Enter Password</label>
@@ -109,6 +112,15 @@ if (isset($_POST["login"])) {
                <h3 align="center">Registrace</h3>
                <br />
                <form method="post">
+               <label>Enter Name</label>
+                    <input type="text" name="name" class="form-control" />
+                    <br />
+                    <label>Enter Last name</label>
+                    <input type="text" name="lastname" class="form-control" />
+                    <br />
+                    <label>Enter Email</label>
+                    <input type="text" name="email" class="form-control" />
+                    <br />
                     <label>Enter Username</label>
                     <input type="text" name="username" class="form-control" />
                     <br />
