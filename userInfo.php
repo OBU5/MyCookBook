@@ -49,7 +49,7 @@ if (!isset($_SESSION["username"])) {
           if ($connect->connect_error) {
                die("Connection failed: " . $conn->connect_error);
           }
-          $query = "SELECT user_id, name, lastname, email, username, role FROM users";
+          $query = "SELECT ID, name, lastname, email, username, role FROM users";
           $result = $connect->query($query);
 
           if ($result->num_rows > 0) {

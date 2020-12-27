@@ -5,22 +5,51 @@ session_start();
 if (!isset($_SESSION["username"])) {
     header("location:login.php");
 } else {
-    $recipeAuthor = $_SESSION["username"];
-    // check if the fields are filled
-    if (empty($_POST["recipename"])) {
-        echo '<script>alert("Nevplnil jste všechna políčka")</script>';
-    } else {
-        $recipename = mysqli_real_escape_string($connect, $_POST["recipename"]);
-        // get user_id of signed user
-        $query = "SELECT user_id FROM Users WHERE username = '$recipeAuthor'";
-        $result = $connect->query($query);
-        if (mysqli_num_rows($result) <= 0) {
-            echo '<script>alert("you are not signed in!")</script>';
+    if (isset($_POST["submit"])) {
+
+        $recipeAuthor = $_SESSION["username"];
+        // check if the fields are filled
+        if (empty($_POST["recipename"])) {
+            echo '<script>alert("Nevplnil jste všechna políčka")</script>';
         } else {
-            $row = $result->fetch_assoc();
-            $query = "INSERT INTO recipes(user_id, recipename, date) VALUES('$row[user_id]', '$recipename', curdate())";
-            if (mysqli_query($connect, $query)) {
-                echo '<script>alert("recept byl úspěšně přidán")</script>';
+            $recipename = mysqli_real_escape_string($connect, $_POST["recipename"]);
+            // get user_id of signed user
+            $query = "SELECT ID FROM Users WHERE username = '$recipeAuthor'";
+            $result = $connect->query($query);
+            if (mysqli_num_rows($result) <= 0) {
+                echo '<script>alert("you are not signed in!")</script>';
+            } else {
+                $row = $result->fetch_assoc();
+                $query = "INSERT INTO Recipes(user_id, name, date) VALUES('$row[ID]', '$recipename', curdate())";
+                if (mysqli_query($connect, $query)) {
+
+                    $ingredients = $_POST['ingredients'];
+                    if (is_array($ingredients) || is_object($ingredients)) {
+
+                        foreach ($ingredients as $ingredient) :
+                            echo $ingredient . "<br>";
+                        endforeach;
+                    }
+                    echo '<script>alert("recept byl úspěšně přidán")</script>';
+                } else {
+                    echo '<script>alert("Recept nebyl přidán, došlo k neočekávané chybě")</script>';
+                }
+            }
+            if (isset($_FILES['img'])) {
+                $uploaddir = 'Uploads/';
+                $uploadfile = $uploaddir . basename($_FILES['img']['name']);
+                $uploadfile = str_replace(' ', '-', $uploadfile);
+                if (move_uploaded_file($_FILES["img"]["tmp_name"], $uploadfile)) {
+                    echo "File is valid, and was successfully uploaded.\n";
+                    echo ' <a href = http://' . $_SERVER['SERVER_NAME'].'/MyCookBook/' .$uploadfile.'> Zobrazit obrázek </a>';
+                } else {
+                    echo "<p> Upload failed </p>";
+                }
+
+                echo '<pre>';
+                echo 'Here is some more debugging info:';
+                print_r($_FILES);
+                print "</pre>";
             }
         }
     }
@@ -31,7 +60,7 @@ if (!isset($_SESSION["username"])) {
 <html>
 
 <head>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="Styles/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@300&display=swap" rel="stylesheet">
 </head>
 
@@ -60,19 +89,13 @@ if (!isset($_SESSION["username"])) {
     </div>
 
     <div class="recipeDiv">
-        <form  method="post">
+        <form enctype="multipart/form-data" method="post">
 
             <label for="recipename">Název:</label>
             <input type="text" id="recipename" name="recipename"><br><br>
 
             <label for="img">Obrázek:</label>
             <input type="file" id="img" name="img" accept="image/*"><br><br>
-
-            <label for="author">Autor</label>
-            <input type="text" id="author" name="author"><br><br>
-
-            <label for="creationDate">Datum přidání:</label>
-            <input type="date" id="creationDate" name="creationDate"><br><br>
 
             <!-- meal category -->
             <label for="mealCategoryDiv">kategorie jídla</label>
@@ -99,15 +122,80 @@ if (!isset($_SESSION["username"])) {
             <label for="tags">Tagy:</label>
             <textarea name="tags" id="tags" rows="10" cols="50" placeholder="tagy oddělta čárkou"></textarea><br>
             <label for="tags">Ingredience:</label>
-            <textarea name="ingredients" id="ingredients" rows="10" cols="50" placeholder="Zadejte ingredience"></textarea><br>
+            <table>
+                <tr>
+                    <th>Pořadí</th>
+                    <th>Název ingredience</th>
+                    <th>Monžství</th>
+                    <th>jednotky</th>
+                </tr>
+                <tr>
+                    <td> 1 </td>
+                    <td> <input type="text" name="ingredients[]"> </td>
+                    <td> <input type="text" name="quantities[]"> </td>
+                    <td> <input type="text" name="units[]"> </td>
+                </tr>
+                <tr>
+                    <td> 2 </td>
+                    <td> <input type="text" name="ingredients[]"> </td>
+                    <td> <input type="text" name="quantities[]"> </td>
+                    <td> <input type="text" name="units[]"> </td>
+                </tr>
+                <tr>
+                    <td> 3 </td>
+                    <td> <input type="text" name="ingredients[]"> </td>
+                    <td> <input type="text" name="quantities[]"> </td>
+                    <td> <input type="text" name="units[]"> </td>
+                </tr>
+                <tr>
+                    <td> 4 </td>
+                    <td> <input type="text" name="ingredients[]"> </td>
+                    <td> <input type="text" name="quantities[]"> </td>
+                    <td> <input type="text" name="units[]"> </td>
+                </tr>
+                <tr>
+                    <td> 5 </td>
+                    <td> <input type="text" name="ingredients[]"> </td>
+                    <td> <input type="text" name="quantities[]"> </td>
+                    <td> <input type="text" name="units[]"> </td>
+                </tr>
+                <tr>
+                    <td> 6 </td>
+                    <td> <input type="text" name="ingredients[]"> </td>
+                    <td> <input type="text" name="quantities[]"> </td>
+                    <td> <input type="text" name="units[]"> </td>
+                </tr>
+                <tr>
+                    <td> 7 </td>
+                    <td> <input type="text" name="ingredients[]"> </td>
+                    <td> <input type="text" name="quantities[]"> </td>
+                    <td> <input type="text" name="units[]"> </td>
+                </tr>
+                <tr>
+                    <td> 8 </td>
+                    <td> <input type="text" name="ingredients[]"> </td>
+                    <td> <input type="text" name="quantities[]"> </td>
+                    <td> <input type="text" name="units[]"> </td>
+                </tr>
+                <tr>
+                    <td> 9 </td>
+                    <td> <input type="text" name="ingredients[]"> </td>
+                    <td> <input type="text" name="quantities[]"> </td>
+                    <td> <input type="text" name="units[]"> </td>
+                </tr>
+                <tr>
+                    <td> 10 </td>
+                    <td> <input type="text" name="ingredients[]"> </td>
+                    <td> <input type="text" name="quantities[]"> </td>
+                    <td> <input type="text" name="units[]"> </td>
+                </tr>
+            </table>
+
+
             <label for="process">Postu přípravy:</label>
             <textarea name="process" id="process" rows="10" cols="50" placeholder="Zadejte postup"></textarea><br>
 
-
-            <label for="originalURL">Odkaz na originální recept</label>
-            <input type="url" id="originalURL" name="originalURL"><br><br>
-
-            <input type="submit" value="Submit">
+            <input type="submit" name="submit">
         </form>
     </div>
 
