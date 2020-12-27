@@ -28,7 +28,7 @@ CREATE TABLE Recipes (
 CREATE TABLE Ingredient (
     ID int AUTO_INCREMENT NOT NULL,
     name varchar(40) NOT NULL,    
-    quantity DECIMAL(5,2) NOT NULL,
+    quantity varchar(40) NOT NULL,
     unit varchar(40) NOT NULL,
     PRIMARY KEY (ID)
 );
