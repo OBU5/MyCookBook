@@ -1,3 +1,32 @@
+<?php
+$connect = mysqli_connect("localhost", "root", "", "test");
+session_start();
+// user must be logged in
+if (!isset($_SESSION["username"])) {
+    header("location:login.php");
+} else {
+    $recipeAuthor = $_SESSION["username"];
+    // check if the fields are filled
+    if (empty($_POST["recipename"])) {
+        echo '<script>alert("Nevplnil jste všechna políčka")</script>';
+    } else {
+        $recipename = mysqli_real_escape_string($connect, $_POST["recipename"]);
+        // get user_id of signed user
+        $query = "SELECT user_id FROM Users WHERE username = '$recipeAuthor'";
+        $result = $connect->query($query);
+        if (mysqli_num_rows($result) <= 0) {
+            echo '<script>alert("you are not signed in!")</script>';
+        } else {
+            $row = $result->fetch_assoc();
+            $query = "INSERT INTO recipes(user_id, recipename, date) VALUES('$row[user_id]', '$recipename', curdate())";
+            if (mysqli_query($connect, $query)) {
+                echo '<script>alert("recept byl úspěšně přidán")</script>';
+            }
+        }
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -7,11 +36,22 @@
 </head>
 
 <body>
+    <!--Navigation bar-->
     <div class="topnav">
-        <a href="home.html">Domů</a>
-        <a href="viewRecipes.html">Zobrazit recepty</a>
-        <a class="active" href="addRecipe.html">Přidat nový recept</a>
-        <a href="about.html">About</a>
+
+        <a class="active" href="index.php">Home</a>
+        <a href="#news">News</a>
+        <a href="#contact">Contact</a>
+        <a href="#about">About</a>
+        <?php
+        if (!isset($_SESSION["username"])) {
+            // User is not logged in
+            echo '<a href="login.php?action=login">Login</a>';
+        } else {
+            // User is  logged in
+            echo '<a href="userInfo.php">' . $_SESSION["username"] . '</a>';
+        }
+        ?>
     </div>
 
     <div style="padding-left:16px">
@@ -20,10 +60,10 @@
     </div>
 
     <div class="recipeDiv">
-        <form action="/action_page.php" method="post" target="_blank">
+        <form  method="post">
 
-            <label for="title">Název:</label>
-            <input type="text" id="title" name="title"><br><br>
+            <label for="recipename">Název:</label>
+            <input type="text" id="recipename" name="recipename"><br><br>
 
             <label for="img">Obrázek:</label>
             <input type="file" id="img" name="img" accept="image/*"><br><br>
@@ -53,7 +93,7 @@
                 <option value="Vietnam">Vietnam</option>
                 <option value="Italy">Italy</option>
                 <option value="Czechia">Czechia</option>
-              </select><br><br>
+            </select><br><br>
 
 
             <label for="tags">Tagy:</label>

@@ -49,8 +49,8 @@ if (!isset($_SESSION["username"])) {
           if ($connect->connect_error) {
                die("Connection failed: " . $conn->connect_error);
           }
-          $sql = "SELECT id, name, lastname, email, username, role FROM users";
-          $result = $connect->query($sql);
+          $query = "SELECT user_id, name, lastname, email, username, role FROM users";
+          $result = $connect->query($query);
 
           if ($result->num_rows > 0) {
                // output data of each row
