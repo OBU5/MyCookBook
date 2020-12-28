@@ -1,5 +1,6 @@
 <?php
 $connect = mysqli_connect("localhost", "root", "", "test");
+$connect->set_charset("UTF-8");
 session_start();
 // user must be logged in
 if (!isset($_SESSION["username"])) {
@@ -41,7 +42,7 @@ if (!isset($_SESSION["username"])) {
                 $uploadfile = str_replace(' ', '-', $uploadfile);
                 if (move_uploaded_file($_FILES["img"]["tmp_name"], $uploadfile)) {
                     echo "File is valid, and was successfully uploaded.\n";
-                    echo ' <a href = http://' . $_SERVER['SERVER_NAME'].'/MyCookBook/' .$uploadfile.'> Zobrazit obrázek </a>';
+                    echo ' <a href = http://' . $_SERVER['SERVER_NAME'] . '/MyCookBook/' . $uploadfile . '> Zobrazit obrázek </a>';
                 } else {
                     echo "<p> Upload failed </p>";
                 }
@@ -96,7 +97,7 @@ if (!isset($_SESSION["username"])) {
 
 
 
-            
+
             <table>
                 <tr>
                     <th>Pořadí</th>
@@ -166,7 +167,7 @@ if (!isset($_SESSION["username"])) {
                 </tr>
             </table>
 
-            
+
 
             <label for="process">Postu přípravy:</label>
             <textarea name="directions" id="directions" rows="10" cols="50" placeholder="Zadejte postup"></textarea><br>
@@ -177,14 +178,21 @@ if (!isset($_SESSION["username"])) {
             <input type="file" id="img" name="img" accept="image/*"><br><br>
 
             <!-- meal category -->
+
+
             <label for="mealCategoryDiv">kategorie jídla</label>
             <div name="mealCategoryDiv" class="mealCategoryDiv">
-                <input type="checkbox" name="mealCategory[]" value="mainDish">
-                <label for="mealCategory1"> Hlavní chod</label><br>
-                <input type="checkbox" name="mealCategory[]" value="starter">
-                <label for="mealCategory2"> Předkrm</label><br>
-                <input type="checkbox" name="mealCategory[]" value="desert">
-                <label for="mealCategory3"> Dezert</label><br><br>
+
+                <?php
+                $query = "SELECT name FROM MealCategory";
+                $result = $connect->query($query);
+                if ($result->num_rows > 0) {
+                    // output data of each row
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<input type="checkbox" name="mealCategory[]">' . $row['name'] . '<br>';
+                    }
+                }
+                ?>
             </div>
 
 
@@ -192,10 +200,16 @@ if (!isset($_SESSION["username"])) {
 
             <label for="originCountry">Země původu:</label>
             <select name="originCountry" id="originCountry">
-                <option value="Vietnam">Vietnam</option>
-                <option value="Italy">Italy</option>
-                <option value="Czechia">Česko</option>
-                <option value="Czechia">Není jasné</option>
+                <?php
+                $query = "SELECT name FROM OriginCountry";
+                $result = $connect->query($query);
+                if ($result->num_rows > 0) {
+                    // output data of each row
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<option value=" . $row['name']  . ">" . $row['name'] . "</option>";
+                    }
+                }
+                ?>
             </select><br><br>
 
             <input type="submit" name="submit">

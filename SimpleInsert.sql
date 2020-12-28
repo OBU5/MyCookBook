@@ -15,6 +15,22 @@ VALUES
 ('vajicko', 1, 'kus'),          -- id = 5
 ('rajče', 2, 'kusy' );          -- id = 6
 
+
+INSERT INTO OriginCountry (name)
+VALUES  
+('Itálie'),           -- id = 1
+('Maďarsko'),         -- id = 2
+('Česko'),            -- id = 3
+('Vietnam');          -- id = 4
+
+
+INSERT INTO MealCategory (name)
+VALUES  
+('Předkrm'),            -- id = 1
+('Hlavní chod'),        -- id = 2
+('Dezert'),             -- id = 3
+('Zákusek');            -- id = 4
+
 INSERT INTO Recipe_Ingredients ( recipe_id, ingredient_id)
 VALUES
 (1,1),
