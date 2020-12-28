@@ -6,7 +6,7 @@ VALUES
 ('Pizza margarita','2019-9-11');    -- id = 2
 
 
-INSERT INTO Ingredient (name, quantity, unit)
+INSERT INTO Ingredients (name, quantity, unit)
 VALUES
 ('mléko', 0.5, 'litru'),        -- id = 1
 ('vajicko', 2, 'žloutky'),      -- id = 2

@@ -94,34 +94,9 @@ if (!isset($_SESSION["username"])) {
             <label for="recipename">Název:</label>
             <input type="text" id="recipename" name="recipename"><br><br>
 
-            <label for="img">Obrázek:</label>
-            <input type="file" id="img" name="img" accept="image/*"><br><br>
-
-            <!-- meal category -->
-            <label for="mealCategoryDiv">kategorie jídla</label>
-            <div name="mealCategoryDiv" class="mealCategoryDiv">
-                <input type="checkbox" name="mealCategory" id="mealCategory1" value="mainDish">
-                <label for="mealCategory1"> Hlavní chod</label><br>
-                <input type="checkbox" name="mealCategory" id="mealCategory2" value="starter">
-                <label for="mealCategory2"> Předkrm</label><br>
-                <input type="checkbox" name="mealCategory" id="mealCategory3" value="desert">
-                <label for="mealCategory3"> Dezert</label><br><br>
-            </div>
 
 
-            <!-- origin country -->
-
-            <label for="originCountry">Země původu:</label>
-            <select name="originCountry" id="originCountry">
-                <option value="Vietnam">Vietnam</option>
-                <option value="Italy">Italy</option>
-                <option value="Czechia">Czechia</option>
-            </select><br><br>
-
-
-            <label for="tags">Tagy:</label>
-            <textarea name="tags" id="tags" rows="10" cols="50" placeholder="tagy oddělta čárkou"></textarea><br>
-            <label for="tags">Ingredience:</label>
+            
             <table>
                 <tr>
                     <th>Pořadí</th>
@@ -191,9 +166,37 @@ if (!isset($_SESSION["username"])) {
                 </tr>
             </table>
 
+            
 
             <label for="process">Postu přípravy:</label>
-            <textarea name="process" id="process" rows="10" cols="50" placeholder="Zadejte postup"></textarea><br>
+            <textarea name="directions" id="directions" rows="10" cols="50" placeholder="Zadejte postup"></textarea><br>
+
+
+
+            <label for="img">Obrázek:</label>
+            <input type="file" id="img" name="img" accept="image/*"><br><br>
+
+            <!-- meal category -->
+            <label for="mealCategoryDiv">kategorie jídla</label>
+            <div name="mealCategoryDiv" class="mealCategoryDiv">
+                <input type="checkbox" name="mealCategory[]" value="mainDish">
+                <label for="mealCategory1"> Hlavní chod</label><br>
+                <input type="checkbox" name="mealCategory[]" value="starter">
+                <label for="mealCategory2"> Předkrm</label><br>
+                <input type="checkbox" name="mealCategory[]" value="desert">
+                <label for="mealCategory3"> Dezert</label><br><br>
+            </div>
+
+
+            <!-- origin country -->
+
+            <label for="originCountry">Země původu:</label>
+            <select name="originCountry" id="originCountry">
+                <option value="Vietnam">Vietnam</option>
+                <option value="Italy">Italy</option>
+                <option value="Czechia">Česko</option>
+                <option value="Czechia">Není jasné</option>
+            </select><br><br>
 
             <input type="submit" name="submit">
         </form>
