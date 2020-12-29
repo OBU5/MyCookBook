@@ -35,7 +35,7 @@ if (!isset($_SESSION["username"])) {
         }
 
 
-        // get originCountry_id
+        // get originCountry_id of selected origin country 
         if (empty($_POST["originCountry"])) {
             echo '<script>alert("Není zvolena země původu")</script>';
         } else {
@@ -49,19 +49,19 @@ if (!isset($_SESSION["username"])) {
             }
         }
 
-        // store image on server and get created URL
-        if (isset($_FILES['img'])) {
-            $imgUrl = "";
+        // store image on server and get created URL if present
+        $imgUrl = "";
+        if (isset($_FILES['img']) && ($_FILES['img']['size'] > 0)) {
             $uploaddir = 'Uploads/';
-            $uploadfile = $uploaddir . basename($_FILES['img']['name']);
+            $uploadfile = basename($_FILES['img']['name']);
             $uploadfile = str_replace(' ', '-', $uploadfile);
             // check if the image doesn't exists... if it does, change name in order to keep existing one
             $i = '';
-            while (file_exists( $uploadfile .$i )) {               
+            while (file_exists($uploaddir . $i . $uploadfile)) {
                 $i++;
             }
-            $uploadfile = $uploadfile . $i;
-
+            $uploadfile = $uploaddir . $i . $uploadfile;
+            echo $uploadfile;
             if (move_uploaded_file($_FILES["img"]["tmp_name"], $uploadfile)) {
                 $imgUrl = 'http://' . $_SERVER['SERVER_NAME'] . '/MyCookBook/' . $uploadfile;
             } else {
@@ -72,25 +72,38 @@ if (!isset($_SESSION["username"])) {
             echo 'Here is some more debugging info:';
             print_r($_FILES);
             print "</pre>";*/
+        } else {
+            echo '<script>alert("Není vložen obrázek")</script>';
         }
 
 
-        // store into database
-        echo $user_id . $recipename .   $directions . $originCountry_id;
+        // store Recipe into database
         $query = "INSERT INTO Recipes(user_id, name, date, directions, originCountry_id, imgUrl) VALUES('$user_id', '$recipename', curdate(), '$directions', '$originCountry_id', '$imgUrl')";
         if (mysqli_query($connect, $query)) {
-
-            $ingredients = $_POST['ingredients'];
-            if (is_array($ingredients) || is_object($ingredients)) {
-
-                foreach ($ingredients as $ingredient) :
-                    echo $ingredient . "<br>";
-                endforeach;
-            }
             echo '<script>alert("recept byl úspěšně přidán")</script>';
         } else {
             echo '<script>alert("Recept nebyl přidán, došlo k neočekávané chybě")</script>';
         }
+
+        //store ingredients into database
+        $ingredients = $_POST['ingredients'];
+        $quantities = $_POST['quantities'];
+        $units = $_POST['units'];
+        if ((is_array($ingredients) || is_object($ingredients)) && (is_array($quantities) || is_object($quantities)) && (is_array($units) || is_object($units))) {
+            for ($i = 0; $i < sizeof($ingredients); $i++) {
+                if (!empty($ingredients[$i])) {
+                    echo $ingredients[$i] . " " . $quantities[$i] . " " . $units[$i] . " <br>";
+                    $query = "INSERT INTO Ingredients(name, quantity, unit) VALUES('$ingredients[$i]', '$quantities[$i]', '$units[$i]')";
+                    if (mysqli_query($connect, $query)) {
+                    } else {
+                        echo '<script>alert("Došlo k neočekávané chybě při pokusu o uložení ingredience ")</script>';
+                    }
+                }
+            }
+        } else {
+            echo '<script>alert("Došlo k neočekávané chybě")</script>';
+        }
+        // store Ingredients related to stored Recipe into database
     }
 }
 ?>
