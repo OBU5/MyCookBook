@@ -48,18 +48,24 @@ if (!isset($_SESSION["username"])) {
                 $originCountry_id = $row['ID'];
             }
         }
-        
-        // get image
+
+        // store image on server and get created URL
         if (isset($_FILES['img'])) {
+            $imgUrl = "";
             $uploaddir = 'Uploads/';
             $uploadfile = $uploaddir . basename($_FILES['img']['name']);
             $uploadfile = str_replace(' ', '-', $uploadfile);
-            $imgUrl = "";
+            // check if the image doesn't exists... if it does, change name in order to keep existing one
+            $i = '';
+            while (file_exists( $uploadfile .$i )) {               
+                $i++;
+            }
+            $uploadfile = $uploadfile . $i;
+
             if (move_uploaded_file($_FILES["img"]["tmp_name"], $uploadfile)) {
                 $imgUrl = 'http://' . $_SERVER['SERVER_NAME'] . '/MyCookBook/' . $uploadfile;
             } else {
                 echo '<script>alert("byl zvolen soubor v chybném formátu")</script>';
-
             }
             /*
             echo '<pre>';
