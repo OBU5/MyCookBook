@@ -24,11 +24,11 @@ CREATE TABLE Recipes (
     name VARCHAR(40) NOT NULL,
     directions VARCHAR(1000) NOT NULL,
     date Date NOT NULL,
-    user_id int,
+    author_id int,
     originCountry_id int,
     imgUrl VARCHAR(1000),
     PRIMARY KEY (ID),
-    FOREIGN KEY (user_id) REFERENCES Users(ID)
+    FOREIGN KEY (author_id) REFERENCES Users(ID)
 );
 
 
