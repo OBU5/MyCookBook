@@ -9,49 +9,81 @@ if (!isset($_SESSION["username"])) {
     if (isset($_POST["submit"])) {
 
         $recipeAuthor = $_SESSION["username"];
-        // check if the fields are filled
+
+        //get recipename
         if (empty($_POST["recipename"])) {
-            echo '<script>alert("Nevplnil jste všechna políčka")</script>';
+            echo '<script>alert("Není vyplněno jméno receptu")</script>';
         } else {
             $recipename = mysqli_real_escape_string($connect, $_POST["recipename"]);
-            // get user_id of signed user
-            $query = "SELECT ID FROM Users WHERE username = '$recipeAuthor'";
+        }
+
+        //get directions
+        if (empty($_POST["directions"])) {
+            echo '<script>alert("Není vyplněn postup")</script>';
+        } else {
+            $directions = mysqli_real_escape_string($connect, $_POST["directions"]);
+        }
+
+        // get user_id of signed user
+        $query = "SELECT ID FROM Users WHERE username = '$recipeAuthor'";
+        $result = $connect->query($query);
+        if (mysqli_num_rows($result) <= 0) {
+            echo '<script>alert("you are not signed in!")</script>';
+        } else {
+            $row = $result->fetch_assoc();
+            $user_id = $row['ID'];
+        }
+
+
+        // get originCountry_id
+        if (empty($_POST["originCountry"])) {
+            echo '<script>alert("Není zvolena země původu")</script>';
+        } else {
+            $originCountry = mysqli_real_escape_string($connect, $_POST["originCountry"]);
+
+            $query = "SELECT ID FROM OriginCountry WHERE name = '$originCountry'";
             $result = $connect->query($query);
-            if (mysqli_num_rows($result) <= 0) {
-                echo '<script>alert("you are not signed in!")</script>';
-            } else {
+            if (mysqli_num_rows($result) > 0) {
                 $row = $result->fetch_assoc();
-                $query = "INSERT INTO Recipes(user_id, name, date) VALUES('$row[ID]', '$recipename', curdate())";
-                if (mysqli_query($connect, $query)) {
-
-                    $ingredients = $_POST['ingredients'];
-                    if (is_array($ingredients) || is_object($ingredients)) {
-
-                        foreach ($ingredients as $ingredient) :
-                            echo $ingredient . "<br>";
-                        endforeach;
-                    }
-                    echo '<script>alert("recept byl úspěšně přidán")</script>';
-                } else {
-                    echo '<script>alert("Recept nebyl přidán, došlo k neočekávané chybě")</script>';
-                }
+                $originCountry_id = $row['ID'];
             }
-            if (isset($_FILES['img'])) {
-                $uploaddir = 'Uploads/';
-                $uploadfile = $uploaddir . basename($_FILES['img']['name']);
-                $uploadfile = str_replace(' ', '-', $uploadfile);
-                if (move_uploaded_file($_FILES["img"]["tmp_name"], $uploadfile)) {
-                    echo "File is valid, and was successfully uploaded.\n";
-                    echo ' <a href = http://' . $_SERVER['SERVER_NAME'] . '/MyCookBook/' . $uploadfile . '> Zobrazit obrázek </a>';
-                } else {
-                    echo "<p> Upload failed </p>";
-                }
+        }
+        
+        // get image
+        if (isset($_FILES['img'])) {
+            $uploaddir = 'Uploads/';
+            $uploadfile = $uploaddir . basename($_FILES['img']['name']);
+            $uploadfile = str_replace(' ', '-', $uploadfile);
+            $imgUrl = "";
+            if (move_uploaded_file($_FILES["img"]["tmp_name"], $uploadfile)) {
+                $imgUrl = 'http://' . $_SERVER['SERVER_NAME'] . '/MyCookBook/' . $uploadfile;
+            } else {
+                echo '<script>alert("byl zvolen soubor v chybném formátu")</script>';
 
-                echo '<pre>';
-                echo 'Here is some more debugging info:';
-                print_r($_FILES);
-                print "</pre>";
             }
+            /*
+            echo '<pre>';
+            echo 'Here is some more debugging info:';
+            print_r($_FILES);
+            print "</pre>";*/
+        }
+
+
+        // store into database
+        echo $user_id . $recipename .   $directions . $originCountry_id;
+        $query = "INSERT INTO Recipes(user_id, name, date, directions, originCountry_id, imgUrl) VALUES('$user_id', '$recipename', curdate(), '$directions', '$originCountry_id', '$imgUrl')";
+        if (mysqli_query($connect, $query)) {
+
+            $ingredients = $_POST['ingredients'];
+            if (is_array($ingredients) || is_object($ingredients)) {
+
+                foreach ($ingredients as $ingredient) :
+                    echo $ingredient . "<br>";
+                endforeach;
+            }
+            echo '<script>alert("recept byl úspěšně přidán")</script>';
+        } else {
+            echo '<script>alert("Recept nebyl přidán, došlo k neočekávané chybě")</script>';
         }
     }
 }
@@ -93,7 +125,7 @@ if (!isset($_SESSION["username"])) {
         <form enctype="multipart/form-data" method="post">
 
             <label for="recipename">Název:</label>
-            <input type="text" id="recipename" name="recipename"><br><br>
+            <input type="text" id="recipename" name="recipename" value=<?php echo isset($_POST['recipename']) ? htmlspecialchars($_POST['recipename'], ENT_QUOTES) : ''; ?>><br><br>
 
 
 
@@ -107,75 +139,77 @@ if (!isset($_SESSION["username"])) {
                 </tr>
                 <tr>
                     <td> 1 </td>
-                    <td> <input type="text" name="ingredients[]"> </td>
-                    <td> <input type="text" name="quantities[]"> </td>
-                    <td> <input type="text" name="units[]"> </td>
+                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][0]) ? htmlspecialchars($_POST['ingredients'][0], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][0]) ? htmlspecialchars($_POST['quantities'][0], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][0]) ? htmlspecialchars($_POST['units'][0], ENT_QUOTES) : ''; ?>> </td>
                 </tr>
                 <tr>
                     <td> 2 </td>
-                    <td> <input type="text" name="ingredients[]"> </td>
-                    <td> <input type="text" name="quantities[]"> </td>
-                    <td> <input type="text" name="units[]"> </td>
+                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][1]) ? htmlspecialchars($_POST['ingredients'][1], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][1]) ? htmlspecialchars($_POST['quantities'][1], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][1]) ? htmlspecialchars($_POST['units'][1], ENT_QUOTES) : ''; ?>> </td>
                 </tr>
+
                 <tr>
                     <td> 3 </td>
-                    <td> <input type="text" name="ingredients[]"> </td>
-                    <td> <input type="text" name="quantities[]"> </td>
-                    <td> <input type="text" name="units[]"> </td>
+                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][2]) ? htmlspecialchars($_POST['ingredients'][2], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][2]) ? htmlspecialchars($_POST['quantities'][2], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][2]) ? htmlspecialchars($_POST['units'][2], ENT_QUOTES) : ''; ?>> </td>
                 </tr>
                 <tr>
                     <td> 4 </td>
-                    <td> <input type="text" name="ingredients[]"> </td>
-                    <td> <input type="text" name="quantities[]"> </td>
-                    <td> <input type="text" name="units[]"> </td>
+                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][3]) ? htmlspecialchars($_POST['ingredients'][3], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][3]) ? htmlspecialchars($_POST['quantities'][3], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][3]) ? htmlspecialchars($_POST['units'][3], ENT_QUOTES) : ''; ?>> </td>
                 </tr>
                 <tr>
                     <td> 5 </td>
-                    <td> <input type="text" name="ingredients[]"> </td>
-                    <td> <input type="text" name="quantities[]"> </td>
-                    <td> <input type="text" name="units[]"> </td>
+                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][4]) ? htmlspecialchars($_POST['ingredients'][4], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][4]) ? htmlspecialchars($_POST['quantities'][4], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][4]) ? htmlspecialchars($_POST['units'][4], ENT_QUOTES) : ''; ?>> </td>
                 </tr>
                 <tr>
                     <td> 6 </td>
-                    <td> <input type="text" name="ingredients[]"> </td>
-                    <td> <input type="text" name="quantities[]"> </td>
-                    <td> <input type="text" name="units[]"> </td>
+                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][5]) ? htmlspecialchars($_POST['ingredients'][5], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][5]) ? htmlspecialchars($_POST['quantities'][5], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][5]) ? htmlspecialchars($_POST['units'][5], ENT_QUOTES) : ''; ?>> </td>
                 </tr>
                 <tr>
                     <td> 7 </td>
-                    <td> <input type="text" name="ingredients[]"> </td>
-                    <td> <input type="text" name="quantities[]"> </td>
-                    <td> <input type="text" name="units[]"> </td>
+                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][6]) ? htmlspecialchars($_POST['ingredients'][6], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][6]) ? htmlspecialchars($_POST['quantities'][6], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][6]) ? htmlspecialchars($_POST['units'][6], ENT_QUOTES) : ''; ?>> </td>
                 </tr>
                 <tr>
                     <td> 8 </td>
-                    <td> <input type="text" name="ingredients[]"> </td>
-                    <td> <input type="text" name="quantities[]"> </td>
-                    <td> <input type="text" name="units[]"> </td>
+                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][7]) ? htmlspecialchars($_POST['ingredients'][7], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][7]) ? htmlspecialchars($_POST['quantities'][7], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][7]) ? htmlspecialchars($_POST['units'][7], ENT_QUOTES) : ''; ?>> </td>
                 </tr>
+
                 <tr>
                     <td> 9 </td>
-                    <td> <input type="text" name="ingredients[]"> </td>
-                    <td> <input type="text" name="quantities[]"> </td>
-                    <td> <input type="text" name="units[]"> </td>
+                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][8]) ? htmlspecialchars($_POST['ingredients'][8], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][8]) ? htmlspecialchars($_POST['quantities'][8], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][8]) ? htmlspecialchars($_POST['units'][8], ENT_QUOTES) : ''; ?>> </td>
                 </tr>
                 <tr>
                     <td> 10 </td>
-                    <td> <input type="text" name="ingredients[]"> </td>
-                    <td> <input type="text" name="quantities[]"> </td>
-                    <td> <input type="text" name="units[]"> </td>
+                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][9]) ? htmlspecialchars($_POST['ingredients'][9], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][9]) ? htmlspecialchars($_POST['quantities'][9], ENT_QUOTES) : ''; ?>> </td>
+                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][9]) ? htmlspecialchars($_POST['units'][9], ENT_QUOTES) : ''; ?>> </td>
                 </tr>
             </table>
 
 
 
             <label for="process">Postu přípravy:</label>
-            <textarea name="directions" id="directions" rows="10" cols="50" placeholder="Zadejte postup"></textarea><br>
+            <textarea name="directions" rows="10" cols="50" placeholder="Zadejte postup"><?php echo isset($_POST['directions']) ? htmlspecialchars($_POST['directions'], ENT_QUOTES) : ''; ?></textarea><br>
 
 
 
             <label for="img">Obrázek:</label>
-            <input type="file" id="img" name="img" accept="image/*"><br><br>
+            <input type="file" name="img" accept="image/*"><br><br>
 
             <!-- meal category -->
 
@@ -188,8 +222,11 @@ if (!isset($_SESSION["username"])) {
                 $result = $connect->query($query);
                 if ($result->num_rows > 0) {
                     // output data of each row
+                    $i = 0;
                     while ($row = $result->fetch_assoc()) {
-                        echo '<input type="checkbox" name="mealCategory[]">' . $row['name'] . '<br>';
+                        $checked = isset($_POST["mealCategory" . $i]) ? "checked " : "";
+                        echo '<input type="checkbox" name="mealCategory' . $i . '"' . $checked . ' >' . $row['name'] . '<br>';
+                        $i++;
                     }
                 }
                 ?>
@@ -205,8 +242,10 @@ if (!isset($_SESSION["username"])) {
                 $result = $connect->query($query);
                 if ($result->num_rows > 0) {
                     // output data of each row
+
                     while ($row = $result->fetch_assoc()) {
-                        echo "<option value=" . $row['name']  . ">" . $row['name'] . "</option>";
+                        $selected = (isset($_POST['originCountry']) && $_POST['originCountry'] == $row['name']) ? 'selected="selected"' : '';
+                        echo "<option value=" . $row['name'] . ' ' . $selected . ">" . $row['name'] . "</option>";
                     }
                 }
                 ?>

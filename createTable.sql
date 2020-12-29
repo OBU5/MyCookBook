@@ -26,6 +26,7 @@ CREATE TABLE Recipes (
     date Date NOT NULL,
     user_id int,
     originCountry_id int,
+    imgUrl VARCHAR(1000),
     PRIMARY KEY (ID),
     FOREIGN KEY (user_id) REFERENCES Users(ID)
 );
