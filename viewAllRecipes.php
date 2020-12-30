@@ -87,13 +87,11 @@ session_start(); ?>
                     $result3 = $connect->query($query3);
                     if ($result3->num_rows > 0) {
                         // get each ingredient by id
-                        $j = 0;
                         while ($row3 = $result3->fetch_assoc()) {
                             //echo $row['author_id'] ." ". $row2['ID']." ". $row2['username'];
                             $ingredients[$i] =  $row3['name'];
                             $quantities[$i] =  $row3['quantity'];
                             $units[$i] =  $row3['unit'];
-                            $j++;
                         }
                     }
                     $i++;
@@ -134,10 +132,9 @@ session_start(); ?>
                 <tr>
                     <th>Ingredience</th>
                     <th>množství</th>
-                    <th>jednotky</th>
                 </tr>";
             for ($i = 0; $i < sizeof($ingredients); $i++) {
-                $htmlIngredients = $htmlIngredients . "<tr><td>" . $ingredients[$i] . "</td><td> " . $quantities[$i] . "</td><td>" . $units[$i] .   "</td></tr>";
+                $htmlIngredients = $htmlIngredients . "<tr><td>" . $ingredients[$i] . "</td><td> " . $quantities[$i] . " ".  $units[$i] .   "</td></tr>";
             }
             $htmlIngredients = $htmlIngredients . "</table>";
 
@@ -175,12 +172,6 @@ session_start(); ?>
 
 
     ?>
-
-
-    <label for="recipename">Název:</label>
-    <input type="text" id="recipename" name="recipename" value=<?php echo isset($_POST['recipename']) ? htmlspecialchars($_POST['recipename'], ENT_QUOTES) : ''; ?>><br><br>
-
-
 </body>
 
 </html>

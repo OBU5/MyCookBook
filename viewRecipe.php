@@ -1,3 +1,8 @@
+<?php
+$connect = mysqli_connect("localhost", "root", "", "test");
+$connect->set_charset("UTF-8");
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 
@@ -12,20 +17,17 @@
         <a class="active" href="viewAllRecipes.php">Zobrazit recepty</a>
         <a href="addRecipe.php">Přidat nový recept</a>
         <a href="about.php">About</a>
-        <?php
-        if (!isset($_SESSION["username"])) {
-            // User is not logged in
-            echo '<a href="login.php?action=login">Login</a>';
-        } else {
-            // User is  logged in
-            echo '<a href="userInfo.php">' . $_SESSION["username"] . '</a>';
-        } ?>
+          <?php
+          if (!isset($_SESSION["username"])) {
+               // User is not logged in
+               echo '<a href="login.php?action=login">Login</a>';
+          } else {
+               // User is  logged in
+               echo '<a href="userInfo.php">' . $_SESSION["username"] . '</a>';
+          } ?>
     </div>
 
     <?php
-    // Create connection
-    $connect = mysqli_connect("localhost", "root", "", "test");
-
     // Check connection
     if ($connect->connect_error) {
         die("Connection failed: " . $connect->connect_error);
@@ -126,11 +128,10 @@
             <table class=ingredients>
                 <tr>
                     <th>Ingredience</th>
-                    <th>množství</th>
-                    <th>jednotky</th>
+                    <th>Množství</th>
                 </tr>";
             for ($i = 0; $i < sizeof($ingredients); $i++) {
-                $htmlIngredients = $htmlIngredients . "<tr><td>" . $ingredients[$i] . "</td><td> " . $quantities[$i] . "</td><td>" . $units[$i] .   "</td></tr>";
+                $htmlIngredients = $htmlIngredients . "<tr><td>" . $ingredients[$i] . "</td><td> " . $quantities[$i] ." " . $units[$i] .   "</td></tr>";
             }
             $htmlIngredients = $htmlIngredients . "</table>";
 
@@ -167,11 +168,6 @@
     }
 
     ?>
-
-
-    <label for="recipename">Název:</label>
-    <input type="text" id="recipename" name="recipename" value=<?php echo isset($_POST['recipename']) ? htmlspecialchars($_POST['recipename'], ENT_QUOTES) : ''; ?>><br><br>
-
 
 </body>
 

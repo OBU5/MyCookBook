@@ -140,13 +140,35 @@ button:hover {
     color: #B85450;
 }
 
-table,
-th,
-tr,
-td {
-    border: 0;
-    border: none;
-    outline: none;
+table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+td,
+th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: rgb(163, 109, 109);
+}
+
+th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: rgb(138, 44, 44);
+    color: white;
 }
 
 
@@ -156,6 +178,9 @@ td {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 50%;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .userInfo td,
@@ -186,8 +211,10 @@ td {
 .ingredients {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
-    width: 100%;
+    width: 50%;
     padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .ingredients td,
