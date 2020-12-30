@@ -64,7 +64,7 @@ if (isset($_POST["login"])) {
      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-     <link rel="stylesheet" href="styles.css">
+     <link rel="stylesheet" href="Styles/styles.css">
      <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@300&display=swap" rel="stylesheet">
 </head>
 
@@ -72,31 +72,28 @@ if (isset($_POST["login"])) {
 <body>
      <!--Navigation bar-->
      <div class="topnav">
-          <a href="#home">Home</a>
-          <a href="#news">News</a>
-          <a href="#contact">Contact</a>
-          <a href="#about">About</a>
+          <a href="index.php">Domů</a>
+          <a href="viewAllRecipes.php">Zobrazit recepty</a>
+          <a href="addRecipe.php">Přidat nový recept</a>
+          <a href="about.php">About</a>
           <?php
           if (!isset($_SESSION["username"])) {
                // User is not logged in
                echo '<a class="active" href="login.php?action=login">Login</a>';
-
-          }
-          else {
+          } else {
                // User is  logged in
-               echo '<a class="active" href="userInfo.php">'.$_SESSION["username"].'</a>';
-          }
-          ?>
+               echo '<a class="active" href="userInfo.php">' . $_SESSION["username"] . '</a>';
+          } ?>
      </div>
      <br /><br />
-     <div class="container" style="width:500px;">
+     <div class="userDiv">
           <?php
           if (isset($_GET["action"]) == "login") {
           ?>
                <h3 align="center">Přihlášení</h3>
                <br />
                <form method="post">
-                                       <label>Enter Username</label>
+                    <label>Enter Username</label>
                     <input type="text" name="username" class="form-control" />
                     <br />
                     <label>Enter Password</label>
@@ -112,7 +109,7 @@ if (isset($_POST["login"])) {
                <h3 align="center">Registrace</h3>
                <br />
                <form method="post">
-               <label>Enter Name</label>
+                    <label>Enter Name</label>
                     <input type="text" name="name" class="form-control" />
                     <br />
                     <label>Enter Last name</label>

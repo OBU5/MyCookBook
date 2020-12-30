@@ -95,6 +95,44 @@ if (!isset($_SESSION["username"])) {
         }
 
 
+        $ingredients = $_POST['ingredients'];
+        $quantities = $_POST['quantities'];
+        $units = $_POST['units'];
+        $ingredients_ID = array();
+
+        if ((is_array($ingredients) || is_object($ingredients)) && (is_array($quantities) || is_object($quantities)) && (is_array($units) || is_object($units))) {
+            // store each ingredient and relationship between ingredient and recipe
+            if ($error == false && empty($ingredients)) {
+                if (!$error) {
+                    echo '<script>alert("Přidejte alespoň jednu ingredienci")</script>';
+                }
+                $error = true;
+            }
+        } else {
+            echo '<script>alert("Recept nebyl přidán, došlo k neočekávané chybě")</script>';
+            $error = true;
+        }
+
+
+        //check, if at least one meal category was set
+        $query = "SELECT ID FROM MealCategory";
+        $result = $connect->query($query);
+        if (!$error) {
+            $presentMealCategory = 0;
+            $i = 0;
+            while ($i <= $result->num_rows) {
+                // output data of each row
+                if (isset($_POST["mealCategory" . $i])) {
+                    $presentMealCategory++;
+                }
+                $i++;
+            }
+            if ($presentMealCategory < 1) {
+                echo '<script>alert("Zvolte alespoň jednu kategorii jídla")</script>';
+                $error = true;
+            }
+        }
+
         // store Recipe into database
         if (!$error) {
 
@@ -133,43 +171,38 @@ if (!isset($_SESSION["username"])) {
             }
         }
 
+        //store ingredients into database
         if (!$error) {
-
-            //store ingredients into database
-            $ingredients = $_POST['ingredients'];
-            $quantities = $_POST['quantities'];
-            $units = $_POST['units'];
-            $ingredients_ID = array();
-
             // check, if ingredients, quantities and units are really arrays
-            if ((is_array($ingredients) || is_object($ingredients)) && (is_array($quantities) || is_object($quantities)) && (is_array($units) || is_object($units))) {
-                // store each ingredient and relationship between ingredient and recipe
-                for ($i = 0; $i < sizeof($ingredients); $i++) {
-                    if (!empty($ingredients[$i])) {
-                        // store ingredient
-                        $query = "INSERT INTO Ingredients(name, quantity, unit) VALUES('$ingredients[$i]', '$quantities[$i]', '$units[$i]')";
-                        if (mysqli_query($connect, $query)) {
-                            // remember id of stored ingredient (it will be handy for "Recipe_Ingredient" table)
-                            $ingredients_ID[$i] = $connect->insert_id;
-                        } else {
-                            echo '<script>alert("Došlo k neočekávané chybě při pokusu o uložení ingredience ")</script>';
-                        }
-
-                        // store relationship between ingredients and stored recipe into database
-
-                        $query = "INSERT INTO Recipe_Ingredients(recipe_id, ingredient_id) VALUES('$currentRecipeID', '$ingredients_ID[$i]')";
-                        if (mysqli_query($connect, $query)) {
-                        } else {
-                            echo '<script>alert("Došlo k neočekávané chybě při pokusu o uložení vztahu mezi ingrediencí a receptem ")</script>';
-                        }
-                    }
+            // store each ingredient and relationship between ingredient and recipe
+            for ($i = 0; $i < sizeof($ingredients); $i++) {
+                // store ingredient
+                $query = "INSERT INTO Ingredients(name, quantity, unit) VALUES('$ingredients[$i]', '$quantities[$i]', '$units[$i]')";
+                if (mysqli_query($connect, $query)) {
+                    // remember id of stored ingredient (it will be handy for "Recipe_Ingredient" table)
+                    $ingredients_ID[$i] = $connect->insert_id;
+                } else {
+                    echo '<script>alert("Došlo k neočekávané chybě při pokusu o uložení ingredience ")</script>';
+                    $error = true;
                 }
-            } else {
+
+                // store relationship between ingredients and stored recipe into database
+                $query = "INSERT INTO Recipe_Ingredients(recipe_id, ingredient_id) VALUES('$currentRecipeID', '$ingredients_ID[$i]')";
+                if (mysqli_query($connect, $query)) {
+                } else {
+                    echo '<script>alert("Došlo k neočekávané chybě při pokusu o uložení vztahu mezi ingrediencí a receptem ")</script>';
+                    $error = true;
+                }
+            }
+        } else {
+            if (!$error) {
                 echo '<script>alert("Došlo k neočekávané chybě")</script>';
             }
+            $error = true;
         }
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -183,11 +216,10 @@ if (!isset($_SESSION["username"])) {
 <body>
     <!--Navigation bar-->
     <div class="topnav">
-
-        <a class="active" href="index.php">Home</a>
-        <a href="#news">News</a>
-        <a href="#contact">Contact</a>
-        <a href="#about">About</a>
+        <a href="index.php">Domů</a>
+        <a href="viewAllRecipes.php">Zobrazit recepty</a>
+        <a class="active" href="addRecipe.php">Přidat nový recept</a>
+        <a href="about.php">About</a>
         <?php
         if (!isset($_SESSION["username"])) {
             // User is not logged in
@@ -195,8 +227,7 @@ if (!isset($_SESSION["username"])) {
         } else {
             // User is  logged in
             echo '<a href="userInfo.php">' . $_SESSION["username"] . '</a>';
-        }
-        ?>
+        } ?>
     </div>
 
     <div style="padding-left:16px">

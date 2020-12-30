@@ -10,12 +10,8 @@ if (!isset($_SESSION["username"])) {
 
 
 <head>
-     <title>My Cook book</title>
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-     <link rel="stylesheet" href="styles.css">
+     <link rel="stylesheet" href="Styles/styles.css">
      <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@300&display=swap" rel="stylesheet">
 </head>
 
@@ -23,11 +19,10 @@ if (!isset($_SESSION["username"])) {
 <body>
      <!--Navigation bar-->
      <div class="topnav">
-          <a href="index.php">Home</a>
-          <a href="#news">News</a>
-          <a href="#contact">Contact</a>
-          <a href="#about">About</a>
-
+          <a href="index.php">Domů</a>
+          <a href="viewAllRecipes.php">Zobrazit recepty</a>
+          <a href="addRecipe.php">Přidat nový recept</a>
+          <a href="about.php">About</a>
           <?php
           if (!isset($_SESSION["username"])) {
                // User is not logged in
@@ -35,10 +30,10 @@ if (!isset($_SESSION["username"])) {
           } else {
                // User is  logged in
                echo '<a class="active" href="userInfo.php">' . $_SESSION["username"] . '</a>';
-          }
-          ?> </div>
+          } ?>
+     </div>
      <br /><br />
-     <div class="container" style="width:500px;">
+     <div class="userDiv">
           <h3 align="center">Informace o Vás</h3>
           <br>
           <?php
@@ -47,7 +42,7 @@ if (!isset($_SESSION["username"])) {
 
           // Check connection
           if ($connect->connect_error) {
-               die("Connection failed: " . $conn->connect_error);
+               die("Connection failed: " . $connect->connect_error);
           }
           $query = "SELECT ID, name, lastname, email, username, role FROM users";
           $result = $connect->query($query);
@@ -56,29 +51,29 @@ if (!isset($_SESSION["username"])) {
                // output data of each row
                while ($row = $result->fetch_assoc()) {
                     if ($row["username"] == $_SESSION["username"])
-                         echo "<table>
+                         echo "<table class =  userInfo>
                               <tr>
                                    <th> jméno </th>
-                                   <th>" . $row["name"] . "</th>
+                                   <td>" . $row["name"] . "</td>
                               <tr/>
                               <tr>
                                    <th> Příjmení </th>
-                                   <th>" . $row["lastname"] . "</th>
+                                   <td>" . $row["lastname"] . "</td>
                               <tr/>
                               <tr>
                                    <th> email </th>
-                                   <th>" . $row["email"] . "</th>
+                                   <td>" . $row["email"] . "</td>
                               <tr/>
                               <tr>
                                    <th> Username </th>
-                                   <th>" . $row["username"] . "</th>
+                                   <td>" . $row["username"] . "</td>
                               <tr/>
                               <tr>
                                    <th> Role </th>
-                                   <th>" . $row["role"] . "</th>
+                                   <td>" . $row["role"] . "</td>
                               <tr/>
                               
-                         <table/>";
+                         </table>";
                }
           } else {
                echo "0 results";
