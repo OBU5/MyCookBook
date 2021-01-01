@@ -6,8 +6,29 @@ if (isset($_SESSION["username"])) {
 }
 if (isset($_POST["register"])) {
 
-     if (empty($_POST["username"]) || empty($_POST["password"])) {
-          echo '<script>alert("Both Fields are required")</script>';
+     //check, if inputs are not empty
+     if (empty($_POST["username"])) {
+          echo '<script>alert("Je potřeba vyplnit uživatelské jméno")</script>';
+     } else if (empty($_POST["password"])) {
+          echo '<script>alert("Je potřeba vyplnit heslo")</script>';
+     } else if (empty($_POST["name"])) {
+          echo '<script>alert("Je potřeba vyplnit jméno")</script>';
+     } else if (empty($_POST["lastname"])) {
+          echo '<script>alert("Je potřeba vyplnit příjmení")</script>';
+     } else if (empty($_POST["email"])) {
+          echo '<script>alert("Je potřeba vyplnit email")</script>';
+     }
+     // check, if inputs are within the range
+     else if (strlen($_POST["username"]) < 3 || strlen($_POST["username"]) > 12) {
+          echo '<script>alert("Uživatelské jméno musí být dlouhé 3 až 12 znaků")</script>';
+     } else if (strlen($_POST["password"]) < 3 || strlen($_POST["password"]) > 20) {
+          echo '<script>alert("Heslo musí být dlouhé 3 až 20 znaků")</script>';
+     } else if (strlen($_POST["name"]) < 3 || strlen($_POST["name"]) > 12) {
+          echo '<script>alert("Jméno musí být dlouhé 3 až 12 znaků")</script>';
+     } else if (strlen($_POST["lastname"]) < 3 || strlen($_POST["lastname"]) > 12) {
+          echo '<script>alert("Příjmení musí být dlouhé 3 až 12 znaků")</script>';
+     } else if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+          echo '<script>alert("Zadaný email není platný")</script>';
      } else {
 
           $username = mysqli_real_escape_string($connect, $_POST["username"]);
@@ -18,7 +39,7 @@ if (isset($_POST["register"])) {
           $query = "SELECT * FROM users WHERE username = '$username'";
           $result = mysqli_query($connect, $query);
           if (mysqli_num_rows($result) > 0) {
-               echo '<script>alert("this username already exists")</script>';
+               echo '<script>alert("Musíte zvolit jiné uživatelské jméno. Toto již existuje")</script>';
           } else {
                // the username is OK
                $password = mysqli_real_escape_string($connect, $_POST["password"]);
@@ -31,8 +52,11 @@ if (isset($_POST["register"])) {
      }
 }
 if (isset($_POST["login"])) {
-     if (empty($_POST["username"]) || empty($_POST["password"])) {
-          echo '<script>alert("Both Fields are required")</script>';
+     //check, if inputs are not empty
+     if (empty($_POST["username"])) {
+          echo '<script>alert("Je potřeba zadat uživatelské jméno")</script>';
+     } else if (empty($_POST["password"])) {
+          echo '<script>alert("Je potřeba zadat heslo")</script>';
      } else {
           $username = mysqli_real_escape_string($connect, $_POST["username"]);
           $password = mysqli_real_escape_string($connect, $_POST["password"]);
@@ -46,11 +70,11 @@ if (isset($_POST["login"])) {
                          header("location:index.php");
                     } else {
                          //return false;  
-                         echo '<script>alert("Wrong User Details")</script>';
+                         echo '<script>alert("Zadali jste špatně uživatelské jméno nebo heslo")</script>';
                     }
                }
           } else {
-               echo '<script>alert("Wrong User Details")</script>';
+               echo '<script>alert("Zadané uživatelské jméno neexistuje")</script>';
           }
      }
 }
@@ -91,16 +115,16 @@ if (isset($_POST["login"])) {
           if (isset($_GET["action"]) == "login") {
           ?>
                <h3 align="center">Přihlášení</h3>
-               <br />
+               <br>
                <form method="post">
                     <label>Enter Username</label>
-                    <input type="text" name="username" class="form-control" />
-                    <br />
+                    <input type="text" name="username" class="form-control" value=<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username'], ENT_QUOTES) : ''; ?>>
+                    <br>
                     <label>Enter Password</label>
-                    <input type="text" name="password" class="form-control" />
-                    <br />
-                    <input type="submit" name="login" value="Login" class="btn btn-info" />
-                    <br />
+                    <input type="password" name="password" class="form-control" >
+                    <br>
+                    <input type="submit" name="login" value="Login" class="btn btn-info" >
+                    <br>
                     <p align="center"><a href="login.php">Register</a></p>
                </form>
           <?php
@@ -109,23 +133,23 @@ if (isset($_POST["login"])) {
                <h3 align="center">Registrace</h3>
                <br />
                <form method="post">
-                    <label>Enter Name</label>
-                    <input type="text" name="name" class="form-control" />
-                    <br />
-                    <label>Enter Last name</label>
-                    <input type="text" name="lastname" class="form-control" />
-                    <br />
-                    <label>Enter Email</label>
-                    <input type="text" name="email" class="form-control" />
-                    <br />
-                    <label>Enter Username</label>
-                    <input type="text" name="username" class="form-control" />
-                    <br />
-                    <label>Enter Password</label>
-                    <input type="text" name="password" class="form-control" />
-                    <br />
+                    <label>Zadejte jméno</label>
+                    <input type="text" name="name" class="form-control" value=<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name'], ENT_QUOTES) : ''; ?>>
+                    <br>
+                    <label>Zadejte příjmení </label>
+                    <input type="text" name="lastname" class="form-control" value=<?php echo isset($_POST['lastname']) ? htmlspecialchars($_POST['lastname'], ENT_QUOTES) : ''; ?>>
+                    <br>
+                    <label>Zadejte email</label>
+                    <input type="text" name="email" class="form-control" value=<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email'], ENT_QUOTES) : ''; ?>>
+                    <br>
+                    <label>Zadejte uživatelské jméno</label>
+                    <input type="text" name="username" class="form-control" value=<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username'], ENT_QUOTES) : ''; ?>>
+                    <br>
+                    <label>Zadejte heslo</label>
+                    <input type="password" name="password" class="form-control" value=<?php echo isset($_POST['password']) ? htmlspecialchars($_POST['password'], ENT_QUOTES) : ''; ?>>
+                    <br>
                     <input type="submit" name="register" value="Register" class="btn btn-info" />
-                    <br />
+                    <br>
                     <p align="center"><a href="login.php?action=login">Login</a></p>
                </form>
           <?php
@@ -137,6 +161,9 @@ if (isset($_POST["login"])) {
           <p>Autor: Ondřej Bureš, Kontakt:
                <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a></p>
      </footer>
+
+     <script src="Scripts/checkLoginForm.js"></script>
 </body>
+
 
 </html>

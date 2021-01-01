@@ -16,6 +16,9 @@ if (!isset($_SESSION["username"])) {
             if (empty($_POST["recipename"])) {
                 echo '<script>alert("Není vyplněno jméno receptu")</script>';
                 $error = true;
+            } else if (strlen($_POST["recipename"]) > 39) {
+                echo '<script>alert("Překročili jste maximální počet znaků pro název receptu")</script>';
+                $error = true;
             } else {
                 $recipename = mysqli_real_escape_string($connect, $_POST["recipename"]);
             }
@@ -23,9 +26,11 @@ if (!isset($_SESSION["username"])) {
 
         //get directions
         if (!$error) {
-
             if (empty($_POST["directions"])) {
                 echo '<script>alert("Není vyplněn postup")</script>';
+                $error = true;
+            } else if (strlen($_POST["directions"]) > 999) {
+                echo '<script>alert("Překročili jste maximální počet znaků pro postup receptu")</script>';
                 $error = true;
             } else {
                 $directions = mysqli_real_escape_string($connect, $_POST["directions"]);
@@ -61,6 +66,11 @@ if (!isset($_SESSION["username"])) {
                     $row = $result->fetch_assoc();
                     $originCountry_id = $row['ID'];
                 }
+                //check, if the originCountry is into database
+                else {
+                    echo '<script>alert("Není zvolena země původu")</script>';
+                    $error = true;
+                }
             }
         }
 
@@ -95,6 +105,7 @@ if (!isset($_SESSION["username"])) {
         }
 
 
+        //check if ingredients are ok
         $ingredients = $_POST['ingredients'];
         $quantities = $_POST['quantities'];
         $units = $_POST['units'];
@@ -106,6 +117,19 @@ if (!isset($_SESSION["username"])) {
                     echo '<script>alert("Přidejte alespoň jednu ingredienci")</script>';
                 }
                 $error = true;
+            }
+            // check strlen of ingredients, quantities and units
+            for ($i = 0; $i < sizeof($ingredients) && !$error; $i++) {
+                if (strlen($ingredients[$i]) > 39) {
+                    echo '<script>alert("Překročili jste maximální počet znaků pro název ingredience")</script>';
+                    $error = true;
+                } else if (strlen($quantities[$i]) > 39) {
+                    echo '<script>alert("Překročili jste maximální počet znaků pro množství ingredience")</script>';
+                    $error = true;
+                } else if (strlen($units[$i]) > 39) {
+                    echo '<script>alert("Překročili jste maximální počet znaků pro jednotku ingredience")</script>';
+                    $error = true;
+                }
             }
         } else {
             echo '<script>alert("Recept nebyl přidán, došlo k neočekávané chybě")</script>';
@@ -120,8 +144,9 @@ if (!isset($_SESSION["username"])) {
             $presentMealCategory = 0;
             $i = 0;
             while ($i <= $result->num_rows) {
-                // output data of each row
-                if (isset($_POST["mealCategory" . $i])) {
+                $row = $result->fetch_assoc();
+                // check, if mealCategory index is into database
+                if (isset($_POST["mealCategory" . $i]) && $_POST["mealCategory" . $i]  == $row['ID']) {
                     $presentMealCategory++;
                 }
                 $i++;
@@ -134,7 +159,6 @@ if (!isset($_SESSION["username"])) {
 
         // store Recipe into database
         if (!$error) {
-
             $query = "INSERT INTO Recipes(author_id, name, date, directions, originCountry_id, imgUrl) VALUES('$recipeAuthor_id', '$recipename', curdate(), '$directions', '$originCountry_id', '$imgUrl')";
             if (mysqli_query($connect, $query)) {
                 echo '<script>alert("recept byl úspěšně přidán")</script>';
@@ -245,80 +269,33 @@ if (!isset($_SESSION["username"])) {
 
 
 
-            <table>
+            <table name="ingredients">
                 <tr>
                     <th>Pořadí</th>
                     <th>Název ingredience</th>
                     <th>Monžství</th>
                     <th>jednotky</th>
                 </tr>
-                <tr>
-                    <td> 1 </td>
-                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][0]) ? htmlspecialchars($_POST['ingredients'][0], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][0]) ? htmlspecialchars($_POST['quantities'][0], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][0]) ? htmlspecialchars($_POST['units'][0], ENT_QUOTES) : ''; ?>> </td>
-                </tr>
-                <tr>
-                    <td> 2 </td>
-                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][1]) ? htmlspecialchars($_POST['ingredients'][1], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][1]) ? htmlspecialchars($_POST['quantities'][1], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][1]) ? htmlspecialchars($_POST['units'][1], ENT_QUOTES) : ''; ?>> </td>
-                </tr>
 
-                <tr>
-                    <td> 3 </td>
-                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][2]) ? htmlspecialchars($_POST['ingredients'][2], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][2]) ? htmlspecialchars($_POST['quantities'][2], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][2]) ? htmlspecialchars($_POST['units'][2], ENT_QUOTES) : ''; ?>> </td>
-                </tr>
-                <tr>
-                    <td> 4 </td>
-                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][3]) ? htmlspecialchars($_POST['ingredients'][3], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][3]) ? htmlspecialchars($_POST['quantities'][3], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][3]) ? htmlspecialchars($_POST['units'][3], ENT_QUOTES) : ''; ?>> </td>
-                </tr>
-                <tr>
-                    <td> 5 </td>
-                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][4]) ? htmlspecialchars($_POST['ingredients'][4], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][4]) ? htmlspecialchars($_POST['quantities'][4], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][4]) ? htmlspecialchars($_POST['units'][4], ENT_QUOTES) : ''; ?>> </td>
-                </tr>
-                <tr>
-                    <td> 6 </td>
-                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][5]) ? htmlspecialchars($_POST['ingredients'][5], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][5]) ? htmlspecialchars($_POST['quantities'][5], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][5]) ? htmlspecialchars($_POST['units'][5], ENT_QUOTES) : ''; ?>> </td>
-                </tr>
-                <tr>
-                    <td> 7 </td>
-                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][6]) ? htmlspecialchars($_POST['ingredients'][6], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][6]) ? htmlspecialchars($_POST['quantities'][6], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][6]) ? htmlspecialchars($_POST['units'][6], ENT_QUOTES) : ''; ?>> </td>
-                </tr>
-                <tr>
-                    <td> 8 </td>
-                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][7]) ? htmlspecialchars($_POST['ingredients'][7], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][7]) ? htmlspecialchars($_POST['quantities'][7], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][7]) ? htmlspecialchars($_POST['units'][7], ENT_QUOTES) : ''; ?>> </td>
-                </tr>
-
-                <tr>
-                    <td> 9 </td>
-                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][8]) ? htmlspecialchars($_POST['ingredients'][8], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][8]) ? htmlspecialchars($_POST['quantities'][8], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][8]) ? htmlspecialchars($_POST['units'][8], ENT_QUOTES) : ''; ?>> </td>
-                </tr>
-                <tr>
-                    <td> 10 </td>
-                    <td> <input type="text" name="ingredients[]" value=<?php echo isset($_POST['ingredients'][9]) ? htmlspecialchars($_POST['ingredients'][9], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="quantities[]" value=<?php echo isset($_POST['quantities'][9]) ? htmlspecialchars($_POST['quantities'][9], ENT_QUOTES) : ''; ?>> </td>
-                    <td> <input type="text" name="units[]" value=<?php echo isset($_POST['units'][9]) ? htmlspecialchars($_POST['units'][9], ENT_QUOTES) : ''; ?>> </td>
-                </tr>
+                <?php
+                for ($i = 1; $i <= 15; $i++) {
+                    $textIngredients = isset($_POST["ingredients"][$i]) ? htmlspecialchars($_POST["ingredients"][$i], ENT_QUOTES) : "";
+                    $textQuantities = isset($_POST["quantities"][$i]) ? htmlspecialchars($_POST["quantities"][$i], ENT_QUOTES) : "";
+                    $textUnits = isset($_POST["units"][$i]) ? htmlspecialchars($_POST["units"][$i], ENT_QUOTES) : "";
+                    echo
+                        '<tr>
+                        <td> ' . $i . ' </td>
+                        <td> <input type="text" id="ingredients' . $i . '" name="ingredients[]" value=' . $textIngredients . '> </td>
+                        <td> <input type="text" id="quantities' . $i . '" name="quantities[]" value=' . $textQuantities . '> </td>
+                        <td> <input type="text" id="units' . $i . '" name="units[]" value=' . $textUnits . '> </td>
+                    </tr>';
+                }
+                ?>
             </table>
 
 
 
-            <label for="process">Postu přípravy:</label>
+            <label for="directions">Postu přípravy:</label>
             <textarea name="directions" rows="10" cols="50" placeholder="Zadejte postup"><?php echo isset($_POST['directions']) ? htmlspecialchars($_POST['directions'], ENT_QUOTES) : ''; ?></textarea><br>
 
 
@@ -340,7 +317,7 @@ if (!isset($_SESSION["username"])) {
                     $i = 0;
                     while ($row = $result->fetch_assoc()) {
                         $checked = isset($_POST["mealCategory" . $i]) ? "checked " : "";
-                        echo '<input type="checkbox" name="mealCategory' . $i . '"' . $checked . ' value =' . $row['ID'] . '>' . $row['name'] . '<br>';
+                        echo '<input type="checkbox" id="mealCategory' . $i . '"name="mealCategory' . $i . '"' . $checked . ' value =' . $row['ID'] . '>' . $row['name'] . '<br>';
                         $i++;
                     }
                 }
@@ -372,6 +349,6 @@ if (!isset($_SESSION["username"])) {
 
 </body>
 
-<script type="text/javascript" src="checkRecipeForm.js"></script>
+<script type="text/javascript" src="Scripts/checkRecipeForm.js"></script>
 
 </html>
