@@ -27,6 +27,15 @@ function checkDirections(e) {
 
 
 function checkBeforePost(e) {
+    if (file.files[0] != null) {
+        var FileSize = file.files[0].size / 1024 / 1024; // in MiB
+        if (FileSize > 20) {
+            alert('Obrázek přesáhl maximální velikost 20 MB');
+            file[i].classList.add("errorText");
+            e.preventDefault();
+        }
+    }
+
     //check, if there is at least one ingredient
     ingredientSet = false;
     for (i = 0; i < 100; i++) {
@@ -84,7 +93,6 @@ function checkBeforePost(e) {
     }
 }
 
-
 let errorText = "";
 
 let recipename = document.querySelector("input[name = recipename]");
@@ -112,39 +120,4 @@ recipename.addEventListener("blur", checkRecipename);
 directions.addEventListener("blur", checkDirections);
 submitButton.addEventListener("click", checkBeforePost);
 
-//--------------------------------------------------------------------
-/*
-function checkCreationDate(e) {
-    console.log("checking");
-    console.log(e); //log metadata of the submit event
-    let creationDateText = creationDate.value;
-
-    // regular expression to match required date format
-    re = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
-    let dateNow = new Date();
-    dateNow.setHours(0, 0, 0, 0);
-
-    if (creationDateText != '' && !creationDateText.match(re)) {
-        e.preventDefault(); //prevent default action (ex submitting)
-        //feedback
-        creationDate.classList.add("errorText");
-    } else
-    if (Date.parse(creationDateText) - Date.parse(dateNow) <= 0) {
-        e.preventDefault(); //prevent default action (ex submitting)
-        //feedback
-        creationDate.classList.add("errorText");
-    } else {
-        creationDate.classList.remove("errorText")
-    }
-}
-
-
-
-let creationDate = document.querySelector("input[name = creationDate]");
-let tags = document.querySelector("input[name = tags]");
-let form = document.querySelector("form[name = myForm]")
-    // event - on submit, function - check()
-    //form.addEventListener("submit", check)
-
-// event - on remove focus of element, function - check()
-creationDate.addEventListener("blur", checkCreationDate)*/
+var file = document.querySelector("input[name = img]");

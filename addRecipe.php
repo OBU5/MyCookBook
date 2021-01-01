@@ -88,16 +88,25 @@ if (!isset($_SESSION["username"])) {
                 }
                 $uploadfile = $uploaddir . $i . $uploadfile;
                 //echo $uploadfile;
-                if (move_uploaded_file($_FILES["img"]["tmp_name"], $uploadfile)) {
-                    $imgUrl = 'http://' . $_SERVER['SERVER_NAME'] . '/MyCookBook/' . $uploadfile;
+
+                $type = $_FILES['img']['type'];
+                $extensions = array('image/jpeg', 'image/png', 'image/gif');
+                if (in_array($type, $extensions)) {
+                    if (move_uploaded_file($_FILES["img"]["tmp_name"], $uploadfile)) {
+                        $imgUrl = 'http://' . $_SERVER['SERVER_NAME'] . '/MyCookBook/' . $uploadfile;
+                    } else {
+                        echo '<script>alert("byl zvolen soubor v chybném formátu")</script>';
+                    }
                 } else {
                     echo '<script>alert("byl zvolen soubor v chybném formátu")</script>';
+                    $error = true;
                 }
+
                 /*
-            echo '<pre>';
-            echo 'Here is some more debugging info:';
-            print_r($_FILES);
-            print "</pre>";*/
+                echo '<pre>';
+                echo 'Here is some more debugging info:';
+                print_r($_FILES);
+                print "</pre>";*/
             } else {
                 echo '<script>alert("Není vložen obrázek")</script>';
                 $error = true;
@@ -279,9 +288,9 @@ if (!isset($_SESSION["username"])) {
 
                 <?php
                 for ($i = 1; $i <= 15; $i++) {
-                    $textIngredients = isset($_POST["ingredients"][$i]) ? htmlspecialchars($_POST["ingredients"][$i], ENT_QUOTES) : "";
-                    $textQuantities = isset($_POST["quantities"][$i]) ? htmlspecialchars($_POST["quantities"][$i], ENT_QUOTES) : "";
-                    $textUnits = isset($_POST["units"][$i]) ? htmlspecialchars($_POST["units"][$i], ENT_QUOTES) : "";
+                    $textIngredients = isset($_POST['ingredients'][$i]) ? htmlspecialchars($_POST['ingredients'][$i], ENT_QUOTES) : '';
+                    $textQuantities = isset($_POST['quantities'][$i]) ? htmlspecialchars($_POST['quantities'][$i], ENT_QUOTES) : '';
+                    $textUnits = isset($_POST['units'][$i]) ? htmlspecialchars($_POST['units'][$i], ENT_QUOTES) : '';
                     echo
                         '<tr>
                         <td> ' . $i . ' </td>
