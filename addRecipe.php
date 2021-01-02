@@ -1,4 +1,7 @@
 <?php
+
+$errorMsgType = "";
+$php_errormsg = "";
 $connect = mysqli_connect("localhost", "root", "", "test");
 $connect->set_charset("UTF-8");
 $error = false;
@@ -14,10 +17,11 @@ if (!isset($_SESSION["username"])) {
         //get recipename
         if (!$error) {
             if (empty($_POST["recipename"])) {
-                echo '<script>alert("Není vyplněno jméno receptu")</script>';
+                $php_errormsg = "Není vyplněno jméno receptu";
+                $errorMsgType = "errorMessage";
                 $error = true;
             } else if (strlen($_POST["recipename"]) > 39) {
-                echo '<script>alert("Překročili jste maximální počet znaků pro název receptu")</script>';
+                $php_errormsg = "Překročili jste maximální počet znaků pro název receptu";
                 $error = true;
             } else {
                 $recipename = mysqli_real_escape_string($connect, $_POST["recipename"]);
@@ -27,10 +31,12 @@ if (!isset($_SESSION["username"])) {
         //get directions
         if (!$error) {
             if (empty($_POST["directions"])) {
-                echo '<script>alert("Není vyplněn postup")</script>';
+                $php_errormsg = "Není vyplněn postup";
+                $errorMsgType = "errorMessage";
                 $error = true;
             } else if (strlen($_POST["directions"]) > 999) {
-                echo '<script>alert("Překročili jste maximální počet znaků pro postup receptu")</script>';
+                $php_errormsg = "Překročili jste maximální počet znaků pro postup receptu";
+                $errorMsgType = "errorMessage";
                 $error = true;
             } else {
                 $directions = mysqli_real_escape_string($connect, $_POST["directions"]);
@@ -42,7 +48,8 @@ if (!isset($_SESSION["username"])) {
             $query = "SELECT ID FROM Users WHERE username = '$recipeAuthor'";
             $result = $connect->query($query);
             if (mysqli_num_rows($result) <= 0) {
-                echo '<script>alert("you are not signed in!")</script>';
+                $php_errormsg = "Nejste přihlášen";
+                $errorMsgType = "errorMessage";
                 $error = true;
             } else {
                 $row = $result->fetch_assoc();
@@ -55,7 +62,8 @@ if (!isset($_SESSION["username"])) {
         if (!$error) {
 
             if (empty($_POST["originCountry"])) {
-                echo '<script>alert("Není zvolena země původu")</script>';
+                $php_errormsg = "Není zvolena země původu";
+                $errorMsgType = "errorMessage";
                 $error = true;
             } else {
                 $originCountry = mysqli_real_escape_string($connect, $_POST["originCountry"]);
@@ -68,9 +76,79 @@ if (!isset($_SESSION["username"])) {
                 }
                 //check, if the originCountry is into database
                 else {
-                    echo '<script>alert("Není zvolena země původu")</script>';
+                    $php_errormsg = "Není zvolena země původu";
+                    $errorMsgType = "errorMessage";
                     $error = true;
                 }
+            }
+        }
+
+
+
+        //check if ingredients are ok
+        $ingredients = $_POST['ingredients'];
+        $quantities = $_POST['quantities'];
+        $units = $_POST['units'];
+        $ingredients_ID = array();
+        $atLeastOneIngredientExists = false;
+        if ((is_array($ingredients) || is_object($ingredients)) && (is_array($quantities) || is_object($quantities)) && (is_array($units) || is_object($units))) {
+            if (!$error && empty($ingredients)) {
+                echo $ingredients;
+                //to do not repeat this part
+                $php_errormsg = "Přidejte alespoň jednu ingredienci";
+                $errorMsgType = "errorMessage";
+                $error = true;
+            } else if (!$error) {
+                // check strlen of ingredients, quantities and units
+                for ($i = 0; $i < sizeof($ingredients) && !$error; $i++) {
+                    // check if there is at least 1 ingredient
+                    if (strlen($ingredients[$i]) > 0  && strlen($ingredients[$i]) < 40) {
+                        $atLeastOneIngredientExists = true;
+                    }
+                    if (strlen($ingredients[$i]) > 39) {
+                        $php_errormsg = "Překročili jste maximální počet znaků pro název ingredience";
+                        $errorMsgType = "errorMessage";
+                        $error = true;
+                    } else if (strlen($quantities[$i]) > 39) {
+                        $php_errormsg = "Překročili jste maximální počet znaků pro množství ingredience";
+                        $errorMsgType = "errorMessage";
+                        $error = true;
+                    } else if (strlen($units[$i]) > 39) {
+                        $php_errormsg = "Překročili jste maximální počet znaků pro jednotku ingredience";
+                        $errorMsgType = "errorMessage";
+                        $error = true;
+                    }
+                }
+                if (!$atLeastOneIngredientExists) {
+                    $php_errormsg = "Přidejte alespoň jednu ingredienci";
+                    $errorMsgType = "errorMessage";
+                    $error = true;
+                }
+            }
+        } else {
+            $php_errormsg = "Recept nebyl přidán, došlo k neočekávané chybě";
+            $error = true;
+        }
+
+
+        //check, if at least one meal category was set
+        $query = "SELECT ID FROM MealCategory";
+        $result = $connect->query($query);
+        if (!$error) {
+            $presentMealCategory = 0;
+            $i = 0;
+            while ($i <= $result->num_rows) {
+                $row = $result->fetch_assoc();
+                // check, if mealCategory index is into database
+                if (isset($_POST["mealCategory" . $i]) && $_POST["mealCategory" . $i]  == $row['ID']) {
+                    $presentMealCategory++;
+                }
+                $i++;
+            }
+            if ($presentMealCategory < 1) {
+                $php_errormsg = "Zvolte alespoň jednu kategorii jídla";
+                $errorMsgType = "errorMessage";
+                $error = true;
             }
         }
 
@@ -95,10 +173,13 @@ if (!isset($_SESSION["username"])) {
                     if (move_uploaded_file($_FILES["img"]["tmp_name"], $uploadfile)) {
                         $imgUrl = 'http://' . $_SERVER['SERVER_NAME'] . '/MyCookBook/' . $uploadfile;
                     } else {
-                        echo '<script>alert("byl zvolen soubor v chybném formátu")</script>';
+                        $php_errormsg = "byl zvolen soubor v chybném formátu";
+                        $errorMsgType = "errorMessage";
+                        $error = true;
                     }
                 } else {
-                    echo '<script>alert("byl zvolen soubor v chybném formátu")</script>';
+                    $php_errormsg = "byl zvolen soubor v chybném formátu";
+                    $errorMsgType = "errorMessage";
                     $error = true;
                 }
 
@@ -108,73 +189,25 @@ if (!isset($_SESSION["username"])) {
                 print_r($_FILES);
                 print "</pre>";*/
             } else {
-                echo '<script>alert("Není vložen obrázek")</script>';
+                $php_errormsg = "Není vložen obrázek";
+                $errorMsgType = "errorMessage";
                 $error = true;
             }
         }
 
 
-        //check if ingredients are ok
-        $ingredients = $_POST['ingredients'];
-        $quantities = $_POST['quantities'];
-        $units = $_POST['units'];
-        $ingredients_ID = array();
-
-        if ((is_array($ingredients) || is_object($ingredients)) && (is_array($quantities) || is_object($quantities)) && (is_array($units) || is_object($units))) {
-            if ($error == false && empty($ingredients)) {
-                if (!$error) {
-                    echo '<script>alert("Přidejte alespoň jednu ingredienci")</script>';
-                }
-                $error = true;
-            }
-            // check strlen of ingredients, quantities and units
-            for ($i = 0; $i < sizeof($ingredients) && !$error; $i++) {
-                if (strlen($ingredients[$i]) > 39) {
-                    echo '<script>alert("Překročili jste maximální počet znaků pro název ingredience")</script>';
-                    $error = true;
-                } else if (strlen($quantities[$i]) > 39) {
-                    echo '<script>alert("Překročili jste maximální počet znaků pro množství ingredience")</script>';
-                    $error = true;
-                } else if (strlen($units[$i]) > 39) {
-                    echo '<script>alert("Překročili jste maximální počet znaků pro jednotku ingredience")</script>';
-                    $error = true;
-                }
-            }
-        } else {
-            echo '<script>alert("Recept nebyl přidán, došlo k neočekávané chybě")</script>';
-            $error = true;
-        }
-
-
-        //check, if at least one meal category was set
-        $query = "SELECT ID FROM MealCategory";
-        $result = $connect->query($query);
-        if (!$error) {
-            $presentMealCategory = 0;
-            $i = 0;
-            while ($i <= $result->num_rows) {
-                $row = $result->fetch_assoc();
-                // check, if mealCategory index is into database
-                if (isset($_POST["mealCategory" . $i]) && $_POST["mealCategory" . $i]  == $row['ID']) {
-                    $presentMealCategory++;
-                }
-                $i++;
-            }
-            if ($presentMealCategory < 1) {
-                echo '<script>alert("Zvolte alespoň jednu kategorii jídla")</script>';
-                $error = true;
-            }
-        }
 
         // store Recipe into database
         if (!$error) {
             $query = "INSERT INTO Recipes(author_id, name, date, directions, originCountry_id, imgUrl) VALUES('$recipeAuthor_id', '$recipename', curdate(), '$directions', '$originCountry_id', '$imgUrl')";
             if (mysqli_query($connect, $query)) {
-                echo '<script>alert("recept byl úspěšně přidán")</script>';
+                $php_errormsg = "recept byl úspěšně přidán";
+                $errorMsgType = "successMessage";
                 // remember id of stored recipe (it will be handy for "Recipe_Ingredient" table)
                 $currentRecipeID = $connect->insert_id;
             } else {
-                echo '<script>alert("Recept nebyl přidán, došlo k neočekávané chybě")</script>';
+                $php_errormsg = "Recept nebyl přidán, došlo k neočekávané chybě";
+                $errorMsgType = "errorMessage";
                 $error = true;
             }
         }
@@ -195,7 +228,8 @@ if (!isset($_SESSION["username"])) {
                     $query = "INSERT INTO Recipe_MealCategory(recipe_id, mealCategory_id) VALUES('$currentRecipeID', '$i')";
                     if (mysqli_query($connect, $query)) {
                     } else {
-                        echo '<script>alert("Došlo k neočekávané chybě při pokusu o uložení vztahu mezi ingrediencí a receptem ")</script>';
+                        $php_errormsg = "Došlo k neočekávané chybě při pokusu o uložení vztahu mezi ingrediencí a receptem ";
+                        $errorMsgType = "errorMessage";
                         $error = true;
                     }
                 }
@@ -215,7 +249,8 @@ if (!isset($_SESSION["username"])) {
                         // remember id of stored ingredient (it will be handy for "Recipe_Ingredient" table)
                         $ingredients_ID[$i] = $connect->insert_id;
                     } else {
-                        echo '<script>alert("Došlo k neočekávané chybě při pokusu o uložení ingredience ")</script>';
+                        $php_errormsg = "Došlo k neočekávané chybě při pokusu o uložení ingredience ";
+                        $errorMsgType = "errorMessage";
                         $error = true;
                     }
 
@@ -223,14 +258,16 @@ if (!isset($_SESSION["username"])) {
                     $query = "INSERT INTO Recipe_Ingredients(recipe_id, ingredient_id) VALUES('$currentRecipeID', '$ingredients_ID[$i]')";
                     if (mysqli_query($connect, $query)) {
                     } else {
-                        echo '<script>alert("Došlo k neočekávané chybě při pokusu o uložení vztahu mezi ingrediencí a receptem ")</script>';
+                        $php_errormsg = "Došlo k neočekávané chybě při pokusu o uložení vztahu mezi ingrediencí a receptem ";
+                        $errorMsgType = "errorMessage";
                         $error = true;
                     }
                 }
             }
         } else {
             if (!$error) {
-                echo '<script>alert("Došlo k neočekávané chybě")</script>';
+                $php_errormsg = "Došlo k neočekávané chybě";
+                $errorMsgType = "errorMessage";
             }
             $error = true;
         }
@@ -294,9 +331,9 @@ if (!isset($_SESSION["username"])) {
                     echo
                         '<tr>
                         <td> ' . $i . ' </td>
-                        <td> <input type="text" id="ingredients' . $i . '" name="ingredients[]" value=' . $textIngredients . '> </td>
-                        <td> <input type="text" id="quantities' . $i . '" name="quantities[]" value=' . $textQuantities . '> </td>
-                        <td> <input type="text" id="units' . $i . '" name="units[]" value=' . $textUnits . '> </td>
+                        <td> <input type="text" maxlength = "40" id="ingredients' . $i . '" name="ingredients[]" value=' . $textIngredients . '> </td>
+                        <td> <input type="text" maxlength = "40" id="quantities' . $i . '" name="quantities[]" value=' . $textQuantities . '> </td>
+                        <td> <input type="text" maxlength = "40" id="units' . $i . '" name="units[]" value=' . $textUnits . '> </td>
                     </tr>';
                 }
                 ?>
@@ -305,7 +342,7 @@ if (!isset($_SESSION["username"])) {
 
 
             <label for="directions">Postu přípravy:</label>
-            <textarea name="directions" rows="10" cols="50" placeholder="Zadejte postup"><?php echo isset($_POST['directions']) ? htmlspecialchars($_POST['directions'], ENT_QUOTES) : ''; ?></textarea><br>
+            <textarea name="directions" rows="10" cols="50" maxlength="1000" minlength="3" required placeholder="Zadejte postup"><?php echo isset($_POST['directions']) ? htmlspecialchars($_POST['directions'], ENT_QUOTES) : ''; ?></textarea><br>
 
 
 
@@ -343,7 +380,6 @@ if (!isset($_SESSION["username"])) {
                 $result = $connect->query($query);
                 if ($result->num_rows > 0) {
                     // output data of each row
-
                     while ($row = $result->fetch_assoc()) {
                         $selected = (isset($_POST['originCountry']) && $_POST['originCountry'] == $row['name']) ? 'selected="selected"' : '';
                         echo "<option value=" . $row['name'] . ' ' . $selected . ">" . $row['name'] . "</option>";
@@ -351,6 +387,7 @@ if (!isset($_SESSION["username"])) {
                 }
                 ?>
             </select><br><br>
+            <p class=<?php echo $errorMsgType; ?>><?php echo $php_errormsg; ?></p>
 
             <input type="submit" name="submit">
         </form>

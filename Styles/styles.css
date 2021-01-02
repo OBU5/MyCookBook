@@ -140,6 +140,22 @@ button:hover {
     color: #B85450;
 }
 
+.successMessage {
+    background-color: #d4f8cc;
+    color: #50b859;
+    font-size: 150%;
+    border: 1px solid darkgreen;
+    text-align: center;
+}
+
+.errorMessage {
+    background-color: #F8CECC;
+    color: #B85450;
+    font-size: 150%;
+    border: 1px solid darkred;
+    text-align: center;
+}
+
 table {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;

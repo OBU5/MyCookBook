@@ -2,8 +2,8 @@ function checkUsername(e) {
     console.log("checking username");
     console.log(e); //log metadata of the submit event
 
-    //Username can be between 3 and 12 characters
-    if (username.value.length < 3 || username.value.length > 12) {
+    //Username can be between 3 and 20 characters
+    if (username.value.length < 3 || username.value.length > 20) {
         username.classList.add("errorText");
     } else {
         username.classList.remove("errorText")
@@ -15,7 +15,7 @@ function checkPassword(e) {
     console.log("checking password");
     console.log(e); //log metadata of the submit event
 
-    //Username can be between 3 and 12 characters
+    //Username can be between 3 and 20 characters
     if (password.value.length < 3 || password.value.length > 20) {
         password.classList.add("errorText");
     } else
@@ -26,8 +26,8 @@ function checkFirstname(e) {
     console.log("checking firstname");
     console.log(e); //log metadata of the submit event
 
-    //firstname can be between 3 and 12 characters
-    if (firstname.value.length < 3 || firstname.value.length > 12) {
+    //firstname can be between 3 and 20 characters
+    if (firstname.value.length < 3 || firstname.value.length > 20) {
         firstname.classList.add("errorText");
     } else
         firstname.classList.remove("errorText")
@@ -37,8 +37,8 @@ function checkLastname(e) {
     console.log("checking lastname");
     console.log(e); //log metadata of the submit event
 
-    //lastname can be between 3 and 12 characters
-    if (lastname.value.length < 3 || lastname.value.length > 12) {
+    //lastname can be between 3 and 20 characters
+    if (lastname.value.length < 3 || lastname.value.length > 20) {
         lastname.classList.add("errorText");
     } else {
         lastname.classList.remove("errorText")
@@ -58,22 +58,22 @@ function checkEmail(e) {
 
 
 function checkBeforePost(e) {
-    if (username.value.length < 3 || username.value.length > 12) {
+    if (username.value.length < 3 || username.value.length > 20) {
         e.preventDefault();
         username.classList.add("errorText");
-        alert("Uživatelské jméno musí být dlouhé 3 až 12 znaků");
+        alert("Uživatelské jméno musí být dlouhé 3 až 20 znaků");
     } else if (password.value.length < 3 || password.value.length > 20) {
         e.preventDefault();
         password.classList.add("errorText");
-        alert("Heslo musí být dlouhé 3 až 12 znaků");
-    } else if (firstname.value.length < 3 || firstname.value.length > 12) {
+        alert("Heslo musí být dlouhé 3 až 40 znaků");
+    } else if (firstname.value.length < 3 || firstname.value.length > 40) {
         e.preventDefault();
         firstname.classList.add("errorText");
-        alert("Jméno musí být dlouhé 3 až 12 znaků");
-    } else if (lastname.value.length < 3 || lastname.value.length > 12) {
+        alert("Jméno musí být dlouhé 3 až 20 znaků");
+    } else if (lastname.value.length < 3 || lastname.value.length > 20) {
         e.preventDefault();
         lastname.classList.add("errorText");
-        alert("Příjmení musí být dlouhé 3 až 12 znaků");
+        alert("Příjmení musí být dlouhé 3 až 20 znaků");
     } else if (!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email.value))) {
         e.preventDefault();
         email.classList.add("errorText");

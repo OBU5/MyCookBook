@@ -1,4 +1,7 @@
 <?php
+
+$errorMsgType = "";
+$php_errormsg = "";
 $connect = mysqli_connect("localhost", "root", "", "test");
 session_start();
 if (isset($_SESSION["username"])) {
@@ -8,27 +11,38 @@ if (isset($_POST["register"])) {
 
      //check, if inputs are not empty
      if (empty($_POST["username"])) {
-          echo '<script>alert("Je potřeba vyplnit uživatelské jméno")</script>';
+          $php_errormsg = "Je potřeba vyplnit uživatelské jméno";
+          $errorMsgType = "errorMessage";
+
      } else if (empty($_POST["password"])) {
-          echo '<script>alert("Je potřeba vyplnit heslo")</script>';
+          $php_errormsg = "Je potřeba vyplnit heslo";
+          $errorMsgType = "errorMessage";
      } else if (empty($_POST["name"])) {
-          echo '<script>alert("Je potřeba vyplnit jméno")</script>';
+          $php_errormsg = "Je potřeba vyplnit jméno";
+          $errorMsgType = "errorMessage";
      } else if (empty($_POST["lastname"])) {
-          echo '<script>alert("Je potřeba vyplnit příjmení")</script>';
+          $php_errormsg = "Je potřeba vyplnit příjmení";
+          $errorMsgType = "errorMessage";
      } else if (empty($_POST["email"])) {
-          echo '<script>alert("Je potřeba vyplnit email")</script>';
+          $php_errormsg = "Je potřeba vyplnit email";
+          $errorMsgType = "errorMessage";
      }
      // check, if inputs are within the range
-     else if (strlen($_POST["username"]) < 3 || strlen($_POST["username"]) > 12) {
-          echo '<script>alert("Uživatelské jméno musí být dlouhé 3 až 12 znaků")</script>';
-     } else if (strlen($_POST["password"]) < 3 || strlen($_POST["password"]) > 20) {
-          echo '<script>alert("Heslo musí být dlouhé 3 až 20 znaků")</script>';
-     } else if (strlen($_POST["name"]) < 3 || strlen($_POST["name"]) > 12) {
-          echo '<script>alert("Jméno musí být dlouhé 3 až 12 znaků")</script>';
-     } else if (strlen($_POST["lastname"]) < 3 || strlen($_POST["lastname"]) > 12) {
-          echo '<script>alert("Příjmení musí být dlouhé 3 až 12 znaků")</script>';
+     else if (strlen($_POST["username"]) < 3 || strlen($_POST["username"]) > 20) {
+          $php_errormsg = "Uživatelské jméno musí být dlouhé 3 až 20 znaků";
+          $errorMsgType = "errorMessage";
+     } else if (strlen($_POST["password"]) < 3 || strlen($_POST["password"]) > 40) {
+          $php_errormsg = "Heslo musí být dlouhé 3 až 40 znaků";
+          $errorMsgType = "errorMessage";
+     } else if (strlen($_POST["name"]) < 3 || strlen($_POST["name"]) > 20) {
+          $php_errormsg = "Jméno musí být dlouhé 3 až 20 znaků";
+          $errorMsgType = "errorMessage";
+     } else if (strlen($_POST["lastname"]) < 3 || strlen($_POST["lastname"]) > 20) {
+          $php_errormsg = "Příjmení musí být dlouhé 3 až 20 znaků";
+          $errorMsgType = "errorMessage";
      } else if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
-          echo '<script>alert("Zadaný email není platný")</script>';
+          $php_errormsg = "Zadaný email není platný";
+          $errorMsgType = "errorMessage";
      } else {
 
           $username = mysqli_real_escape_string($connect, $_POST["username"]);
@@ -39,14 +53,16 @@ if (isset($_POST["register"])) {
           $query = "SELECT * FROM users WHERE username = '$username'";
           $result = mysqli_query($connect, $query);
           if (mysqli_num_rows($result) > 0) {
-               echo '<script>alert("Musíte zvolit jiné uživatelské jméno. Toto již existuje")</script>';
+               $php_errormsg = "Musíte zvolit jiné uživatelské jméno. Toto již existuje";
+               $errorMsgType = "errorMessage";
           } else {
                // the username is OK
                $password = mysqli_real_escape_string($connect, $_POST["password"]);
                $password = password_hash($password, PASSWORD_DEFAULT);
                $query = "INSERT INTO users(name, lastname, email, username, password, role) VALUES('$name', '$lastname', '$email', '$username', '$password', 'Regular user')";
                if (mysqli_query($connect, $query)) {
-                    echo '<script>alert("Registration Done")</script>';
+                    $php_errormsg = "Registration Done";
+                    $errorMsgType = "successMessage";
                }
           }
      }
@@ -54,9 +70,9 @@ if (isset($_POST["register"])) {
 if (isset($_POST["login"])) {
      //check, if inputs are not empty
      if (empty($_POST["username"])) {
-          echo '<script>alert("Je potřeba zadat uživatelské jméno")</script>';
+          $php_errormsg = "Je potřeba zadat uživatelské jméno";
      } else if (empty($_POST["password"])) {
-          echo '<script>alert("Je potřeba zadat heslo")</script>';
+          $php_errormsg = "Je potřeba zadat heslo";
      } else {
           $username = mysqli_real_escape_string($connect, $_POST["username"]);
           $password = mysqli_real_escape_string($connect, $_POST["password"]);
@@ -70,11 +86,13 @@ if (isset($_POST["login"])) {
                          header("location:index.php");
                     } else {
                          //return false;  
-                         echo '<script>alert("Zadali jste špatně uživatelské jméno nebo heslo")</script>';
+                         $php_errormsg = "Zadali jste špatně uživatelské jméno nebo heslo";
+                         $errorMsgType = "errorMessage";
                     }
                }
           } else {
-               echo '<script>alert("Zadané uživatelské jméno neexistuje")</script>';
+               $php_errormsg = "Zadané uživatelské jméno neexistuje";
+               $errorMsgType = "errorMessage";
           }
      }
 }
@@ -118,12 +136,12 @@ if (isset($_POST["login"])) {
                <br>
                <form method="post">
                     <label>Enter Username</label>
-                    <input type="text" name="username" class="form-control" value=<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username'], ENT_QUOTES) : ''; ?>>
+                    <input type="text" name="username" class="form-control" maxlength = "20" minlength="3" required value=<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username'], ENT_QUOTES) : ''; ?>>
                     <br>
                     <label>Enter Password</label>
-                    <input type="password" name="password" class="form-control" >
+                    <input type="password" name="password" maxlength = "40" minlength="3" required class="form-control">
                     <br>
-                    <input type="submit" name="login" value="Login" class="btn btn-info" >
+                    <input type="submit" name="login" value="Login" class="btn btn-info">
                     <br>
                     <p align="center"><a href="login.php">Register</a></p>
                </form>
@@ -134,20 +152,21 @@ if (isset($_POST["login"])) {
                <br />
                <form method="post">
                     <label>Zadejte jméno</label>
-                    <input type="text" name="name" class="form-control" value=<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name'], ENT_QUOTES) : ''; ?>>
+                    <input type="text" name="name" class="form-control" pattern="[A-Ža-ž]{3,40}" required value=<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name'], ENT_QUOTES) : ''; ?>>
                     <br>
                     <label>Zadejte příjmení </label>
-                    <input type="text" name="lastname" class="form-control" value=<?php echo isset($_POST['lastname']) ? htmlspecialchars($_POST['lastname'], ENT_QUOTES) : ''; ?>>
+                    <input type="text" name="lastname" class="form-control" pattern="[A-Ža-ž]{3,40}" required value=<?php echo isset($_POST['lastname']) ? htmlspecialchars($_POST['lastname'], ENT_QUOTES) : ''; ?>>
                     <br>
                     <label>Zadejte email</label>
-                    <input type="text" name="email" class="form-control" value=<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email'], ENT_QUOTES) : ''; ?>>
+                    <input type="text" name="email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required value=<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email'], ENT_QUOTES) : ''; ?>>
                     <br>
                     <label>Zadejte uživatelské jméno</label>
-                    <input type="text" name="username" class="form-control" value=<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username'], ENT_QUOTES) : ''; ?>>
+                    <input type="text" name="username" class="form-control" maxlength = "40" minlength="3" required value=<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username'], ENT_QUOTES) : ''; ?>>
                     <br>
                     <label>Zadejte heslo</label>
-                    <input type="password" name="password" class="form-control" value=<?php echo isset($_POST['password']) ? htmlspecialchars($_POST['password'], ENT_QUOTES) : ''; ?>>
+                    <input type="password" name="password" class="form-control" maxlength = "20" minlength="3" required value=<?php echo isset($_POST['password']) ? htmlspecialchars($_POST['password'], ENT_QUOTES) : ''; ?>>
                     <br>
+                    <p class = <?php echo $errorMsgType; ?> ><?php echo $php_errormsg; ?></p>
                     <input type="submit" name="register" value="Register" class="btn btn-info" />
                     <br>
                     <p align="center"><a href="login.php?action=login">Login</a></p>

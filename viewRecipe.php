@@ -9,6 +9,7 @@ session_start();
 <head>
     <link rel="stylesheet" href="Styles/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -17,14 +18,14 @@ session_start();
         <a class="active" href="viewAllRecipes.php">Zobrazit recepty</a>
         <a href="addRecipe.php">Přidat nový recept</a>
         <a href="about.php">About</a>
-          <?php
-          if (!isset($_SESSION["username"])) {
-               // User is not logged in
-               echo '<a href="login.php?action=login">Login</a>';
-          } else {
-               // User is  logged in
-               echo '<a href="userInfo.php">' . $_SESSION["username"] . '</a>';
-          } ?>
+        <?php
+        if (!isset($_SESSION["username"])) {
+            // User is not logged in
+            echo '<a href="login.php?action=login">Login</a>';
+        } else {
+            // User is  logged in
+            echo '<a href="userInfo.php">' . $_SESSION["username"] . '</a>';
+        } ?>
     </div>
 
     <?php
@@ -131,7 +132,7 @@ session_start();
                     <th>Množství</th>
                 </tr>";
             for ($i = 0; $i < sizeof($ingredients); $i++) {
-                $htmlIngredients = $htmlIngredients . "<tr><td>" . $ingredients[$i] . "</td><td> " . $quantities[$i] ." " . $units[$i] .   "</td></tr>";
+                $htmlIngredients = $htmlIngredients . "<tr><td>" . $ingredients[$i] . "</td><td> " . $quantities[$i] . " " . $units[$i] .   "</td></tr>";
             }
             $htmlIngredients = $htmlIngredients . "</table>";
 
@@ -144,7 +145,7 @@ session_start();
 
             // echo HTML div of 1 recipe
             echo "    
-                    <div style= cursor:pointer; class=recipeDiv  onclick=location.href='viewRecipe.php?id=" . $row['ID'] . "'>
+                    <div class=recipeDiv>
                     <h1>" . $row["name"] . "</h1>
          
                     <p> <strong>identifikační číslo receptu:</strong> " . $recipe_id . "</p>
@@ -160,13 +161,14 @@ session_start();
                     <p margin:0px;><strong> Vhodné jako:</strong> </p>" . $htmlMealCategories . "
 
                     <p> <img class=preview src=" . $imgUrl . " alt=Obrázek> </p>
-                                              
+                    <button type=button onclick=location.href='editRecipe.php?id=" . $recipe_id . "'>Upravit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-edit'></i></button>             
+                    <button type=button onclick=location.href='deleteRecipe.php?id=" . $recipe_id . "'>Odstranit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-remove'></i></button>             
+
                    </div> <br><br>";
         }
     } else {
-        echo "0 results";
+        echo "<p> Recept s požadovaným identifikačním číslem neexistuje<p>";
     }
-
     ?>
 
 </body>
