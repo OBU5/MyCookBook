@@ -325,9 +325,9 @@ if (!isset($_SESSION["username"])) {
 
                 <?php
                 for ($i = 1; $i <= 15; $i++) {
-                    $textIngredients = isset($_POST['ingredients'][$i]) ? htmlspecialchars($_POST['ingredients'][$i], ENT_QUOTES) : '';
-                    $textQuantities = isset($_POST['quantities'][$i]) ? htmlspecialchars($_POST['quantities'][$i], ENT_QUOTES) : '';
-                    $textUnits = isset($_POST['units'][$i]) ? htmlspecialchars($_POST['units'][$i], ENT_QUOTES) : '';
+                    $textIngredients = isset($_POST['ingredients'][$i-1]) ? htmlspecialchars($_POST['ingredients'][$i-1], ENT_QUOTES) : '';
+                    $textQuantities = isset($_POST['quantities'][$i-1]) ? htmlspecialchars($_POST['quantities'][$i-1], ENT_QUOTES) : '';
+                    $textUnits = isset($_POST['units'][$i-1]) ? htmlspecialchars($_POST['units'][$i-1], ENT_QUOTES) : '';
                     echo
                         '<tr>
                         <td> ' . $i . ' </td>
