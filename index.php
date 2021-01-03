@@ -39,6 +39,8 @@ session_start();
           <p>Some content..</p>
      </div>
 
+
+
      <!--Footer-->
      <footer>
           <p>Autor: Ondřej Bureš, Kontakt:

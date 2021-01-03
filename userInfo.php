@@ -1,9 +1,5 @@
 <?php
 session_start();
-// if the user is not logged in, redirrect him
-if (!isset($_SESSION["username"])) {
-     header("location:index.php?action=login");
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -13,6 +9,8 @@ if (!isset($_SESSION["username"])) {
 
      <link rel="stylesheet" href="Styles/styles.css">
      <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@300&display=swap" rel="stylesheet">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 
 
@@ -37,21 +35,28 @@ if (!isset($_SESSION["username"])) {
           <h3 align="center">Informace o Vás</h3>
           <br>
           <?php
-          // Create connection
-          $connect = mysqli_connect("localhost", "root", "", "test");
+          if (isset($_SESSION["username"])) {
 
-          // Check connection
-          if ($connect->connect_error) {
-               die("Connection failed: " . $connect->connect_error);
-          }
-          $query = "SELECT ID, name, lastname, email, username, role FROM users";
-          $result = $connect->query($query);
+               // Create connection
+               $connect = mysqli_connect("localhost", "root", "", "test");
+               $currentUser = $_SESSION["username"];
+               // Check connection
+               if ($connect->connect_error) {
+                    die("Connection failed: " . $connect->connect_error);
+               }
+               $query = "SELECT ID, name, lastname, email, username, role FROM users WHERE username = '$currentUser'";
+               $result = $connect->query($query);
 
-          if ($result->num_rows > 0) {
-               // output data of each row
-               while ($row = $result->fetch_assoc()) {
-                    if ($row["username"] == $_SESSION["username"])
-                         echo "<table class =  userInfo>
+               if ($result->num_rows > 0) {
+                    // output data of each row
+
+                    $row = $result->fetch_assoc();
+                    $adminButton  = "";
+
+                    if ($row["role"] == "Admin") {
+                         $adminButton = "<button type=button onclick=location.href='viewAllUserInfo.php'>Zobrazit všechny uživatele&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-edit'></i></button>";
+                    }
+                    echo "<table class =  userInfo>
                               <tr>
                                    <th> jméno </th>
                                    <td>" . $row["name"] . "</td>
@@ -71,19 +76,25 @@ if (!isset($_SESSION["username"])) {
                               <tr>
                                    <th> Role </th>
                                    <td>" . $row["role"] . "</td>
-                              <tr/>
-                              
-                         </table>";
+                              <tr/>                              
+                         </table>
+                         <br><br>
+                         <button type=button onclick=location.href='editLogin.php?id=" . $row["ID"] .  "'>Upravit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-edit'></i></button>    
+                         " . $adminButton . "         
+                         ";
+               } else {
+                    echo "0 results";
                }
+
+
+
+               echo '<br><br>';
+               echo '<label><a href="logout.php">Logout</a></label>';
           } else {
-               echo "0 results";
+               echo '<p class=errorMessage>Nejste přihlášen</p>';
           }
-
-
-
-          echo '<br><br>';
-          echo '<label><a href="logout.php">Logout</a></label>';
           ?>
+
      </div>
      <!--Footer-->
      <footer>

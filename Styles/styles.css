@@ -2,6 +2,10 @@ body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 100%;
+    background-image: url(https://images.pexels.com/photos/1414651/pexels-photo-1414651.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
 }
 
 h1 {
@@ -19,7 +23,7 @@ p.indented {
     overflow: auto;
     background-color: #555;
     font-family: 'Sansita Swashed';
-    font-size: 2em;
+    font-size: 150%;
 }
 
 .topnav a {
@@ -85,8 +89,30 @@ input[type=submit]:hover {
     background-color: #f2f2f2;
     margin: auto;
     width: 50%;
-    border: 3px solid rgb(0, 1, 71);
+    border: 3px solid rgb(71, 1, 0);
     padding: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+.fullRecipeDiv {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    margin: auto;
+    width: 70%;
+    border: 3px solid rgb(71, 1, 0);
+    padding: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+.fullRecipeDiv p {
+    color: rgb(54, 54, 54);
+}
+
+.fullRecipeDiv h1,
+h2 {
+    font-size: 200%;
 }
 
 .userDiv {
@@ -94,8 +120,25 @@ input[type=submit]:hover {
     background-color: #f2f2f2;
     margin: auto;
     width: 50%;
-    border: 3px solid rgb(0, 1, 71);
+    border: 3px solid rgb(71, 1, 0);
     padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+    text-align: center;
+}
+
+.userDiv button {
+    width: 50%;
+    padding: 10px;
+    background: rgb(138, 44, 44);
+    font-size: 110%;
+    color: white;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+    margin: auto;
+    position: relative;
 }
 
 .mealCategoryDiv {
@@ -103,14 +146,20 @@ input[type=submit]:hover {
     background-color: #c4c4c4;
     padding: 20px;
     margin-bottom: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
 }
 
 .aboutDiv {
+    background-color: #c4c4c4;
+    border: 3px solid rgb(71, 1, 0);
     border-radius: 5px;
     margin: auto;
-    width: 100%;
+    width: 70%;
     padding: 20px;
     font-size: 150%;
+    margin-top: 5px;
+    margin-bottom: 60px;
 }
 
 .aboutDiv p {
@@ -283,6 +332,15 @@ th {
 
 img.preview {
     max-height: 200px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+img.full {
+    max-width: 100%;
     max-width: 100%;
     height: auto;
     display: block;

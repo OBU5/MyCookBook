@@ -200,6 +200,11 @@ session_start(); ?>
             </ul>
         </div>
     <?php endif; ?>
+     <!--Footer-->
+     <footer>
+          <p>Autor: Ondřej Bureš, Kontakt:
+               <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a></p>
+     </footer>
 
 </body>
 

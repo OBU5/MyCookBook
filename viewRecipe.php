@@ -34,6 +34,9 @@ session_start();
         die("Connection failed: " . $connect->connect_error);
     }
     $recipeID = $_GET['id'];
+    $currentUserID = 0;
+    $currentUserRole = "";
+    $currentUser = $_SESSION["username"];
 
 
     $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM Recipes WHERE ID = '$recipeID' ";
@@ -51,6 +54,7 @@ session_start();
             $originCountry = "Neznámý";
             $originCountry_id = $row["originCountry_id"];
             $author = "Neznámý";
+            $recipeAuthor_id = "Neznámý";
             $ingredients = array();
             $quantities = array();
             $units = array();
@@ -66,6 +70,7 @@ session_start();
 
                     if ($row['author_id'] == $row2['ID']) {
                         $author = $row2['username'];
+                        $recipeAuthor_id = $row2['ID'];
                     }
                 }
             }
@@ -125,7 +130,7 @@ session_start();
 
 
             // prepre table of ingredients
-            $htmlIngredients = "<h3>Ingredience</h3> 
+            $htmlIngredients = "<h2>Ingredience</h2> 
             <table class=ingredients>
                 <tr>
                     <th>Ingredience</th>
@@ -142,10 +147,30 @@ session_start();
                 $htmlMealCategories = $htmlMealCategories . "<li>" . $mealCategories[$i] . "</li>";
             }
             $htmlMealCategories = $htmlMealCategories . "</ul>";
+            if (!@getimagesize($imgUrl)) {
+                $imgUrl = 'http://' . $_SERVER['SERVER_NAME'] . '/MyCookBook/Uploads/default.jpg';
+            }
+
+            $htmlButtonText = "";
+            // get user_id of signed user
+            $query1 = "SELECT ID, role FROM Users WHERE username = '$currentUser'";
+            $result1 = $connect->query($query1);
+            if (mysqli_num_rows($result1) <= 0) {
+            } else {
+                $row1 = $result1->fetch_assoc();
+                $currentUserID = $row1['ID'];
+                $currentUserRole = $row1['role'];
+                //show buttons only if current user is author, of the role of user is "Admin"
+                if ($currentUserID == $recipeAuthor_id || $currentUserRole == "Admin") {
+                    $htmlButtonText = "<button type=button onclick=location.href='editRecipe.php?id=" . $recipe_id . "'>Upravit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-edit'></i></button>             
+                    <button type=button onclick=location.href='deleteRecipe.php?id=" . $recipe_id . "'>Odstranit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-remove'></i></button>";
+                }
+            }
+
 
             // echo HTML div of 1 recipe
             echo "    
-                    <div class=recipeDiv>
+                    <div class=fullRecipeDiv>
                     <h1>" . $row["name"] . "</h1>
          
                     <p> <strong>identifikační číslo receptu:</strong> " . $recipe_id . "</p>
@@ -156,13 +181,13 @@ session_start();
                     <p><strong>Země původu:</strong> " . $originCountry . "</p>
             
                     " . $htmlIngredients . "
-                    <h3>Postup</h3>
+                    <h2>Postup</h2>
                     <p> " . $directions . "</p>
-                    <p margin:0px;><strong> Vhodné jako:</strong> </p>" . $htmlMealCategories . "
+                    <h3> Vhodné jako:</h3> " . $htmlMealCategories . "
 
-                    <p> <img class=preview src=" . $imgUrl . " alt=Obrázek> </p>
-                    <button type=button onclick=location.href='editRecipe.php?id=" . $recipe_id . "'>Upravit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-edit'></i></button>             
-                    <button type=button onclick=location.href='deleteRecipe.php?id=" . $recipe_id . "'>Odstranit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-remove'></i></button>             
+                    <p> <img class=full src=" . $imgUrl . " alt=Obrázek> </p>
+                    
+                    " . $htmlButtonText . "
 
                    </div> <br><br>";
         }
@@ -170,6 +195,11 @@ session_start();
         echo "<p> Recept s požadovaným identifikačním číslem neexistuje<p>";
     }
     ?>
+    <!--Footer-->
+    <footer>
+        <p>Autor: Ondřej Bureš, Kontakt:
+            <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a></p>
+    </footer>
 
 </body>
 

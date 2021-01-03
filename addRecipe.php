@@ -300,12 +300,6 @@ if (!isset($_SESSION["username"])) {
             echo '<a href="userInfo.php">' . $_SESSION["username"] . '</a>';
         } ?>
     </div>
-
-    <div style="padding-left:16px">
-        <h2>Top Navigation Example</h2>
-        <p>Some content..</p>
-    </div>
-
     <div class="recipeDiv">
         <form enctype="multipart/form-data" method="post">
 
@@ -325,9 +319,9 @@ if (!isset($_SESSION["username"])) {
 
                 <?php
                 for ($i = 1; $i <= 15; $i++) {
-                    $textIngredients = isset($_POST['ingredients'][$i-1]) ? htmlspecialchars($_POST['ingredients'][$i-1], ENT_QUOTES) : '';
-                    $textQuantities = isset($_POST['quantities'][$i-1]) ? htmlspecialchars($_POST['quantities'][$i-1], ENT_QUOTES) : '';
-                    $textUnits = isset($_POST['units'][$i-1]) ? htmlspecialchars($_POST['units'][$i-1], ENT_QUOTES) : '';
+                    $textIngredients = isset($_POST['ingredients'][$i - 1]) ? htmlspecialchars($_POST['ingredients'][$i - 1], ENT_QUOTES) : '';
+                    $textQuantities = isset($_POST['quantities'][$i - 1]) ? htmlspecialchars($_POST['quantities'][$i - 1], ENT_QUOTES) : '';
+                    $textUnits = isset($_POST['units'][$i - 1]) ? htmlspecialchars($_POST['units'][$i - 1], ENT_QUOTES) : '';
                     echo
                         '<tr>
                         <td> ' . $i . ' </td>
@@ -393,6 +387,11 @@ if (!isset($_SESSION["username"])) {
         </form>
     </div>
 
+    <!--Footer-->
+    <footer>
+        <p>Autor: Ondřej Bureš, Kontakt:
+            <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a></p>
+    </footer>
 </body>
 
 <script type="text/javascript" src="Scripts/checkRecipeForm.js"></script>

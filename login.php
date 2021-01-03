@@ -5,7 +5,7 @@ $php_errormsg = "";
 $connect = mysqli_connect("localhost", "root", "", "test");
 session_start();
 if (isset($_SESSION["username"])) {
-     header("location:entry.php");
+     header("location:index.php");
 }
 if (isset($_POST["register"])) {
 

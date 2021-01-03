@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 ?>
 <!DOCTYPE html>
@@ -35,6 +35,11 @@ session_start();
         <a href="mailto: bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a>
 
     </div>
+    <!--Footer-->
+    <footer>
+        <p>Autor: Ondřej Bureš, Kontakt:
+            <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a></p>
+    </footer>
 </body>
 
 </html>
