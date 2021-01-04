@@ -61,30 +61,34 @@ function checkBeforePost(e) {
     if (username.value.length < 3 || username.value.length > 20) {
         e.preventDefault();
         username.classList.add("errorText");
-        alert("Uživatelské jméno musí být dlouhé 3 až 20 znaků");
+
+        document.getElementById("errorMsg").innerHTML = "Uživatelské jméno musí být dlouhé 3 až 20 znaků";
     } else if (password.value.length < 3 || password.value.length > 20) {
         e.preventDefault();
         password.classList.add("errorText");
-        alert("Heslo musí být dlouhé 3 až 40 znaků");
+
+        document.getElementById("errorMsg").innerHTML = "Heslo musí být dlouhé 3 až 40 znaků";
     } else if (firstname.value.length < 3 || firstname.value.length > 40) {
         e.preventDefault();
         firstname.classList.add("errorText");
-        alert("Jméno musí být dlouhé 3 až 20 znaků");
+
+        document.getElementById("errorMsg").innerHTML = "Jméno musí být dlouhé 3 až 20 znaků";
     } else if (lastname.value.length < 3 || lastname.value.length > 20) {
         e.preventDefault();
         lastname.classList.add("errorText");
-        alert("Příjmení musí být dlouhé 3 až 20 znaků");
+
+        document.getElementById("errorMsg").innerHTML = "Příjmení musí být dlouhé 3 až 20 znaků";
     } else if (!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email.value))) {
         e.preventDefault();
         email.classList.add("errorText");
-        alert("Zadejte platný email");
+
+        document.getElementById("errorMsg").innerHTML = "Zadejte platný email";
 
     }
 
 }
 
 let errorText = "";
-
 let firstname = document.querySelector("input[name = name]");
 let lastname = document.querySelector("input[name = lastname]");
 let username = document.querySelector("input[name = username]");

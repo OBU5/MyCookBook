@@ -1,6 +1,4 @@
 <?php
-$connect = mysqli_connect("localhost", "root", "", "test");
-$connect->set_charset("UTF-8");
 session_start(); ?>
 <!DOCTYPE html>
 <html>
@@ -31,33 +29,37 @@ session_start(); ?>
 
     <?php
 
-    // Check connection
-    if ($connect->connect_error) {
-        die("Connection failed: " . $connect->connect_error);
-    }
+    $connect = mysqli_connect("localhost", "root", "", "test");
+   // Check connection
+   if (!$connect) {
+    die("Connection failed: No database found");
+} else {
+    $connect->set_charset("UTF-8");
+}
+if ($connect) {
     $sarchedOption = isset($_GET['option']) ? $_GET['option'] : "default";
-    //get recipe author name¨
-    $author_id = 0; // not selected
-    $tmpAuthorName = $_SESSION["username"];
+    //get recipe author name
+    $currentUserID = 0; // not selected
+    $tmpAuthorName = isset($_SESSION["username"]) ? $_SESSION["username"] : "";
     $query2 = "SELECT ID, username FROM Users WHERE username ='$tmpAuthorName'";
     $result2 = $connect->query($query2);
-    if ($result2->num_rows > 0) {
+    if ($result2!=null && $result2->num_rows > 0) {
         // output data of each row
         while ($row2 = $result2->fetch_assoc()) {
-            $author_id = $row2['ID'];
+            $currentUserID = $row2['ID'];
         }
     }
 
 
 
     if ($sarchedOption != null && $sarchedOption  == "my") {
-        $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM Recipes WHERE author_id = '$author_id'";
+        $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM Recipes WHERE author_id = '$currentUserID'";
     } else {
         $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM Recipes";
     }
     $result = $connect->query($query);
     // Get the total number of records from our table "students".
-    $total_pages = $result->num_rows;
+    $total_pages = $result != null ? $result->num_rows: 0;
 
     // Check if the page number is specified and check if it's a number, if not -> return the default page number which is 1.
     $page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
@@ -67,10 +69,10 @@ session_start(); ?>
     echo "</div>";
 
     // Number of results to show on each page.
-    $num_results_on_page = 5;
+    $num_results_on_page = 10;
 
     if ($sarchedOption != null && $sarchedOption  == "my") {
-        $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM Recipes WHERE author_id = '$author_id' LIMIT ?,?";
+        $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM Recipes WHERE author_id = '$currentUserID' LIMIT ?,?";
     } else {
         $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM Recipes LIMIT ?,?";
     }
@@ -82,7 +84,7 @@ session_start(); ?>
         // Get the results...
         $result = $stmt->get_result();
 
-
+        echo "<div class=recipeDiv>";
         // for all recipes
         if ($result->num_rows > 0) {
             // output data of each row
@@ -110,6 +112,14 @@ session_start(); ?>
                             $author = $row2['username'];
                         }
                     }
+                }
+
+                // get origin country
+                $query2 = "SELECT name FROM OriginCountry WHERE ID = '$originCountry_id'";
+                $result2 = $connect->query($query2);
+                if ($result2->num_rows > 0) {
+                    $row2 = $result2->fetch_assoc();
+                    $originCountry = $row2["name"];
                 }
 
                 // get MealCategory
@@ -144,67 +154,73 @@ session_start(); ?>
                 }
                 // echo HTML div of 1 recipe
                 echo "    
-                    <div class=recipeDiv>
-                    <h1>" . $row["name"] . "</h1>
-         
-                    <p> <strong>Identifikační číslo receptu:</strong> " . $recipe_id . "</p>
-            
-                    <p><strong>Autor:</strong> " . $author . "</p>
-                    <p><strong>Země původu:</strong> " . $originCountry . "</p>
-            
-                    <p margin:0px;><strong> Vhodné jako:</strong> </p>" . $htmlMealCategories . "
+                
+                <h1>" . $row["name"] . "</h1>
+     
+                <p> <strong>Identifikační číslo receptu:</strong> " . $recipe_id . "</p>
+        
+                <p><strong>Autor:</strong> " . $author . "</p>
+                <p><strong>Země původu:</strong> " . $originCountry . "</p>
+        
+                <p margin:0px;><strong> Vhodné jako:</strong> </p>" . $htmlMealCategories . "
 
-                    <p> <strong>Náhled obrázku</strong></p><p><img class=preview src=" . $imgUrl  . " alt=Obrázek> </p>
-                    <button type=button onclick=location.href='viewRecipe.php?id=" . $row['ID'] . "'>Více informací&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-search'></i></button>             
-                   </div> <br><br>";
+                <p> <strong>Náhled obrázku</strong></p><p><img class=preview src=" . $imgUrl  . " alt=Obrázek> </p>
+                <button type=button onclick=location.href='viewRecipe.php?id=" . $row['ID'] . "'>Více informací&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-search'></i></button>  
+                <hr>
+                <br>
+                <br>";
             }
         }
     } else {
         echo "0 results";
     }
+}
 
 
-    ?>
+?>
 
 
-    <?php
-    // Pagination
-    if (ceil($total_pages / $num_results_on_page) > 0) : ?>
-        <div class="pagination">
-            <ul class="pagination">
-                <?php if ($page > 1) : ?>
-                    <li class="prev"><a href="viewAllRecipes.php?page=<?php echo $page - 1 ?>">Předchozí</a></li>
-                <?php endif; ?>
+<?php
+// Pagination
+if (ceil($total_pages / $num_results_on_page) > 0) : ?>
+    <div class="pagination">
+        <ul class="pagination">
+            <?php if ($page > 1) : ?>
+                <li class="prev"><a href="viewAllRecipes.php?page=<?php echo $page - 1 ?>">Předchozí</a></li>
+            <?php endif; ?>
 
-                <?php if ($page > 3) : ?>
-                    <li class="start"><a href="viewAllRecipes.php?page=1&option=<?php echo $sarchedOption ?>">1</a></li>
-                    <li class="dots">...</li>
-                <?php endif; ?>
+            <?php if ($page > 3) : ?>
+                <li class="start"><a href="viewAllRecipes.php?page=1&option=<?php echo $sarchedOption ?>">1</a></li>
+                <li class="dots">...</li>
+            <?php endif; ?>
 
-                <?php if ($page - 2 > 0) : ?><li class="page"><a href="viewAllRecipes.php?page=<?php echo $page - 2 ?>&option=<?php echo $sarchedOption ?>"><?php echo $page - 2 ?></a></li><?php endif; ?>
-                <?php if ($page - 1 > 0) : ?><li class="page"><a href="viewAllRecipes.php?page=<?php echo $page - 1 ?>&option=<?php echo $sarchedOption ?>"><?php echo $page - 1 ?></a></li><?php endif; ?>
+            <?php if ($page - 2 > 0) : ?><li class="page"><a href="viewAllRecipes.php?page=<?php echo $page - 2 ?>&option=<?php echo $sarchedOption ?>"><?php echo $page - 2 ?></a></li><?php endif; ?>
+            <?php if ($page - 1 > 0) : ?><li class="page"><a href="viewAllRecipes.php?page=<?php echo $page - 1 ?>&option=<?php echo $sarchedOption ?>"><?php echo $page - 1 ?></a></li><?php endif; ?>
 
-                <li class="currentpage"><a href="viewAllRecipes.php?page=<?php echo $page ?>&option=<?php echo $sarchedOption ?>"><?php echo $page ?></a></li>
+            <li class="currentpage"><a href="viewAllRecipes.php?page=<?php echo $page ?>&option=<?php echo $sarchedOption ?>"><?php echo $page ?></a></li>
 
-                <?php if ($page + 1 < ceil($total_pages / $num_results_on_page) + 1) : ?><li class="page"><a href="viewAllRecipes.php?page=<?php echo $page + 1 ?>&option=<?php echo $sarchedOption ?>"><?php echo $page + 1 ?></a></li><?php endif; ?>
-                <?php if ($page + 2 < ceil($total_pages / $num_results_on_page) + 1) : ?><li class="page"><a href="viewAllRecipes.php?page=<?php echo $page + 2 ?>&option=<?php echo $sarchedOption ?>"><?php echo $page + 2 ?></a></li><?php endif; ?>
+            <?php if ($page + 1 < ceil($total_pages / $num_results_on_page) + 1) : ?><li class="page"><a href="viewAllRecipes.php?page=<?php echo $page + 1 ?>&option=<?php echo $sarchedOption ?>"><?php echo $page + 1 ?></a></li><?php endif; ?>
+            <?php if ($page + 2 < ceil($total_pages / $num_results_on_page) + 1) : ?><li class="page"><a href="viewAllRecipes.php?page=<?php echo $page + 2 ?>&option=<?php echo $sarchedOption ?>"><?php echo $page + 2 ?></a></li><?php endif; ?>
 
-                <?php if ($page < ceil($total_pages / $num_results_on_page) - 2) : ?>
-                    <li class="dots">...</li>
-                    <li class="end"><a href="viewAllRecipes.php?page=<?php echo ceil($total_pages / $num_results_on_page) ?>&option=<?php echo $sarchedOption ?>"><?php echo ceil($total_pages / $num_results_on_page) ?></a></li>
-                <?php endif; ?>
+            <?php if ($page < ceil($total_pages / $num_results_on_page) - 2) : ?>
+                <li class="dots">...</li>
+                <li class="end"><a href="viewAllRecipes.php?page=<?php echo ceil($total_pages / $num_results_on_page) ?>&option=<?php echo $sarchedOption ?>"><?php echo ceil($total_pages / $num_results_on_page) ?></a></li>
+            <?php endif; ?>
 
-                <?php if ($page < ceil($total_pages / $num_results_on_page)) : ?>
-                    <li class="next"><a href="viewAllRecipes.php?page=<?php echo $page + 1 ?>&option=<?php echo $sarchedOption ?>">Další</a></li>
-                <?php endif; ?>
-            </ul>
-        </div>
-    <?php endif; ?>
-     <!--Footer-->
-     <footer>
-          <p>Autor: Ondřej Bureš, Kontakt:
-               <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a></p>
-     </footer>
+            <?php if ($page < ceil($total_pages / $num_results_on_page)) : ?>
+                <li class="next"><a href="viewAllRecipes.php?page=<?php echo $page + 1 ?>&option=<?php echo $sarchedOption ?>">Další</a></li>
+            <?php endif; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
+</div> <br>
+<!--Footer-->
+<footer>
+    <p>Autor: Ondřej Bureš, Kontakt:
+        <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a>
+    </p>
+</footer>
 
 </body>
 

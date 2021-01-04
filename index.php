@@ -5,7 +5,7 @@ session_start();
 <html>
 
 <head>
-<link rel="stylesheet" href="Styles/styles.css">
+     <link rel="stylesheet" href="Styles/styles.css">
      <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@300&display=swap" rel="stylesheet">
 </head>
 
@@ -26,25 +26,24 @@ session_start();
           } ?>
      </div>
      <!--Content of the page -->
-     <div style="padding-left:16px">
-          <h2>Top Navigation Example</h2>
-          <p>Some content..</p><br>
-          <p>Some content..</p><br>
-          <p>Some content..</p><br>
-          <p>Some content..</p><br>
-          <p>Some content..</p><br>
-          <p>Some content..</p><br>
-          <p>Some content..</p><br>
-          <p>Some content..</p><br>
-          <p>Some content..</p>
+     <div class="homeDiv">
+         <?php
+                    if (isset($_SESSION["username"])) {
+                         // User is not logged in
+                         echo " <p>Vítejte na webové stránce MyCookBook &nbsp; <strong>" .$_SESSION['username']. "</strong>! </p>";
+                         echo " <p> </p>";
+                    } else {
+                         // User is  logged in
+                         echo " <p>Vítejte na webové stránce MyCookBook. Aby jste mohl využít tuto stránku plnohodnotně, musíte se nejprve přihlásit</p>";
+                    } ?> </p>
      </div>
-
 
 
      <!--Footer-->
      <footer>
           <p>Autor: Ondřej Bureš, Kontakt:
-               <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a></p>
+               <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a>
+          </p>
      </footer>
 </body>
 

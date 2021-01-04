@@ -18,18 +18,21 @@ VALUES
 
 INSERT INTO OriginCountry (name)
 VALUES  
-('Itálie'),           -- id = 1
-('Maďarsko'),         -- id = 2
-('Česko'),            -- id = 3
-('Vietnam');          -- id = 4
+('Nenznámá'),            -- id = 1
+('Česko'),              -- id = 3
+('Vietnam'),            -- id = 4
+('Itálie'),             -- id = 1
+('Maďarsko'),           -- id = 2
+('Španělsko');          -- id = 2
 
 
 INSERT INTO MealCategory (name)
 VALUES  
 ('Předkrm'),            -- id = 1
-('Hlavní chod'),        -- id = 2
-('Dezert'),             -- id = 3
-('Zákusek');            -- id = 4
+('Polévka'),            -- id = 2
+('Hlavní chod'),        -- id = 3
+('Dezert'),             -- id = 4
+('Svačina');            -- id = 5   
 
 INSERT INTO Recipe_Ingredients ( recipe_id, ingredient_id)
 VALUES

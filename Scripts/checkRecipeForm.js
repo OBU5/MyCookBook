@@ -30,9 +30,9 @@ function checkBeforePost(e) {
     if (file.files[0] != null) {
         var FileSize = file.files[0].size / 1024 / 1024; // in MiB
         if (FileSize > 20) {
-            alert('Obrázek přesáhl maximální velikost 20 MB');
-            file[i].classList.add("errorText");
             e.preventDefault();
+            document.getElementById("errorMsg").innerHTML = 'Obrázek přesáhl maximální velikost 20 MB';
+            file.classList.add("errorText");
         }
     }
 
@@ -68,27 +68,27 @@ function checkBeforePost(e) {
     // if there is no ingredient, alert
     if (!ingredientSet) {
         e.preventDefault();
-        alert("je potřeba zadat alespoň jednu ingredienci s délkou názvu maximálně 40 znaků");
+        document.getElementById("errorMsg").innerHTML = "je potřeba zadat alespoň jednu ingredienci s délkou názvu maximálně 40 znaků";
 
     }
     // if there is no meal category, alert
     else if (!mealCategorySet) {
         e.preventDefault();
-        alert("je potřeba vybrat alespoň jednu jídelní kategorii");
+        document.getElementById("errorMsg").innerHTML = "je potřeba vybrat alespoň jednu jídelní kategorii";
 
     } else {
         if (recipename.value.length < 3 || recipename.value.length > 40) {
             e.preventDefault();
             recipename.classList.add("errorText");
-            alert("Název receptu musí být dlouhý 3 až 40 znaků");
+            document.getElementById("errorMsg").innerHTML = "Název receptu musí být dlouhý 3 až 40 znaků";
         } else if (directions.value.length < 3) {
             e.preventDefault();
             directions.classList.add("errorText");
-            alert("pokyny receptu musíobsahovat nějaký text");
+            document.getElementById("errorMsg").innerHTML = "pokyny receptu musíobsahovat nějaký text";
         } else if (directions.value.length < 3 || directions.value.length > 1000) {
             e.preventDefault();
             directions.classList.add("errorText");
-            alert("pokyny receptu nesmí přesáhnout délku 1000 znaků");
+            document.getElementById("errorMsg").innerHTML = "pokyny receptu nesmí přesáhnout délku 1000 znaků";
         }
     }
 }

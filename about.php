@@ -24,7 +24,8 @@ session_start();
         } else {
             // User is  logged in
             echo '<a href="userInfo.php">' . $_SESSION["username"] . '</a>';
-        } ?>
+        } 
+        ?>
     </div>
     <div class="aboutDiv">
         <h1> Vítejte na stránce MyCookBook </h1>

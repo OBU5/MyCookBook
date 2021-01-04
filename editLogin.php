@@ -1,131 +1,139 @@
 <?php
-
 $errorMsgType = "";
 $php_errormsg = "";
+$error = false;
 $connect = mysqli_connect("localhost", "root", "", "test");
-session_start();
-$editUserID = isset($_GET['id']) ? $_GET['id'] : 0;
+// Check connection
+if (!$connect) {
+     die("Connection failed: No database found");
+} else {
+     $connect->set_charset("UTF-8");
+     session_start();
+}
+if ($connect) {
+     $editUserID = isset($_GET['id']) ? $_GET['id'] : 0;
 
 
-$username = "";
-$email = "";
-$name  = "";
-$lastname = "";
-$password = "";
-$role = "";
-$currentUser = "";
-if (isset($_SESSION["username"])) {
-     $currentUser = $_SESSION["username"];
-} else {
-     header("location:index.php");
-}
-//get user_id of signed user
-$query1 = "SELECT ID, role FROM Users WHERE username = '$currentUser'";
-$result1 = $connect->query($query1);
-if (mysqli_num_rows($result1) <= 0) {
-     $php_errormsg = "Nejste přihlášen";
-     $errorMsgType = "errorMessage";
-     $error = true;
-} else {
-     $row1 = $result1->fetch_assoc();
-     $currentUserID = $row1['ID'];
-     $currentUserRole = $row1['role'];
-}
-//update only if current user is author, of the role of user is "Admin"
-if ($currentUserID == $editUserID || $currentUserRole == "Admin") {
-     if (isset($_POST["register"])) {
-          //check, if inputs are not empty
-          if (empty($_POST["username"])) {
-               $php_errormsg = "Je potřeba vyplnit uživatelské jméno";
-               $errorMsgType = "errorMessage";
-          } else if (empty($_POST["password"])) {
-               $php_errormsg = "Je potřeba vyplnit heslo";
-               $errorMsgType = "errorMessage";
-          } else if (empty($_POST["name"])) {
-               $php_errormsg = "Je potřeba vyplnit jméno";
-               $errorMsgType = "errorMessage";
-          } else if (empty($_POST["lastname"])) {
-               $php_errormsg = "Je potřeba vyplnit příjmení";
-               $errorMsgType = "errorMessage";
-          } else if (empty($_POST["email"])) {
-               $php_errormsg = "Je potřeba vyplnit email";
-               $errorMsgType = "errorMessage";
+     $username = "";
+     $email = "";
+     $name  = "";
+     $lastname = "";
+     $password = "";
+     $role = "";
+     $currentUser = "";
+     if (isset($_SESSION["username"])) {
+          $currentUser = $_SESSION["username"];
+     } else {
+          header("location:index.php");
+     }
+     //get user_id of signed user
+     $query1 = "SELECT ID, role FROM Users WHERE username = '$currentUser'";
+     $result1 = $connect->query($query1);
+     if (mysqli_num_rows($result1) <= 0) {
+          $php_errormsg = "Nejste přihlášen";
+          $errorMsgType = "errorMessage";
+          $error = true;
+     } else {
+          $row1 = $result1->fetch_assoc();
+          $currentUserID = $row1['ID'];
+          $currentUserRole = $row1['role'];
+     }
+     //update only if current user is author, of the role of user is "Admin"
+     if ($currentUserID == $editUserID || $currentUserRole == "Admin") {
+          if (isset($_POST["register"])) {
+               //check, if inputs are not empty
+               if (empty($_POST["username"])) {
+                    $php_errormsg = "Je potřeba vyplnit uživatelské jméno";
+                    $errorMsgType = "errorMessage";
+               } else if (empty($_POST["password"])) {
+                    $php_errormsg = "Je potřeba vyplnit heslo";
+                    $errorMsgType = "errorMessage";
+               } else if (empty($_POST["name"])) {
+                    $php_errormsg = "Je potřeba vyplnit jméno";
+                    $errorMsgType = "errorMessage";
+               } else if (empty($_POST["lastname"])) {
+                    $php_errormsg = "Je potřeba vyplnit příjmení";
+                    $errorMsgType = "errorMessage";
+               } else if (empty($_POST["email"])) {
+                    $php_errormsg = "Je potřeba vyplnit email";
+                    $errorMsgType = "errorMessage";
+               }
+               // check, if inputs are within the range
+               else if (strlen($_POST["username"]) < 3 || strlen($_POST["username"]) > 20) {
+                    $php_errormsg = "Uživatelské jméno musí být dlouhé 3 až 20 znaků";
+                    $errorMsgType = "errorMessage";
+               } else if (strlen($_POST["password"]) < 3 || strlen($_POST["password"]) > 40) {
+                    $php_errormsg = "Heslo musí být dlouhé 3 až 40 znaků";
+                    $errorMsgType = "errorMessage";
+               } else if (strlen($_POST["name"]) < 3 || strlen($_POST["name"]) > 20) {
+                    $php_errormsg = "Jméno musí být dlouhé 3 až 20 znaků";
+                    $errorMsgType = "errorMessage";
+               } else if (strlen($_POST["lastname"]) < 3 || strlen($_POST["lastname"]) > 20) {
+                    $php_errormsg = "Příjmení musí být dlouhé 3 až 20 znaků";
+                    $errorMsgType = "errorMessage";
+               } else if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+                    $php_errormsg = "Zadaný email není platný";
+                    $errorMsgType = "errorMessage";
+               } else {
+                    //check if ID is valid
+                    $query = "SELECT * FROM users WHERE ID = '$editUserID'";
+                    $result = mysqli_query($connect, $query);
+
+                    if ($result->num_rows > 0) {
+                         $row = $result->fetch_assoc();
+
+                         $username = mysqli_real_escape_string($connect, $_POST["username"]);
+                         $email = mysqli_real_escape_string($connect, $_POST["email"]);
+                         $name = mysqli_real_escape_string($connect, $_POST["name"]);
+                         $lastname = mysqli_real_escape_string($connect, $_POST["lastname"]);
+                         $role = isset($_POST["role"]) ? mysqli_real_escape_string($connect, $_POST["role"]) : "";
+                         // check if the username really doesn't exist
+                         // the username is OK
+                         $password = mysqli_real_escape_string($connect, $_POST["password"]);
+                         $password = password_hash($password, PASSWORD_DEFAULT);
+                         $query = "UPDATE users SET  name = '$name', lastname = '$lastname', username = '$username', email = '$email' WHERE ID = '$editUserID'";
+                         //only origin user can change his/her password
+                         if ($row["username"] == $_SESSION["username"]) {
+                              $query = "UPDATE users SET  name = '$name', lastname = '$lastname', username = '$username', email = '$email', password = '$password' WHERE ID = '$editUserID'";
+                         } else if ($currentUserRole == "Admin") {
+                              $query = "UPDATE users SET  name = '$name', lastname = '$lastname', username = '$username', email = '$email', role = '$role' WHERE ID = '$editUserID'";
+                         }
+                         if (mysqli_query($connect, $query)) {
+                              $php_errormsg = "Údaje k danému účtu byly úspěšně změněny";
+                              $errorMsgType = "successMessage";
+                         } else {
+                              $php_errormsg = "Došlo k neočekávané chybě";
+                              $errorMsgType = "errorMessage";
+                         }
+                    } else {
+                         $php_errormsg = "Dané identifikační číslo neexistuje";
+                         $errorMsgType = "errorMessage";
+                    }
+               }
           }
-          // check, if inputs are within the range
-          else if (strlen($_POST["username"]) < 3 || strlen($_POST["username"]) > 20) {
-               $php_errormsg = "Uživatelské jméno musí být dlouhé 3 až 20 znaků";
-               $errorMsgType = "errorMessage";
-          } else if (strlen($_POST["password"]) < 3 || strlen($_POST["password"]) > 40) {
-               $php_errormsg = "Heslo musí být dlouhé 3 až 40 znaků";
-               $errorMsgType = "errorMessage";
-          } else if (strlen($_POST["name"]) < 3 || strlen($_POST["name"]) > 20) {
-               $php_errormsg = "Jméno musí být dlouhé 3 až 20 znaků";
-               $errorMsgType = "errorMessage";
-          } else if (strlen($_POST["lastname"]) < 3 || strlen($_POST["lastname"]) > 20) {
-               $php_errormsg = "Příjmení musí být dlouhé 3 až 20 znaků";
-               $errorMsgType = "errorMessage";
-          } else if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
-               $php_errormsg = "Zadaný email není platný";
-               $errorMsgType = "errorMessage";
-          } else {
+          //get request
+          else {
+
                //check if ID is valid
                $query = "SELECT * FROM users WHERE ID = '$editUserID'";
                $result = mysqli_query($connect, $query);
-
                if ($result->num_rows > 0) {
                     $row = $result->fetch_assoc();
-
-                    $username = mysqli_real_escape_string($connect, $_POST["username"]);
-                    $email = mysqli_real_escape_string($connect, $_POST["email"]);
-                    $name = mysqli_real_escape_string($connect, $_POST["name"]);
-                    $lastname = mysqli_real_escape_string($connect, $_POST["lastname"]);
-                    $role = mysqli_real_escape_string($connect, $_POST["role"]);
-                    // check if the username really doesn't exist
-                    // the username is OK
-                    $password = mysqli_real_escape_string($connect, $_POST["password"]);
-                    $password = password_hash($password, PASSWORD_DEFAULT);
-                    $query = "UPDATE users SET  name = '$name', lastname = '$lastname', username = '$username', email = '$email' WHERE ID = '$editUserID'";
-                    //only origin user can change his/her password
-                    if ($row["username"] == $_SESSION["username"]) {
-                         $query = "UPDATE users SET  name = '$name', lastname = '$lastname', username = '$username', email = '$email', password = '$password' WHERE ID = '$editUserID'";
-                    } else if ($currentUserRole == "Admin") {
-                         $query = "UPDATE users SET  name = '$name', lastname = '$lastname', username = '$username', email = '$email', role = '$role' WHERE ID = '$editUserID'";
-                    }
-                    if (mysqli_query($connect, $query)) {
-                         $php_errormsg = "Údaje k danému účtu byly úspěšně změněny";
-                         $errorMsgType = "successMessage";
-                    } else {
-                         $php_errormsg = "Došlo k neočekávané chybě";
-                         $errorMsgType = "errorMessage";
-                    }
+                    $username = $row["username"];
+                    $email = $row["email"];
+                    $name = $row["name"];
+                    $lastname = $row["lastname"];
+                    $password = $row["password"];
+                    $role = $row["role"];
                } else {
                     $php_errormsg = "Dané identifikační číslo neexistuje";
                     $errorMsgType = "errorMessage";
                }
           }
+     } else {
+          $php_errormsg = "Nemáte práva na tuto operaci";
+          $errorMsgType = "errorMessage";
      }
-     //get request
-     else {
-
-          //check if ID is valid
-          $query = "SELECT * FROM users WHERE ID = '$editUserID'";
-          $result = mysqli_query($connect, $query);
-          if ($result->num_rows > 0) {
-               $row = $result->fetch_assoc();
-               $username = $row["username"];
-               $email = $row["email"];
-               $name = $row["name"];
-               $lastname = $row["lastname"];
-               $password = $row["password"];
-               $role = $row["role"];
-          } else {
-               $php_errormsg = "Dané identifikační číslo neexistuje";
-               $errorMsgType = "errorMessage";
-          }
-     }
-} else {
-     $php_errormsg = "Nemáte práva na tuto operaci";
-     $errorMsgType = "errorMessage";
 }
 ?>
 <!DOCTYPE html>
@@ -186,7 +194,7 @@ if ($currentUserID == $editUserID || $currentUserRole == "Admin") {
                <input type="password" name="password" class="form-control" maxlength="20" minlength="3" required>
                <br>
 
-               <p class=<?php echo $errorMsgType; ?>><?php echo $php_errormsg; ?></p>
+               <p id="errorMsg" class=<?php echo $errorMsgType; ?>><?php echo $php_errormsg; ?></p>
                <input type="submit" name="register" value="Změnit uživatelské údaje" class="btn btn-info" />
                <br>
           </form>
@@ -194,7 +202,8 @@ if ($currentUserID == $editUserID || $currentUserRole == "Admin") {
      <!--Footer-->
      <footer>
           <p>Autor: Ondřej Bureš, Kontakt:
-               <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a></p>
+               <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a>
+          </p>
      </footer>
 
      <script src="Scripts/checkLoginForm.js"></script>

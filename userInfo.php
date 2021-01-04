@@ -39,24 +39,32 @@ session_start();
 
                // Create connection
                $connect = mysqli_connect("localhost", "root", "", "test");
-               $currentUser = $_SESSION["username"];
                // Check connection
-               if ($connect->connect_error) {
-                    die("Connection failed: " . $connect->connect_error);
+               if (!$connect) {
+                    die("Connection failed: No database found");
+               } else {
+                    $connect->set_charset("UTF-8");
+                    session_start();
                }
-               $query = "SELECT ID, name, lastname, email, username, role FROM users WHERE username = '$currentUser'";
-               $result = $connect->query($query);
-
-               if ($result->num_rows > 0) {
-                    // output data of each row
-
-                    $row = $result->fetch_assoc();
-                    $adminButton  = "";
-
-                    if ($row["role"] == "Admin") {
-                         $adminButton = "<button type=button onclick=location.href='viewAllUserInfo.php'>Zobrazit všechny uživatele&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-edit'></i></button>";
+               if ($connect) {
+                    $currentUser = $_SESSION["username"];
+                    // Check connection
+                    if ($connect->connect_error) {
+                         die("Connection failed: " . $connect->connect_error);
                     }
-                    echo "<table class =  userInfo>
+                    $query = "SELECT ID, name, lastname, email, username, role FROM users WHERE username = '$currentUser'";
+                    $result = $connect->query($query);
+
+                    if ($result->num_rows > 0) {
+                         // output data of each row
+
+                         $row = $result->fetch_assoc();
+                         $adminButton  = "";
+
+                         if ($row["role"] == "Admin") {
+                              $adminButton = "<button type=button onclick=location.href='viewAllUserInfo.php'>Zobrazit všechny uživatele&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-edit'></i></button>";
+                         }
+                         echo "<table class =  userInfo>
                               <tr>
                                    <th> jméno </th>
                                    <td>" . $row["name"] . "</td>
@@ -82,16 +90,17 @@ session_start();
                          <button type=button onclick=location.href='editLogin.php?id=" . $row["ID"] .  "'>Upravit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-edit'></i></button>    
                          " . $adminButton . "         
                          ";
+                    } else {
+                         echo "0 results";
+                    }
+
+
+
+                    echo '<br><br>';
+                    echo '<label><a href="logout.php">Logout</a></label>';
                } else {
-                    echo "0 results";
+                    echo '<p class=errorMessage>Nejste přihlášen</p>';
                }
-
-
-
-               echo '<br><br>';
-               echo '<label><a href="logout.php">Logout</a></label>';
-          } else {
-               echo '<p class=errorMessage>Nejste přihlášen</p>';
           }
           ?>
 
@@ -99,7 +108,8 @@ session_start();
      <!--Footer-->
      <footer>
           <p>Autor: Ondřej Bureš, Kontakt:
-               <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a></p>
+               <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a>
+          </p>
      </footer>
 </body>
 

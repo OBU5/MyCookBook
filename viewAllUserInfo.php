@@ -4,36 +4,40 @@ session_start();
 if (!isset($_SESSION["username"])) {
      header("location:index.php?action=login");
 }
-// Create connection
 $connect = mysqli_connect("localhost", "root", "", "test");
 // Check connection
-if ($connect->connect_error) {
-     die("Connection failed: " . $connect->connect_error);
-}
-$query = "SELECT * FROM users";
-$result = $connect->query($query);
-
-if ($result->num_rows > 0) {
-     $total_pages = $result->num_rows;
-
-     // Check if the page number is specified and check if it's a number, if not -> return the default page number which is 1.
-     $page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
-
-
-     // Number of results to show on each page.
-     $num_results_on_page = 5;
-     $query = "SELECT * FROM users LIMIT ?,?";
-
-     if ($stmt = $connect->prepare($query)) {
-          // Calculate the page to get the results we need from our table.
-          $calc_page = ($page - 1) * $num_results_on_page;
-          $stmt->bind_param('ii', $calc_page, $num_results_on_page);
-          $stmt->execute();
-          // Get the results...
-          $result = $stmt->get_result();
-     }
+if (!$connect) {
+     die("Connection failed: No database found");
 } else {
-     echo "<p>0 results</p>";
+     $connect->set_charset("UTF-8");
+     session_start();
+}
+if ($connect) {
+     $query = "SELECT * FROM users";
+     $result = $connect->query($query);
+
+     if ($result->num_rows > 0) {
+          $total_pages = $result->num_rows;
+
+          // Check if the page number is specified and check if it's a number, if not -> return the default page number which is 1.
+          $page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
+
+
+          // Number of results to show on each page.
+          $num_results_on_page = 5;
+          $query = "SELECT * FROM users LIMIT ?,?";
+
+          if ($stmt = $connect->prepare($query)) {
+               // Calculate the page to get the results we need from our table.
+               $calc_page = ($page - 1) * $num_results_on_page;
+               $stmt->bind_param('ii', $calc_page, $num_results_on_page);
+               $stmt->execute();
+               // Get the results...
+               $result = $stmt->get_result();
+          }
+     } else {
+          echo "<p>0 results</p>";
+     }
 }
 ?>
 <!DOCTYPE html>
@@ -143,7 +147,8 @@ if ($result->num_rows > 0) {
      <!--Footer-->
      <footer>
           <p>Autor: Ondřej Bureš, Kontakt:
-               <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a></p>
+               <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a>
+          </p>
      </footer>
 </body>
 
