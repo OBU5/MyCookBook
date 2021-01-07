@@ -1,8 +1,20 @@
 <?php
+$bodyClass = "style1";
+if (isset($_COOKIE["style"])) {
+    if ($_COOKIE["style"] == "1") {
+        $bodyClass = "style1";
+    } elseif ($_COOKIE["style"] == "2") {
+        $bodyClass = "style2";
+    } elseif ($_COOKIE["style"] == "3") {
+        $bodyClass = "style3";
+    } elseif ($_COOKIE["style"] == "4") {
+        $bodyClass = "style4";
+    }
+}
 $errorMsgType = "";
 $php_errormsg = "";
 $error = false;
-$connect = mysqli_connect("localhost", "root", "", "test");
+$connect = mysqli_connect("localhost", "bureson1", "webove aplikace", "bureson1");
 // Check connection
 if (!$connect) {
     die("Connection failed: No database found");
@@ -23,7 +35,7 @@ if ($connect) {
         }
         $recipeID = isset($_GET['id']) ? $_GET['id'] : 0;
 
-        $query = "SELECT ID, name, directions, author_id, originCountry_id, imgUrl FROM Recipes WHERE ID = '$recipeID' ";
+        $query = "SELECT ID, name, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE ID = '$recipeID' ";
         $result = $connect->query($query);
 
         // recipe found - id is valid
@@ -33,7 +45,7 @@ if ($connect) {
             $currentUser = $_SESSION["username"];
             // get user_id of signed user
             if (!$error) {
-                $query1 = "SELECT ID, role FROM Users WHERE username = '$currentUser'";
+                $query1 = "SELECT ID, role FROM users WHERE username = '$currentUser'";
                 $result1 = $connect->query($query1);
                 if (mysqli_num_rows($result1) <= 0) {
                     $php_errormsg = "Nejste přihlášen";
@@ -49,7 +61,7 @@ if ($connect) {
             if ($currentUserID == $recipeAuthor_id || $currentUserRole == "Admin") {
                 //delete "mealCategory" elements  
                 if (!$error) {
-                    $query = "DELETE FROM Recipe_MealCategory WHERE recipe_id = '$recipeID'";
+                    $query = "DELETE FROM recipe_mealcategory WHERE recipe_id = '$recipeID'";
                     if (mysqli_query($connect, $query)) {
                     } else {
                         $php_errormsg = "Došlo k neočekávané chybě při pokusu o smazání vztahu mezi kategorií jídla a receptem ";
@@ -60,7 +72,7 @@ if ($connect) {
 
                 //delete old ingredients
                 $ingredient_ToDelete = array();
-                $query2 = "SELECT ingredient_id FROM Recipe_Ingredients WHERE recipe_id = '$recipeID'";
+                $query2 = "SELECT ingredient_id FROM recipe_ingredients WHERE recipe_id = '$recipeID'";
                 $result2 = $connect->query($query2);
                 if ($result2->num_rows > 0) {
                     // get each ingredient by id
@@ -70,7 +82,7 @@ if ($connect) {
                         $i++;
                     }
                 }
-                $query3 = "DELETE FROM Recipe_Ingredients WHERE recipe_id = '$recipeID'";
+                $query3 = "DELETE FROM recipe_ingredients WHERE recipe_id = '$recipeID'";
                 if (mysqli_query($connect, $query3)) {
                 } else {
                     $php_errormsg = "Došlo k neočekávané chybě při pokusu o smazání vztahu mezi ingrediencí a receptem ";
@@ -82,7 +94,7 @@ if ($connect) {
 
                     // delete each ingredient related to this recipe 
 
-                    $query3 = "DELETE FROM Ingredients WHERE ID= '$ingredient_ToDelete[$i]'";
+                    $query3 = "DELETE FROM ingredients WHERE ID= '$ingredient_ToDelete[$i]'";
                     if (mysqli_query($connect, $query3)) {
                     } else {
                         $php_errormsg = "Došlo k neočekávané chybě při pokusu o smazání ingredience s ID " . $ingredient_ToDelete[$i];
@@ -95,7 +107,7 @@ if ($connect) {
 
                 // delete Recipe
                 if (!$error) {
-                    $query = "DELETE FROM Recipes WHERE ID = '$recipeID'";
+                    $query = "DELETE FROM recipes WHERE ID = '$recipeID'";
                     if (mysqli_query($connect, $query)) {
                         $php_errormsg = "recept byl úspěšně smazán";
                         $errorMsgType = "successMessage";
@@ -127,13 +139,15 @@ if ($connect) {
 <html>
 
 <head>
+    <title>My CookBook</title>
+    <link rel="icon" href="https://www.flaticon.com/svg/static/icons/svg/3565/3565407.svg" type="image/gif" sizes="16x16">
     <link rel="stylesheet" href="Styles/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@300&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body class="<?php echo $bodyClass; ?>">
     <!--Navigation bar-->
-    <div class="topnav">
+    <nav class="topnav">
         <a href="index.php">Domů</a>
         <a href="viewAllRecipes.php">Zobrazit recepty</a>
         <a class="active" href="addRecipe.php">Přidat nový recept</a>
@@ -146,13 +160,20 @@ if ($connect) {
             // User is  logged in
             echo '<a href="userInfo.php">' . $_SESSION["username"] . '</a>';
         } ?>
-    </div>
+        <select onchange="location = this.value;">
+            <option hidden selected disabled>Styl</option>
+            <option value="changeStyle.php?style=1">Zeleninový</option>
+            <option value="changeStyle.php?style=2">Masový</option>
+            <option value="changeStyle.php?style=3">Těstovinový</option>
+            <option value="changeStyle.php?style=4">Ovocný</option>
+        </select>
+    </nav>
 
-    <div class="recipeDiv">
+    <main class="recipeDiv">
 
         <p class=<?php echo $errorMsgType; ?>><?php echo $php_errormsg; ?></p>
 
-    </div>
+    </main>
 </body>
 
 </html>

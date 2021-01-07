@@ -1,8 +1,20 @@
 <?php
+$bodyClass = "style1";
+if (isset($_COOKIE["style"])) {
+     if ($_COOKIE["style"] == "1") {
+          $bodyClass = "style1";
+     } elseif ($_COOKIE["style"] == "2") {
+          $bodyClass = "style2";
+     } elseif ($_COOKIE["style"] == "3") {
+          $bodyClass = "style3";
+     } elseif ($_COOKIE["style"] == "4") {
+          $bodyClass = "style4";
+     }
+}
 $errorMsgType = "";
 $php_errormsg = "";
 $error = false;
-$connect = mysqli_connect("localhost", "root", "", "test");
+$connect = mysqli_connect("localhost", "bureson1", "webove aplikace", "bureson1");
 // Check connection
 if (!$connect) {
      die("Connection failed: No database found");
@@ -27,7 +39,7 @@ if ($connect) {
           header("location:index.php");
      }
      //get user_id of signed user
-     $query1 = "SELECT ID, role FROM Users WHERE username = '$currentUser'";
+     $query1 = "SELECT ID, role FROM users WHERE username = '$currentUser'";
      $result1 = $connect->query($query1);
      if (mysqli_num_rows($result1) <= 0) {
           $php_errormsg = "Nejste přihlášen";
@@ -40,7 +52,7 @@ if ($connect) {
      }
      //update only if current user is author, of the role of user is "Admin"
      if ($currentUserID == $editUserID || $currentUserRole == "Admin") {
-          $query = "DELETE FROM Users WHERE ID = '$currentUserID'";
+          $query = "DELETE FROM users WHERE ID = '$currentUserID'";
           if (mysqli_query($connect, $query)) {
                $php_errormsg = "Uživatel" . $currentUserID . " byl smazán";
                $errorMsgType = "successMessage";
@@ -62,7 +74,8 @@ if ($connect) {
 <html>
 
 <head>
-     <title>My Cook book</title>
+     <title>My CookBook</title>
+     <link rel="icon" href="https://www.flaticon.com/svg/static/icons/svg/3565/3565407.svg" type="image/gif" sizes="16x16">
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -70,9 +83,10 @@ if ($connect) {
      <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@300&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body class="<?php echo $bodyClass; ?>">
+
      <!--Navigation bar-->
-     <div class="topnav">
+     <nav class="topnav">
           <a href="index.php">Domů</a>
           <a href="viewAllRecipes.php">Zobrazit recepty</a>
           <a href="addRecipe.php">Přidat nový recept</a>
@@ -85,13 +99,20 @@ if ($connect) {
                // User is  logged in
                echo '<a class="active" href="userInfo.php">' . $_SESSION["username"] . '</a>';
           } ?>
-     </div>
+          <select onchange="location = this.value;">
+               <option hidden selected disabled>Styl</option>
+               <option value="changeStyle.php?style=1">Zeleninový</option>
+               <option value="changeStyle.php?style=2">Masový</option>
+               <option value="changeStyle.php?style=3">Těstovinový</option>
+               <option value="changeStyle.php?style=4">Ovocný</option>
+          </select>
+     </nav>
      <br /><br />
-     <div class="userDiv">
+     <main class="userDiv">
           <p id="errorMsg" class=<?php echo $errorMsgType; ?>><?php echo $php_errormsg; ?></p>
 
           </form>
-     </div>
+     </main>
      <!--Footer-->
      <footer>
           <p>Autor: Ondřej Bureš, Kontakt:

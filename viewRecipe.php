@@ -1,24 +1,39 @@
 <?php
-$connect = mysqli_connect("localhost", "root", "", "test");
+$bodyClass = "style1";
+if (isset($_COOKIE["style"])) {
+    if ($_COOKIE["style"] == "1") {
+        $bodyClass = "style1";
+    } elseif ($_COOKIE["style"] == "2") {
+        $bodyClass = "style2";
+    } elseif ($_COOKIE["style"] == "3") {
+        $bodyClass = "style3";
+    } elseif ($_COOKIE["style"] == "4") {
+        $bodyClass = "style4";
+    }
+}
+
+$connect = mysqli_connect("localhost", "bureson1", "webove aplikace", "bureson1");
 // Check connection
 if (!$connect) {
-     die("Connection failed: No database found");
+    die("Connection failed: No database found");
 } else {
-     $connect->set_charset("UTF-8");
-     session_start();
+    $connect->set_charset("UTF-8");
+    session_start();
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="cs">
 
 <head>
+    <title>My CookBook</title>
+    <link rel="icon" href="https://www.flaticon.com/svg/static/icons/svg/3565/3565407.svg" type="image/gif" sizes="16x16">
     <link rel="stylesheet" href="Styles/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
-<body>
-    <div class="topnav">
+<body class="<?php echo $bodyClass; ?>">
+    <nav class="topnav">
         <a href="index.php">Domů</a>
         <a class="active" href="viewAllRecipes.php">Zobrazit recepty</a>
         <a href="addRecipe.php">Přidat nový recept</a>
@@ -33,25 +48,34 @@ if (!$connect) {
                 echo '<a href="userInfo.php">' . $_SESSION["username"] . '</a>';
             }
         } ?>
-    </div>
+        <select onchange="location = this.value;">
+            <option hidden selected disabled>Styl</option>
+            <option value="changeStyle.php?style=1">Zeleninový</option>
+            <option value="changeStyle.php?style=2">Masový</option>
+            <option value="changeStyle.php?style=3">Těstovinový</option>
+            <option value="changeStyle.php?style=4">Ovocný</option>
+        </select>
+    </nav>
 
     <?php
     if ($connect) {
-
         $recipeID = $_GET['id'];
         $currentUserID = 0;
         $currentUserRole = "";
-        $currentUser = $_SESSION["username"];
+        if (isset($_SESSION["username"])) {
+            $currentUser = $_SESSION["username"];
+        } else {
+            $currentUser = "mrNobody";
+        }
 
 
-        $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM Recipes WHERE ID = '$recipeID' ";
+        $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE ID = '$recipeID' ";
         $result = $connect->query($query);
 
         // for all recipes
         if ($result->num_rows > 0) {
             // output data of each row
             while ($row = $result->fetch_assoc()) {
-
                 $recipe_id = $row["ID"];
                 $creation_date = $row["date"];
                 $imgUrl = $row["imgUrl"];
@@ -66,7 +90,7 @@ if (!$connect) {
                 $mealCategories = array();
 
                 //get recipe author name
-                $query2 = "SELECT ID, username FROM Users";
+                $query2 = "SELECT ID, username FROM users";
                 $result2 = $connect->query($query2);
                 if ($result2->num_rows > 0) {
                     // output data of each row
@@ -81,15 +105,15 @@ if (!$connect) {
                 }
 
                 // get ingredients id
-                $query2 = "SELECT ingredient_id FROM Recipe_Ingredients WHERE recipe_id = '$recipe_id'";
+                $query2 = "SELECT ingredient_id FROM recipe_ingredients WHERE recipe_id = '$recipe_id'";
                 $result2 = $connect->query($query2);
                 if ($result2->num_rows > 0) {
                     // get each ingredient by id
                     $i = 0;
                     while ($row2 = $result2->fetch_assoc()) {
                         $tmpIngredient_id = $row2["ingredient_id"];
-                        // prepare each ingredient related to this recipe 
-                        $query3 = "SELECT name, quantity, unit FROM Ingredients WHERE ID = '$tmpIngredient_id'";
+                        // prepare each ingredient related to this recipe
+                        $query3 = "SELECT name, quantity, unit FROM ingredients WHERE ID = '$tmpIngredient_id'";
                         $result3 = $connect->query($query3);
                         if ($result3->num_rows > 0) {
                             // get each ingredient by id
@@ -108,7 +132,7 @@ if (!$connect) {
 
 
                 // get origin country
-                $query2 = "SELECT name FROM OriginCountry WHERE ID = '$originCountry_id'";
+                $query2 = "SELECT name FROM origincountry WHERE ID = '$originCountry_id'";
                 $result2 = $connect->query($query2);
                 if ($result2->num_rows > 0) {
                     $row2 = $result2->fetch_assoc();
@@ -116,14 +140,14 @@ if (!$connect) {
                 }
 
                 // get MealCategory
-                $query2 = "SELECT mealCategory_id FROM Recipe_MealCategory WHERE recipe_id = '$recipe_id'";
+                $query2 = "SELECT mealCategory_id FROM recipe_mealcategory WHERE recipe_id = '$recipe_id'";
                 $result2 = $connect->query($query2);
                 $tmp_mealCategory_id = 0;
                 if ($result2->num_rows > 0) {
                     $i = 0;
                     while ($row2 = $result2->fetch_assoc()) {
                         $tmp_mealCategory_id = $row2["mealCategory_id"];
-                        $query3 = "SELECT name FROM MealCategory WHERE ID = '$tmp_mealCategory_id'";
+                        $query3 = "SELECT name FROM mealcategory WHERE ID = '$tmp_mealCategory_id'";
                         $result3 = $connect->query($query3);
                         if ($result3->num_rows > 0) {
                             $row3 = $result3->fetch_assoc();
@@ -158,7 +182,7 @@ if (!$connect) {
 
                 $htmlButtonText = "";
                 // get user_id of signed user
-                $query1 = "SELECT ID, role FROM Users WHERE username = '$currentUser'";
+                $query1 = "SELECT ID, role FROM users WHERE username = '$currentUser'";
                 $result1 = $connect->query($query1);
                 if (mysqli_num_rows($result1) <= 0) {
                 } else {
@@ -175,7 +199,7 @@ if (!$connect) {
 
                 // echo HTML div of 1 recipe
                 echo "    
-                    <div class=fullRecipeDiv>
+                    <main class=fullRecipeDiv>
                     <h1>" . $row["name"] . "</h1>
          
                     <p> <strong>identifikační číslo receptu:</strong> " . $recipe_id . "</p>
@@ -187,14 +211,16 @@ if (!$connect) {
             
                     " . $htmlIngredients . "
                     <h2>Postup</h2>
-                    <p> " . $directions . "</p>
+                    <p> " . nl2br($directions) . "</p>
                     <h3> Vhodné jako:</h3> " . $htmlMealCategories . "
 
-                    <p> <img class=full src=" . $imgUrl . " alt=Obrázek> </p>
+                    <p> <img class=full src=https://wa.toad.cz/~bureson1/" . $imgUrl . " alt=Obrázek> </p>
                     
                     " . $htmlButtonText . "
-
-                   </div> <br><br>";
+                    <button onclick='window.print();'>
+                    Vytisknout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-print'></i>
+                    </button>
+                   </main> <br><br>";
             }
         } else {
             echo "<p> Recept s požadovaným identifikačním číslem neexistuje<p>";

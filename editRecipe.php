@@ -1,8 +1,20 @@
 <?php
+$bodyClass = "style1";
+if (isset($_COOKIE["style"])) {
+    if ($_COOKIE["style"] == "1") {
+        $bodyClass = "style1";
+    } elseif ($_COOKIE["style"] == "2") {
+        $bodyClass = "style2";
+    } elseif ($_COOKIE["style"] == "3") {
+        $bodyClass = "style3";
+    } elseif ($_COOKIE["style"] == "4") {
+        $bodyClass = "style4";
+    }
+}
 $errorMsgType = "";
 $php_errormsg = "";
 $error = false;
-$connect = mysqli_connect("localhost", "root", "", "test");
+$connect = mysqli_connect("localhost", "bureson1", "webove aplikace", "bureson1");
 // Check connection
 if (!$connect) {
     die("Connection failed: No database found");
@@ -38,7 +50,7 @@ if ($connect) {
 
         //if recipe id is valid
         if ($recipeID > 0) {
-            $query = "SELECT ID, name, directions, author_id, originCountry_id, imgUrl FROM Recipes WHERE ID = '$recipeID' ";
+            $query = "SELECT ID, name, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE ID = '$recipeID' ";
             $result = $connect->query($query);
 
             // recipe found - id is valid
@@ -53,7 +65,7 @@ if ($connect) {
 
                     // get user_id of signed user
                     if (!$error) {
-                        $query1 = "SELECT ID, role FROM Users WHERE username = '$currentUser'";
+                        $query1 = "SELECT ID, role FROM users WHERE username = '$currentUser'";
                         $result1 = $connect->query($query1);
                         if (mysqli_num_rows($result1) <= 0) {
                             $php_errormsg = "Nejste přihlášen";
@@ -74,7 +86,7 @@ if ($connect) {
                                 $php_errormsg = "Není vyplněno jméno receptu";
                                 $errorMsgType = "errorMessage";
                                 $error = true;
-                            } else if (strlen($_POST["recipename"]) > 39) {
+                            } elseif (strlen($_POST["recipename"]) > 39) {
                                 $php_errormsg = "Překročili jste maximální počet znaků pro název receptu";
                                 $error = true;
                             } else {
@@ -88,7 +100,7 @@ if ($connect) {
                                 $php_errormsg = "Není vyplněn postup";
                                 $errorMsgType = "errorMessage";
                                 $error = true;
-                            } else if (strlen($_POST["directions"]) > 999) {
+                            } elseif (strlen($_POST["directions"]) > 999) {
                                 $php_errormsg = "Překročili jste maximální počet znaků pro postup receptu";
                                 $errorMsgType = "errorMessage";
                                 $error = true;
@@ -99,7 +111,7 @@ if ($connect) {
 
                         // get user_id of signed user
                         if (!$error) {
-                            $query = "SELECT ID FROM Users WHERE username = '$currentUser'";
+                            $query = "SELECT ID FROM users WHERE username = '$currentUser'";
                             $result = $connect->query($query);
                             if (mysqli_num_rows($result) <= 0) {
                                 $php_errormsg = "Nejste přihlášen";
@@ -112,9 +124,8 @@ if ($connect) {
                         }
 
 
-                        // get originCountry_id of selected origin country 
+                        // get originCountry_id of selected origin country
                         if (!$error) {
-
                             if (empty($_POST["originCountry"])) {
                                 $php_errormsg = "Není zvolena země původu";
                                 $errorMsgType = "errorMessage";
@@ -122,7 +133,7 @@ if ($connect) {
                             } else {
                                 $originCountry = mysqli_real_escape_string($connect, $_POST["originCountry"]);
 
-                                $query = "SELECT ID FROM OriginCountry WHERE name = '$originCountry'";
+                                $query = "SELECT ID FROM origincountry WHERE name = '$originCountry'";
                                 $result = $connect->query($query);
                                 if (mysqli_num_rows($result) > 0) {
                                     $row = $result->fetch_assoc();
@@ -150,7 +161,7 @@ if ($connect) {
                                 $php_errormsg = "Přidejte alespoň jednu ingredienci";
                                 $errorMsgType = "errorMessage";
                                 $error = true;
-                            } else if (!$error) {
+                            } elseif (!$error) {
                                 // check strlen of ingredients, quantities and units
                                 for ($i = 0; $i < sizeof($ingredients) && !$error; $i++) {
                                     // check if there is at least 1 ingredient
@@ -162,11 +173,11 @@ if ($connect) {
                                         $php_errormsg = "Překročili jste maximální počet znaků pro název ingredience";
                                         $errorMsgType = "errorMessage";
                                         $error = true;
-                                    } else if (strlen($quantities[$i]) > 39) {
+                                    } elseif (strlen($quantities[$i]) > 39) {
                                         $php_errormsg = "Překročili jste maximální počet znaků pro množství ingredience";
                                         $errorMsgType = "errorMessage";
                                         $error = true;
-                                    } else if (strlen($units[$i]) > 39) {
+                                    } elseif (strlen($units[$i]) > 39) {
                                         $php_errormsg = "Překročili jste maximální počet znaků pro jednotku ingredience";
                                         $errorMsgType = "errorMessage";
                                         $error = true;
@@ -185,7 +196,7 @@ if ($connect) {
 
 
                         //check, if at least one meal category was set
-                        $query = "SELECT ID, name FROM MealCategory";
+                        $query = "SELECT ID, name FROM mealcategory";
                         $result = $connect->query($query);
                         if (!$error) {
                             $presentMealCategory = 0;
@@ -255,10 +266,10 @@ if ($connect) {
                         // update Recipe
                         if (!$error) {
                             if ($imgUrlChanged) {
-                                $query = "UPDATE Recipes SET  name = '$recipename', directions = '$directions', originCountry_id = '$originCountry_id', imgUrl = '$imgUrl' WHERE ID = '$recipeID'";
+                                $query = "UPDATE recipes SET  name = '$recipename', directions = '$directions', originCountry_id = '$originCountry_id', imgUrl = '$imgUrl' WHERE ID = '$recipeID'";
                                 echo "changed";
                             } else {
-                                $query = "UPDATE Recipes SET  name = '$recipename', directions = '$directions', originCountry_id = '$originCountry_id' WHERE ID = '$recipeID'";
+                                $query = "UPDATE recipes SET  name = '$recipename', directions = '$directions', originCountry_id = '$originCountry_id' WHERE ID = '$recipeID'";
                             }
                             if (mysqli_query($connect, $query)) {
                                 $php_errormsg = "recept byl úspěšně upraven";
@@ -274,9 +285,9 @@ if ($connect) {
                         // store relationship between MealCategory and stored recipe into database
 
 
-                        //update "mealCategory" elements  
+                        //update "mealCategory" elements
                         if (!$error) {
-                            $query = "DELETE FROM Recipe_MealCategory WHERE recipe_id = '$recipeID'";
+                            $query = "DELETE FROM recipe_mealcategory WHERE recipe_id = '$recipeID'";
                             if (mysqli_query($connect, $query)) {
                             } else {
                                 $php_errormsg = "Došlo k neočekávané chybě při pokusu o smazání vztahu mezi kategorií jídla a receptem ";
@@ -285,13 +296,13 @@ if ($connect) {
                             }
                             // save new meal category and recipe relationship
 
-                            $query = "SELECT ID FROM MealCategory";
+                            $query = "SELECT ID FROM mealcategory";
                             $result = $connect->query($query);
                             $i = 1;
                             while ($i <= $result->num_rows) {
                                 if (isset($_POST["mealCategory" . $i])) {
                                     //echo $i;
-                                    $query = "INSERT INTO Recipe_MealCategory (mealCategory_id, recipe_id) VALUES ('$i', '$recipeID')";
+                                    $query = "INSERT INTO recipe_mealcategory (mealCategory_id, recipe_id) VALUES ('$i', '$recipeID')";
                                     if (mysqli_query($connect, $query)) {
                                     } else {
                                         $php_errormsg = "Došlo k neočekávané chybě při pokusu o uložení vztahu mezi kategorií jídla a receptem ";
@@ -305,7 +316,7 @@ if ($connect) {
 
                         //delete old ingredients
                         $ingredient_ToDelete = array();
-                        $query2 = "SELECT ingredient_id FROM Recipe_Ingredients WHERE recipe_id = '$recipeID'";
+                        $query2 = "SELECT ingredient_id FROM recipe_ingredients WHERE recipe_id = '$recipeID'";
                         $result2 = $connect->query($query2);
                         if ($result2->num_rows > 0) {
                             // get each ingredient by id
@@ -315,7 +326,7 @@ if ($connect) {
                                 $i++;
                             }
                         }
-                        $query3 = "DELETE FROM Recipe_Ingredients WHERE recipe_id = '$recipeID'";
+                        $query3 = "DELETE FROM recipe_ingredients WHERE recipe_id = '$recipeID'";
                         if (mysqli_query($connect, $query3)) {
                         } else {
                             $php_errormsg = "Došlo k neočekávané chybě při pokusu o smazání vztahu mezi ingrediencí a receptem ";
@@ -324,9 +335,9 @@ if ($connect) {
                         }
 
                         for ($i = 0; $i < sizeof($ingredient_ToDelete); $i++) {
-                            // delete each ingredient related to this recipe 
+                            // delete each ingredient related to this recipe
                             $ingredientDelete = $ingredient_ToDelete[$i];
-                            $query3 = "DELETE FROM Ingredients WHERE ID= ' $ingredientDelete'";
+                            $query3 = "DELETE FROM ingredients WHERE ID= ' $ingredientDelete'";
                             if (mysqli_query($connect, $query3)) {
                             } else {
                                 $php_errormsg = "Došlo k neočekávané chybě při pokusu o smazání ingredience s ID " . $ingredient_ToDelete[$i];
@@ -343,7 +354,7 @@ if ($connect) {
 
                                 // store ingredient if is not empty
                                 if (!empty($ingredients[$i])) {
-                                    $query = "INSERT INTO Ingredients(name, quantity, unit) VALUES('$ingredients[$i]', '$quantities[$i]', '$units[$i]')";
+                                    $query = "INSERT INTO ingredients(name, quantity, unit) VALUES('$ingredients[$i]', '$quantities[$i]', '$units[$i]')";
                                     if (mysqli_query($connect, $query)) {
                                         // remember id of stored ingredient (it will be handy for "Recipe_Ingredient" table)
                                         $ingredients_ID[$i] = $connect->insert_id;
@@ -354,7 +365,7 @@ if ($connect) {
                                     }
 
                                     // store relationship between ingredients and stored recipe into database
-                                    $query = "INSERT INTO Recipe_Ingredients(recipe_id, ingredient_id) VALUES('$recipeID', '$ingredients_ID[$i]')";
+                                    $query = "INSERT INTO recipe_ingredients(recipe_id, ingredient_id) VALUES('$recipeID', '$ingredients_ID[$i]')";
                                     if (mysqli_query($connect, $query)) {
                                     } else {
                                         $php_errormsg = "Došlo k neočekávané chybě při pokusu o uložení vztahu mezi ingrediencí a receptem ";
@@ -378,7 +389,7 @@ if ($connect) {
                 }
                 //if it is not submited -> load data from database
                 else {
-                    $query = "SELECT ID, name, directions, author_id, originCountry_id, imgUrl FROM Recipes WHERE ID = '$recipeID' ";
+                    $query = "SELECT ID, name, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE ID = '$recipeID' ";
                     $result = $connect->query($query);
 
                     // output data of each row
@@ -395,7 +406,7 @@ if ($connect) {
                         $mealCategories = array();
 
                         //get recipe author name
-                        $query2 = "SELECT ID, username FROM Users";
+                        $query2 = "SELECT ID, username FROM users";
                         $result2 = $connect->query($query2);
                         if ($result2->num_rows > 0) {
                             // output data of each row
@@ -409,15 +420,15 @@ if ($connect) {
                         }
 
                         // get ingredients id
-                        $query2 = "SELECT ingredient_id FROM Recipe_Ingredients WHERE recipe_id = '$recipeID'";
+                        $query2 = "SELECT ingredient_id FROM recipe_ingredients WHERE recipe_id = '$recipeID'";
                         $result2 = $connect->query($query2);
                         if ($result2->num_rows > 0) {
                             // get each ingredient by id
                             $i = 0;
                             while ($row2 = $result2->fetch_assoc()) {
                                 $tmpIngredient_id = $row2["ingredient_id"];
-                                // prepare each ingredient related to this recipe 
-                                $query3 = "SELECT name, quantity, unit FROM Ingredients WHERE ID = '$tmpIngredient_id'";
+                                // prepare each ingredient related to this recipe
+                                $query3 = "SELECT name, quantity, unit FROM ingredients WHERE ID = '$tmpIngredient_id'";
                                 $result3 = $connect->query($query3);
                                 if ($result3->num_rows > 0) {
                                     // get each ingredient by id
@@ -436,7 +447,7 @@ if ($connect) {
 
 
                         // get origin country
-                        $query2 = "SELECT name FROM OriginCountry WHERE ID = '$originCountry_id'";
+                        $query2 = "SELECT name FROM origincountry WHERE ID = '$originCountry_id'";
                         $result2 = $connect->query($query2);
                         if ($result2->num_rows > 0) {
                             $row2 = $result2->fetch_assoc();
@@ -444,14 +455,14 @@ if ($connect) {
                         }
 
                         // get MealCategory
-                        $query2 = "SELECT mealCategory_id FROM Recipe_MealCategory WHERE recipe_id = '$recipeID'";
+                        $query2 = "SELECT mealCategory_id FROM recipe_mealcategory WHERE recipe_id = '$recipeID'";
                         $result2 = $connect->query($query2);
                         $tmp_mealCategory_id = 0;
                         if ($result2->num_rows > 0) {
                             $i = 1;
                             while ($row2 = $result2->fetch_assoc()) {
                                 $tmp_mealCategory_id = $row2["mealCategory_id"];
-                                $query3 = "SELECT name FROM MealCategory";
+                                $query3 = "SELECT name FROM mealcategory";
                                 $result3 = $connect->query($query3);
                                 if ($result3->num_rows > 0) {
                                     $row3 = $result3->fetch_assoc();
@@ -465,13 +476,11 @@ if ($connect) {
                     }
                 }
             } else {
-
                 $php_errormsg = "Zadané id neexistuje";
                 $errorMsgType = "errorMessage";
                 $error = true;
             }
         } else {
-
             $php_errormsg = "Zadané id neexistuje";
             $errorMsgType = "errorMessage";
             $error = true;
@@ -487,13 +496,15 @@ if ($connect) {
 <html>
 
 <head>
+    <title>My CookBook</title>
+    <link rel="icon" href="https://www.flaticon.com/svg/static/icons/svg/3565/3565407.svg" type="image/gif" sizes="16x16">
     <link rel="stylesheet" href="Styles/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@300&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body class="<?php echo $bodyClass; ?>">
     <!--Navigation bar-->
-    <div class="topnav">
+    <nav class="topnav">
         <a href="index.php">Domů</a>
         <a href="viewAllRecipes.php">Zobrazit recepty</a>
         <a class="active" href="addRecipe.php">Přidat nový recept</a>
@@ -506,19 +517,23 @@ if ($connect) {
             // User is  logged in
             echo '<a href="userInfo.php">' . $_SESSION["username"] . '</a>';
         } ?>
-    </div>
+        <select onchange="location = this.value;">
+            <option hidden selected disabled>Styl</option>
+            <option value="changeStyle.php?style=1">Zeleninový</option>
+            <option value="changeStyle.php?style=2">Masový</option>
+            <option value="changeStyle.php?style=3">Těstovinový</option>
+            <option value="changeStyle.php?style=4">Ovocný</option>
+        </select>
+    </nav>
 
 
-    <div class="recipeDiv">
+    <main class="recipeDiv">
         <form enctype="multipart/form-data" method="post">
 
             <label for="recipename">Název:</label>
             <input type="text" id="recipename" name="recipename" value="<?php echo isset($recipename) ? htmlspecialchars($recipename, ENT_QUOTES) : ''; ?>"><br><br>
-
-
-
-
-            <table name="ingredients">
+            <p>Ingredience:</p>
+            <table id="tableIngredients" class="ingredients">
                 <tr>
                     <th>Pořadí</th>
                     <th>Název ingredience</th>
@@ -527,46 +542,45 @@ if ($connect) {
                 </tr>
 
                 <?php
-                for ($i = 1; $i <= 15; $i++) {
+                for ($i = 1; $i <= sizeof($ingredients); $i++) {
                     $textIngredients = !empty($ingredients[$i - 1]) ? htmlspecialchars($ingredients[$i - 1], ENT_QUOTES) : '';
                     $textQuantities = !empty($quantities[$i - 1]) ? htmlspecialchars($quantities[$i - 1], ENT_QUOTES) : '';
                     $textUnits = !empty($units[$i - 1]) ? htmlspecialchars($units[$i - 1], ENT_QUOTES) : '';
                     echo
                         '<tr>
                         <td> ' . $i . ' </td>
-                        <td> <input type="text" maxlength = "40" id="ingredients' . $i . '" name="ingredients[]" value="' . $textIngredients . '"> </td>
-                        <td> <input type="text" maxlength = "40" id="quantities' . $i . '" name="quantities[]" value="' . $textQuantities . '"> </td>
-                        <td> <input type="text" maxlength = "40" id="units' . $i . '" name="units[]" value="' . $textUnits . '"> </td>
+                        <td><label hidden for="ingredients' . $i . '">Ingredience:</label>  <input type="text" maxlength = "40" id="ingredients' . $i . '" name="ingredients[]" value="' . $textIngredients . '"> </td>
+                        <td><label hidden for="quantities' . $i . '">množství:</label>  <input type="text" maxlength = "40" id="quantities' . $i . '" name="quantities[]" value="' . $textQuantities . '"> </td>
+                        <td><label hidden for="units' . $i . '">jednotky:</label>  <input type="text" maxlength = "40" id="units' . $i . '" name="units[]" value="' . $textUnits . '"> </td>
                     </tr>';
                 }
                 ?>
             </table>
-
-
-
-            <label for="directions">Postu přípravy:</label>
-            <textarea name="directions" rows="10" cols="50" maxlength="1000" minlength="3" required placeholder="Zadejte postup"><?php echo isset($directions) ? htmlspecialchars($directions, ENT_QUOTES) : ''; ?></textarea><br>
+            <button type="button" class="addIngredient" onclick="addRow()">Přidat další ingredienci</button>
+            <br>
+            <label for="directions">Postup:</label>
+            <textarea name="directions" id="directions" rows="10" cols="50" maxlength="1000" minlength="3" required placeholder="Zadejte postup"><?php echo stripcslashes(isset($directions) ? htmlspecialchars($directions, ENT_QUOTES) : ''); ?></textarea><br>
 
 
 
             <label for="img">Obrázek:</label>
-            <input type="file" name="img" accept="image/*"><br><br>
+            <input type="file" name="img" id="img" accept="image/*"><br><br>
 
             <!-- meal category -->
 
 
-            <label for="mealCategoryDiv">kategorie jídla</label>
+            <p>Kategorie jídla:</p>
             <div name="mealCategoryDiv" class="mealCategoryDiv">
 
                 <?php
-                $query = "SELECT ID, name FROM MealCategory";
+                $query = "SELECT ID, name FROM mealcategory";
                 $result = $connect->query($query);
                 if ($result->num_rows > 0) {
                     // output data of each row
                     $i = 1;
                     while ($row = $result->fetch_assoc()) {
                         $checked = !empty($mealCategories[$i]) ? "checked " : "";
-                        echo '<input type="checkbox" id="mealCategory' . $i . '"name="mealCategory' . $i . '"' . $checked . ' value =' . $row['ID'] . '>' . $row['name'] . '<br>';
+                        echo '<label hidden for="mealCategory' . $i . '">kategorie:</label>   <input type="checkbox" id="mealCategory' . $i . '" name="mealCategory' . $i . '"' . $checked . ' value =' . $row['ID'] . '>' . $row['name'] . '<br>';
                         $i++;
                     }
                 }
@@ -579,7 +593,7 @@ if ($connect) {
             <label for="originCountry">Země původu:</label>
             <select name="originCountry" id="originCountry">
                 <?php
-                $query = "SELECT name FROM OriginCountry";
+                $query = "SELECT name FROM origincountry";
                 $result = $connect->query($query);
                 if ($result->num_rows > 0) {
                     // output data of each row
@@ -590,11 +604,11 @@ if ($connect) {
                 }
                 ?>
             </select><br><br>
-            <p class=<?php echo $errorMsgType; ?>><?php echo $php_errormsg; ?></p>
+            <p id="errorMsg" class="<?php echo $errorMsgType; ?>"><?php echo $php_errormsg; ?></p>
 
             <input type="submit" name="submit">
         </form>
-    </div>
+    </main>
 
     <!--Footer-->
     <footer>

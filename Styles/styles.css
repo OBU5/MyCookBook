@@ -1,4 +1,7 @@
-body {
+/* Background styles */
+
+/*STYLE 1*/
+body.style1 {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 100%;
@@ -8,69 +11,390 @@ body {
     background-size: cover;
 }
 
-h1 {
-    text-align: center;
-}
-
-p.indented {
-    padding-left: 20px;
-}
-
-
-/* Navigation bar */
-
-.topnav {
+/* navigation */
+body.style1 nav.topnav {
     overflow: auto;
     background-color: #555;
     font-family: 'Sansita Swashed';
     font-size: 150%;
 }
 
-.topnav a {
-    float: left;
-    color: #f2f2f2;
-    text-align: center;
-    padding: 16px 16px;
-    text-decoration: none;
-    font-size: 1em;
-}
-
-
-/*the :hover selector is used to select elements when you mouse over them*/
-
-.topnav a:hover {
+body.style1 nav.topnav a:hover {
     background-color: #ddd;
     color: black;
 }
 
+body.style1 nav.topnav a.active {
+    background-color: rgb(44, 138, 44);
+    color: white;
+}
 
-/* a from class "active" inside class "topnav" */
+body.style1 input[type=submit] {
+    width: 100%;
+    background-color: rgb(44, 138, 44);
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
 
-.topnav a.active {
-    background-color: rgb(138, 44, 44);
-    ;
+body.style1 input[type=submit]:hover {
+    background-color: rgb(44, 110, 44);
+}
+
+body.style1 button {
+    width: 100%;
+    padding: 10px;
+    background: rgb(44, 138, 44);
+    font-size: 110%;
+    color: white;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+}
+
+body.style1 button:hover {
+    background: rgb(44, 110, 44);
+}
+
+body.style1 button.addIngredient {
+    width: 90%;
+    height: auto;
+    padding: 10px;
+    background: rgb(44, 138, 44);
+    font-size: 110%;
+    color: white;
+    border: 0;
+    border-left: none;
+    cursor: pointer;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+body.style1 button.addIngredient:hover {
+    background: rgb(44, 110, 44);
+}
+
+/* content division elements and its content */
+
+body.style1 .homeDiv {
+    background-color: #c4c4c4;
+    border: 3px solid rgb(1, 71, 0);
+    border-radius: 5px;
+    margin: auto;
+    width: 70%;
+    padding: 20px;
+    font-size: 150%;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+body.style1 .recipeDiv {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    margin: auto;
+    width: 50%;
+    border: 3px solid rgb(1, 71, 0);
+    padding: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+body.style1 .fullRecipeDiv {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    margin: auto;
+    width: 70%;
+    border: 3px solid rgb(1, 71, 0);
+    padding: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+
+body.style1 .userDiv {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    margin: auto;
+    width: 50%;
+    border: 3px solid rgb(1, 71, 0);
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+    text-align: center;
+}
+
+body.style1 .userDiv h2 {
+    font-size: 150%;
+}
+
+body.style1 .userDiv button {
+    width: 50%;
+    padding: 10px;
+    background: rgb(44, 138, 44);
+    font-size: 110%;
+    color: white;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+    margin: auto;
+    position: relative;
+}
+
+body.style1 .userDiv button:hover {
+    background: rgb(44, 110, 44);
+}
+
+body.style1 .mealCategoryDiv {
+    border-radius: 5px;
+    background-color: #c4c4c4;
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+body.style1 .aboutDiv {
+    background-color: #c4c4c4;
+    border: 3px solid rgb(1, 71, 0);
+    border-radius: 5px;
+    margin: auto;
+    width: 70%;
+    padding: 20px;
+    font-size: 150%;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+body.style1 .aboutDiv p {
+    display: inline
+}
+
+body.style1 .chooseOptionDiv {
+    width: 50%;
+    padding: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.style1.chooseOptionDiv button {
+    width: 50%;
+    padding: 10px;
+    background: rgb(44, 138, 44);
+    font-size: 100%;
+    color: white;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Tables */
+
+body.style1 table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style1 td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+body.style1 tr:nth-child(even) {
+    background-color: rgb(220, 240, 220);
+}
+
+body.style1 tr:hover {
+    background-color: rgb(109, 163, 109);
+}
+
+body.style1 th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: rgb(44, 138, 44);
+    color: #fff;
+}
+
+/*User info table*/
+
+body.style1 .userInfo {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style1 .userInfo td, body.style1 .userInfo th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+body.style1 .userInfo tr:nth-child(even) {
+    background-color: rgb(240, 230, 230);
+}
+
+body.style1 .userInfo tr:hover {
+    background-color: rgb(109, 163, 109);
+}
+
+body.style1 .userInfo th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: rgb(44, 138, 44);
+    color: white;
+}
+
+/*Ingredients table*/
+
+body.style1 .ingredients {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style1 .ingredients td, .ingredients th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+body.style1 .ingredients th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: rgb(44, 138, 44);
+    color: white;
+}
+
+body.style1 .ingredients input {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: white;
+    color: rgb(44, 138, 44);
+}
+/* Pagination*/
+
+body.style1 .pagination {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style1 .pagination ul {
+    list-style-type: none;
+    padding: 10px 0;
+    display: inline-flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+body.style1 .pagination li {
+    box-sizing: border-box;
+    padding-right: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style1 .pagination li a {
+    box-sizing: border-box;
+    background-color: #e2e6e6;
+    padding: 8px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    color: rgb(44, 138, 44);
+    border-radius: 4px;
+}
+
+body.style1 .pagination li a:hover {
+    background-color: #bfd1c2;
+}
+
+body.style1 .pagination .next a, body.style1 .pagination .prev a {
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+body.style1 .pagination .currentpage a {
+    background-color: rgb(44, 138, 44);
+    color: #fff;
+}
+
+body.style1 .pagination .currentpage a:hover {
+    background-color: rgb(40, 114, 40);
+}
+
+/* footer*/
+
+body.style1 footer {
+    background-color: rgb(97, 145, 97);
+    text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
     color: white;
 }
 
 
-/*recipe form*/
 
-input[type=text],
-input[type=date],
-input[type=password],
-input[type=url],
-select,
-textarea {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+
+/*STYLE 2*/
+
+body.style2 {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 100%;
+    background-image: url(https://www.wallpapertip.com/wmimgs/242-2424588_photo-wallpaper-bread-meat-bbq-vegetables-sauce.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
 }
 
-input[type=submit] {
+body.style2 nav.topnav {
+    overflow: auto;
+    background-color: #555;
+    font-family: 'Sansita Swashed';
+    font-size: 150%;
+}
+
+body.style2 nav.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+body.style2 nav.topnav a.active {
+    background-color: rgb(138, 44, 44);
+    color: white;
+}
+
+
+body.style2 input[type=submit] {
     width: 100%;
     background-color: rgb(138, 44, 44);
     color: white;
@@ -81,22 +405,62 @@ input[type=submit] {
     cursor: pointer;
 }
 
-input[type=submit]:hover {
+body.style2 input[type=submit]:hover {
     background-color: rgb(110, 44, 44);
 }
 
-.homeDiv {
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    margin: auto;
-    width: 75%;
+body.style2 button {
+    width: 100%;
+    padding: 10px;
+    background: rgb(138, 44, 44);
+    font-size: 110%;
+    color: white;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+}
+
+body.style2 button:hover {
+    background: rgb(110, 44, 44);
+}
+
+body.style2 button.addIngredient {
+    width: 90%;
+    height: auto;
+    padding: 10px;
+    background: rgb(138, 44, 44);
+    font-size: 110%;
+    color: white;
+    border: 0;
+    border-left: none;
+    cursor: pointer;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+body.style2 button.addIngredient:hover {
+    background: rgb(110, 44, 44);
+}
+
+/* content division elements and its content */
+
+body.style2 .homeDiv {
+    background-color: #c4c4c4;
     border: 3px solid rgb(71, 1, 0);
+    border-radius: 5px;
+    margin: auto;
+    width: 70%;
     padding: 20px;
+    font-size: 150%;
     margin-top: 5px;
     margin-bottom: 60px;
 }
 
-.recipeDiv {
+body.style2 .recipeDiv {
     border-radius: 5px;
     background-color: #f2f2f2;
     margin: auto;
@@ -107,7 +471,7 @@ input[type=submit]:hover {
     margin-bottom: 60px;
 }
 
-.fullRecipeDiv {
+body.style2 .fullRecipeDiv {
     border-radius: 5px;
     background-color: #f2f2f2;
     margin: auto;
@@ -118,13 +482,1080 @@ input[type=submit]:hover {
     margin-bottom: 60px;
 }
 
+body.style2 .userDiv {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    margin: auto;
+    width: 50%;
+    border: 3px solid rgb(71, 1, 0);
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+    text-align: center;
+}
+
+body.style2 .userDiv h2 {
+    font-size: 150%;
+}
+
+body.style2 .userDiv button {
+    width: 50%;
+    padding: 10px;
+    background: rgb(138, 44, 44);
+    font-size: 110%;
+    color: white;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+    margin: auto;
+    position: relative;
+}
+
+body.style2 .userDiv button:hover {
+    background: rgb(110, 44, 44);
+}
+
+body.style2 .mealCategoryDiv {
+    border-radius: 5px;
+    background-color: #c4c4c4;
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+body.style2 .aboutDiv {
+    background-color: #c4c4c4;
+    border: 3px solid rgb(71, 1, 0);
+    border-radius: 5px;
+    margin: auto;
+    width: 70%;
+    padding: 20px;
+    font-size: 150%;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+body.style2 .aboutDiv p {
+    display: inline
+}
+
+body.style2 .chooseOptionDiv {
+    width: 50%;
+    padding: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.style2 .chooseOptionDiv button {
+    width: 50%;
+    padding: 10px;
+    background: rgb(138, 44, 44);
+    font-size: 100%;
+    color: white;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Tables */
+
+body.style2 table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style2 td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+body.style2 tr:nth-child(even) {
+    background-color: rgb(240, 230, 230);
+}
+
+body.style2 tr:hover {
+    background-color: rgb(163, 109, 109);
+}
+
+body.style2 th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: rgb(138, 44, 44);
+    color: white;
+}
+
+/*User info table*/
+
+body.style2 .userInfo {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style2 .userInfo td, body.style2 .userInfo th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+body.style2 .userInfo tr:nth-child(even) {
+    background-color: rgb(240, 230, 230);
+}
+
+body.style2 .userInfo tr:hover {
+    background-color: rgb(163, 109, 109);
+}
+
+body.style2 .userInfo th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: rgb(138, 44, 44);
+    color: white;
+}
+
+
+/*Ingredients table*/
+
+body.style2 .ingredients {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style2 .ingredients td, body.style2 .ingredients th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+body.style2 .ingredients tr:nth-child(even) {
+    background-color: rgb(240, 230, 230);
+}
+
+body.style2 .ingredients tr:hover {
+    background-color: rgb(163, 109, 109);
+}
+
+body.style2 .ingredients th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: rgb(138, 44, 44);
+    color: white;
+}
+
+body.style2 .ingredients input {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: white;
+    color: rgb(138, 44, 44);
+}
+
+/* Pagination*/
+
+body.style2 .pagination {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style2 .pagination ul {
+    list-style-type: none;
+    padding: 10px 0;
+    display: inline-flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+body.style2 .pagination li {
+    box-sizing: border-box;
+    padding-right: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style2 .pagination li a {
+    box-sizing: border-box;
+    background-color: #e2e6e6;
+    padding: 8px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    color: #616872;
+    border-radius: 4px;
+}
+
+body.style2 .pagination li a:hover {
+    background-color: #d4dada;
+}
+
+body.style2 .pagination .next a, body.style2 .pagination .prev a {
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+body.style2 .pagination .currentpage a {
+    background-color: rgb(138, 44, 44);
+    color: #fff;
+}
+
+body.style2 .pagination .currentpage a:hover {
+    background-color: rgb(114, 37, 37);
+}
+
+/* footer*/
+
+body.style2 footer {
+    background-color: #555;
+    text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+}
+
+
+
+/*STYLE 3 */
+
+body.style3 {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 100%;
+    background-image: url(https://eskipaper.com/images/pasta-wallpaper-4.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+body.style3 nav.topnav {
+    overflow: auto;
+    background-color: #555;
+    font-family: 'Sansita Swashed';
+    font-size: 150%;
+}
+
+body.style3 nav.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+body.style3 nav.topnav a.active {
+    background-color: rgb(200, 115, 0);
+    color: white;
+}
+
+body.style3 input[type=submit] {
+    width: 100%;
+    background-color: rgb(200, 115, 0);
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+body.style3 input[type=submit]:hover {
+    background-color: rgb(180, 100, 0);
+}
+
+body.style3 button {
+    width: 100%;
+    padding: 10px;
+    background: rgb(200, 115, 0);
+    font-size: 110%;
+    color: white;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+}
+
+
+body.style3 button.addIngredient {
+    width: 90%;
+    height: auto;
+    padding: 10px;
+    background:  rgb(200, 115, 0);
+    font-size: 110%;
+    color: white;
+    border: 0;
+    border-left: none;
+    cursor: pointer;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+body.style3 button:hover {
+    background:  rgb(180, 100, 0);
+}
+
+/* content division elements and its content */
+
+body.style3 .homeDiv {
+    background-color: #c4c4c4;
+    border: 3px solid  rgb(80, 45, 0);
+    border-radius: 5px;
+    margin: auto;
+    width: 70%;
+    padding: 20px;
+    font-size: 150%;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+body.style3 .recipeDiv {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    margin: auto;
+    width: 50%;
+    border: 3px solid rgb(80, 45, 0);
+    padding: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+body.style3 .fullRecipeDiv {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    margin: auto;
+    width: 70%;
+    border: 3px solid rgb(80, 45, 0);
+    padding: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+body.style3 .userDiv {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    margin: auto;
+    width: 50%;
+    border: 3px solid rgb(80, 45, 0);
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+    text-align: center;
+}
+
+body.style3 .userDiv h2 {
+    font-size: 150%;
+}
+
+body.style3 .userDiv button {
+    width: 50%;
+    padding: 10px;
+    background-color: rgb(200, 115, 0);
+    font-size: 110%;
+    color: white;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+    margin: auto;
+    position: relative;
+}
+
+body.style3 .mealCategoryDiv {
+    border-radius: 5px;
+    background-color: #c4c4c4;
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+body.style3 .aboutDiv {
+    background-color: #c4c4c4;
+    border: 3px solid rgb(80, 45, 0);
+    border-radius: 5px;
+    margin: auto;
+    width: 70%;
+    padding: 20px;
+    font-size: 150%;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+body.style3 .aboutDiv p {
+    display: inline
+}
+
+body.style3 .chooseOptionDiv {
+    width: 50%;
+    padding: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.style3 .chooseOptionDiv button {
+    width: 50%;
+    padding: 10px;
+    background: rgb(200, 115, 0);
+    font-size: 100%;
+    color: white;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Tables */
+
+body.style3 table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style3 td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+body.style3 tr:nth-child(even) {
+    background-color: rgb(238, 234, 215);
+}
+
+body.style3 tr:hover {
+    background-color: rgb(168, 98, 0);
+}
+
+body.style3 th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: rgb(200, 115, 0);
+    color: white;
+}
+
+/*User info table*/
+
+
+body.style3 .userInfo {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style3 .userInfo td, body.style3 .userInfo th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+body.style3 .userInfo tr:nth-child(even) {
+    background-color: rgb(240, 230, 230);
+}
+
+body.style3 .userInfo tr:hover {
+    background-color: rgb(163, 159, 109);
+}
+
+body.style3 .userInfo th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: rgb(200, 115, 0);
+    color: white;
+}
+
+
+/*Ingredients table*/
+
+body.style3 .ingredients {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style3 .ingredients td, body.style3 .ingredients th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+body.style3 .ingredients tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+body.style3 .ingredients tr:hover {
+    background-color: rgb(167, 135, 92);
+}
+
+body.style3 .ingredients th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: rgb(168, 98, 0);
+    color: white;
+}
+
+body.style3 .ingredients input {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: white;
+    color: rgb(168, 98, 0);
+}
+
+/* Pagination*/
+
+body.style3 .pagination {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style3 .pagination ul {
+    list-style-type: none;
+    padding: 10px 0;
+    display: inline-flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+body.style3 .pagination li {
+    box-sizing: border-box;
+    padding-right: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style3 .pagination li a {
+    box-sizing: border-box;
+    background-color: #e2e6e6;
+    padding: 8px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    color: #696657;
+    border-radius: 4px;
+}
+
+body.style3 .pagination li a:hover {
+    background-color: #d4dada;
+}
+
+body.style3 .pagination .next a, body.style3 .pagination .prev a {
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+body.style3 .pagination .currentpage a {
+    background-color:  rgb(168, 98, 0);
+    color: #fff;
+}
+
+body.style3 .pagination .currentpage a:hover {
+    background-color: rgb(168, 98, 0);
+}
+
+/* footer*/
+
+body.style3 footer {
+    background-color: #555;
+    text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+}
+
+
+
+/* STYLE 4*/
+body.style4 {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 100%;
+    background-image: url(https://savonfoodssupermarket.com/wp-content/uploads/2017/06/Backgroud-img.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+/* navigation */
+body.style4 nav.topnav {
+    overflow: auto;
+    background-color: #555;
+    font-family: 'Sansita Swashed';
+    font-size: 150%;
+}
+
+body.style4 nav.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+body.style4 nav.topnav a.active {
+    background-color: rgb(44, 44, 138);
+    color: white;
+}
+
+body.style4 input[type=submit] {
+    width: 100%;
+    background-color: rgb(44, 44, 138);
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+body.style4 input[type=submit]:hover {
+    background-color: rgb(44, 44, 110);
+}
+
+body.style4 button {
+    width: 100%;
+    padding: 10px;
+    background: rgb(44, 44, 138);
+    font-size: 110%;
+    color: white;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+}
+
+body.style4 button:hover {
+    background: rgb(44, 44, 110);
+}
+
+body.style4 button.addIngredient {
+    width: 90%;
+    height: auto;
+    padding: 10px;
+    background: rgb(44, 44, 138);
+    font-size: 110%;
+    color: white;
+    border: 0;
+    border-left: none;
+    cursor: pointer;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+body.style4 button.addIngredient:hover {
+    background: rgb(44, 44, 110);
+}
+
+/* content division elements and its content */
+
+body.style4 .homeDiv {
+    background-color: #c4c4c4;
+    border: 3px solid rgb(1, 1, 71);
+    border-radius: 5px;
+    margin: auto;
+    width: 70%;
+    padding: 20px;
+    font-size: 150%;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+body.style4 .recipeDiv {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    margin: auto;
+    width: 50%;
+    border: 3px solid rgb(1, 1, 71);
+    padding: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+body.style4 .fullRecipeDiv {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    margin: auto;
+    width: 70%;
+    border: 3px solid rgb(1, 1, 71);
+    padding: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+
+body.style4 .userDiv {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    margin: auto;
+    width: 50%;
+    border: 3px solid rgb(1, 1, 71);
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+    text-align: center;
+}
+
+body.style4 .userDiv h2 {
+    font-size: 150%;
+}
+
+body.style4 .userDiv button {
+    width: 50%;
+    padding: 10px;
+    background: rgb(44, 44, 138);
+    font-size: 110%;
+    color: white;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+    margin: auto;
+    position: relative;
+}
+
+body.style4 .userDiv button:hover {
+    background: rgb(44, 44, 110);
+}
+
+body.style4 .mealCategoryDiv {
+    border-radius: 5px;
+    background-color: #c4c4c4;
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+body.style4 .aboutDiv {
+    background-color: #c4c4c4;
+    border: 3px solid rgb(1, 1, 71);
+    border-radius: 5px;
+    margin: auto;
+    width: 70%;
+    padding: 20px;
+    font-size: 150%;
+    margin-top: 5px;
+    margin-bottom: 60px;
+}
+
+body.style4 .aboutDiv p {
+    display: inline
+}
+
+body.style4 .chooseOptionDiv {
+    width: 50%;
+    padding: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.style4.chooseOptionDiv button {
+    width: 50%;
+    padding: 10px;
+    background: rgb(44, 44, 138);
+    font-size: 100%;
+    color: white;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Tables */
+
+body.style4 table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style4 td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+body.style4 tr:nth-child(even) {
+    background-color: rgb(220, 220, 240);
+}
+
+body.style4 tr:hover {
+    background-color: rgb(109, 109, 163);
+}
+
+body.style4 th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: rgb(44, 44, 138);
+    color: #fff;
+}
+
+/*User info table*/
+
+body.style4 .userInfo {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style4 .userInfo td, body.style4 .userInfo th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+body.style4 .userInfo tr:nth-child(even) {
+    background-color: rgb(240, 230, 230);
+}
+
+body.style4 .userInfo tr:hover {
+    background-color: rgb(109, 109, 163);
+}
+
+body.style4 .userInfo th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: rgb(44, 44, 138);
+    color: white;
+}
+
+/*Ingredients table*/
+
+body.style4 .ingredients {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style4 .ingredients td, .ingredients th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+body.style4 .ingredients th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: rgb(44, 44, 138);
+    color: white;
+}
+
+body.style4 .ingredients input {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: white;
+    color: rgb(44, 44, 138);
+}
+/* Pagination*/
+
+body.style4 .pagination {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style4 .pagination ul {
+    list-style-type: none;
+    padding: 10px 0;
+    display: inline-flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+body.style4 .pagination li {
+    box-sizing: border-box;
+    padding-right: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.style4 .pagination li a {
+    box-sizing: border-box;
+    background-color: #e2e6e6;
+    padding: 8px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    color: rgb(44, 44, 138);
+    border-radius: 4px;
+}
+
+body.style4 .pagination li a:hover {
+    background-color: #bfd1c2;
+}
+
+body.style4 .pagination .next a, body.style4 .pagination .prev a {
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+body.style4 .pagination .currentpage a {
+    background-color: rgb(44, 44, 138);
+    color: #fff;
+}
+
+body.style4 .pagination .currentpage a:hover {
+    background-color: rgb(40, 40, 114);
+}
+
+/* footer*/
+
+body.style4 footer {
+    background-color: rgb(97, 97, 145);
+    text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+}
+
+
+/* Navigation bar */
+
+.topnav select {
+    font-family: 'Sansita Swashed';
+    display: inline-block;
+    width: 10%;
+    height: 50px;
+    font-size: 100%;
+    text-align-last: center;
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #555;
+    border: none;
+    width: auto;
+    color: white;
+    padding: 10px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 16px 16px;
+    text-decoration: none;
+    font-size: 100%;
+}
+
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+
+/* default text, inputs, ... */
+
+h1 {
+    text-align: center;
+}
+
+p.indented {
+    padding-left: 20px;
+}
+
+p.margin0 {
+    margin: 0px;
+}
+
+.errorText {
+    background-color: #F8CECC;
+    color: #B85450;
+}
+
+.successMessage {
+    background-color: #d4f8cc;
+    color: #50b859;
+    font-size: 150%;
+    border: 1px solid darkgreen;
+    text-align: center;
+}
+
+.errorMessage {
+    background-color: #F8CECC;
+    color: #B85450;
+    font-size: 150%;
+    border: 1px solid darkred;
+    text-align: center;
+}
+
+input[type=text], input[type=date], input[type=password], input[type=url], select, textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+
 .fullRecipeDiv p {
     color: rgb(54, 54, 54);
 }
 
-.fullRecipeDiv h1,
-h2 {
+.fullRecipeDiv h1 {
     font-size: 200%;
+}
+
+.fullRecipeDiv h2 {
+    font-size: 180%;
 }
 
 .userDiv {
@@ -138,6 +1569,10 @@ h2 {
     margin-top: 5px;
     margin-bottom: 60px;
     text-align: center;
+}
+
+.userDiv h2 {
+    font-size: 150%;
 }
 
 .userDiv button {
@@ -178,33 +1613,6 @@ h2 {
     display: inline
 }
 
-
-/*Unsorted*/
-
-button {
-    width: 100%;
-    padding: 10px;
-    background: rgb(138, 44, 44);
-    font-size: 110%;
-    color: white;
-    border: 1px solid grey;
-    border-left: none;
-    cursor: pointer;
-}
-
-.chooseOptionButton {
-    width: 50%;
-    padding: 10px;
-    background: rgb(138, 44, 44);
-    font-size: 100%;
-    color: white;
-    border: 1px solid grey;
-    border-left: none;
-    cursor: pointer;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 .chooseOptionDiv {
     width: 50%;
     padding: 20px;
@@ -214,131 +1622,6 @@ button {
     align-items: center;
     justify-content: center;
 }
-
-button:hover {
-    background: rgb(110, 44, 44);
-}
-
-.errorText {
-    background-color: #F8CECC;
-    color: #B85450;
-}
-
-.successMessage {
-    background-color: #d4f8cc;
-    color: #50b859;
-    font-size: 150%;
-    border: 1px solid darkgreen;
-    text-align: center;
-}
-
-.errorMessage {
-    background-color: #F8CECC;
-    color: #B85450;
-    font-size: 150%;
-    border: 1px solid darkred;
-    text-align: center;
-}
-
-table {
-    font-family: Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-    padding-left: 20px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-td,
-th {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-tr:hover {
-    background-color: rgb(163, 109, 109);
-}
-
-th {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    text-align: left;
-    background-color: rgb(138, 44, 44);
-    color: white;
-}
-
-
-/*User info table*/
-
-.userInfo {
-    font-family: Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 50%;
-    padding-left: 20px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.userInfo td,
-.userInfo th {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-.userInfo tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.userInfo tr:hover {
-    background-color: rgb(163, 109, 109);
-}
-
-.userInfo th {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    text-align: left;
-    background-color: rgb(138, 44, 44);
-    color: white;
-}
-
-
-/*Ingredients table*/
-
-.ingredients {
-    font-family: Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 50%;
-    padding-left: 20px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.ingredients td,
-.ingredients th {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-.ingredients tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.ingredients tr:hover {
-    background-color: rgb(163, 109, 109);
-}
-
-.ingredients th {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    text-align: left;
-    background-color: rgb(138, 44, 44);
-    color: white;
-}
-
 
 /* Image */
 
@@ -361,68 +1644,53 @@ img.full {
 }
 
 
-/* Pagination*/
+/*print page (viewRecipe.php)*/
 
-.pagination {
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.pagination ul {
-    list-style-type: none;
-    padding: 10px 0;
-    display: inline-flex;
-    justify-content: center;
-    box-sizing: border-box;
-}
-
-.pagination li {
-    box-sizing: border-box;
-    padding-right: 10px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.pagination li a {
-    box-sizing: border-box;
-    background-color: #e2e6e6;
-    padding: 8px;
-    text-decoration: none;
-    font-size: 12px;
-    font-weight: bold;
-    color: #616872;
-    border-radius: 4px;
-}
-
-.pagination li a:hover {
-    background-color: #d4dada;
-}
-
-.pagination .next a,
-.pagination .prev a {
-    text-transform: uppercase;
-    font-size: 12px;
-}
-
-.pagination .currentpage a {
-    background-color: rgb(138, 44, 44);
-    color: #fff;
-}
-
-.pagination .currentpage a:hover {
-    background-color: rgb(114, 37, 37);
-}
-
-
-/* footer*/
-
-footer {
-    background-color: #555;
-    text-align: center;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    color: white;
+@media print {
+    .topnav {
+        display: none !important;
+    }
+    .topnav a {
+        display: none !important;
+    }
+    .topnav select {
+        display: none !important;
+    }
+    body {
+        margin: 0;
+        color: #000;
+        background-color: #fff;
+    }
+    .fullRecipeDiv, .recipeDiv {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        margin: auto;
+        width: 70%;
+        border: 0 !important;
+        padding: 20px;
+        margin-top: 5px;
+        margin-bottom: 60px;
+    }
+    h1 {
+        font-size: 18px !important;
+        color: #000;
+    }
+    h2 {
+        font-size: 14px;
+        color: #000;
+    }
+    h3 {
+        font-size: 13px;
+        color: #000;
+    }
+    ul, li, th, td, p {
+        font-size: 12px;
+        color: rgb(0, 0, 0) !important;
+    }
+    footer {
+        display: none !important;
+    }
+    button {
+        display: none !important;
+    }
 }

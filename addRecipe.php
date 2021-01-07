@@ -1,8 +1,20 @@
 <?php
+$bodyClass = "style1";
+if (isset($_COOKIE["style"])) {
+    if ($_COOKIE["style"] == "1") {
+        $bodyClass = "style1";
+    } elseif ($_COOKIE["style"] == "2") {
+        $bodyClass = "style2";
+    } elseif ($_COOKIE["style"] == "3") {
+        $bodyClass = "style3";
+    } elseif ($_COOKIE["style"] == "4") {
+        $bodyClass = "style4";
+    }
+}
 $errorMsgType = "";
 $php_errormsg = "";
 $error = false;
-$connect = mysqli_connect("localhost", "root", "", "test");
+$connect = mysqli_connect("localhost", "bureson1", "webove aplikace", "bureson1");
 // Check connection
 if (!$connect) {
     die("Connection failed: No database found");
@@ -181,7 +193,8 @@ if ($connect) {
                     $extensions = array('image/jpeg', 'image/png', 'image/gif');
                     if (in_array($type, $extensions)) {
                         if (move_uploaded_file($_FILES["img"]["tmp_name"], $uploadfile)) {
-                            $imgUrl = 'http://' . $_SERVER['SERVER_NAME'] . '/MyCookBook/' . $uploadfile;
+                            $imgUrl = $uploadfile;
+                            echo $imgUrl;
                         } else {
                             $php_errormsg = "byl zvolen soubor v chybném formátu";
                             $errorMsgType = "errorMessage";
@@ -288,16 +301,18 @@ if ($connect) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="cs">
 
 <head>
+    <title>MyCookBook</title>
+    <link rel="icon" href="https://www.flaticon.com/svg/static/icons/svg/3565/3565407.svg" type="image/gif" sizes="16x16">
     <link rel="stylesheet" href="Styles/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@300&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body class="<?php echo $bodyClass; ?>">
     <!--Navigation bar-->
-    <div class="topnav">
+    <nav class="topnav">
         <a href="index.php">Domů</a>
         <a href="viewAllRecipes.php">Zobrazit recepty</a>
         <a class="active" href="addRecipe.php">Přidat nový recept</a>
@@ -310,8 +325,15 @@ if ($connect) {
             // User is  logged in
             echo '<a href="userInfo.php">' . $_SESSION["username"] . '</a>';
         } ?>
-    </div>
-    <div class="recipeDiv">
+        <select onchange="location = this.value;">
+            <option hidden selected disabled>Styl</option>
+            <option value="changeStyle.php?style=1">Zeleninový</option>
+            <option value="changeStyle.php?style=2">Masový</option>
+            <option value="changeStyle.php?style=3">Těstovinový</option>
+            <option value="changeStyle.php?style=4">Ovocný</option>
+        </select>
+    </nav>
+    <main class="recipeDiv">
         <form enctype="multipart/form-data" method="post">
 
             <label for="recipename">Název:</label>
@@ -319,8 +341,8 @@ if ($connect) {
 
 
 
-
-            <table name="ingredients">
+            <p>Ingredience:</p>
+            <table id="tableIngredients" class="ingredients">
                 <tr>
                     <th>Pořadí</th>
                     <th>Název ingredience</th>
@@ -329,36 +351,35 @@ if ($connect) {
                 </tr>
 
                 <?php
-                for ($i = 1; $i <= 15; $i++) {
+                for ($i = 1; $i <= 5; $i++) {
                     $textIngredients = isset($_POST['ingredients'][$i - 1]) ? htmlspecialchars($_POST['ingredients'][$i - 1], ENT_QUOTES) : '';
                     $textQuantities = isset($_POST['quantities'][$i - 1]) ? htmlspecialchars($_POST['quantities'][$i - 1], ENT_QUOTES) : '';
                     $textUnits = isset($_POST['units'][$i - 1]) ? htmlspecialchars($_POST['units'][$i - 1], ENT_QUOTES) : '';
                     echo
                         '<tr>
                         <td> ' . $i . ' </td>
-                        <td> <input type="text" maxlength = "40" id="ingredients' . $i . '" name="ingredients[]" value="' . $textIngredients . '"> </td>
-                        <td> <input type="text" maxlength = "40" id="quantities' . $i . '" name="quantities[]" value="' . $textQuantities . '"> </td>
-                        <td> <input type="text" maxlength = "40" id="units' . $i . '" name="units[]" value="' . $textUnits . '"> </td>
+                        <td><label hidden for="ingredients' . $i . '">Ingredience:</label> <input type="text" maxlength = "40" id="ingredients' . $i . '" name="ingredients[]" value="' . $textIngredients . '"> </td>
+                        <td><label hidden for="quantities' . $i . '">množství:</label>  <input type="text" maxlength = "40" id="quantities' . $i . '" name="quantities[]" value="' . $textQuantities . '"> </td>
+                        <td><label hidden for="units' . $i . '">jednotky:</label>  <input type="text" maxlength = "40" id="units' . $i . '" name="units[]" value="' . $textUnits . '"> </td>
                     </tr>';
                 }
                 ?>
             </table>
+            <button type="button" class="addIngredient" onclick="addRow()">Přidat další ingredienci</button>
+            <br>
 
 
-
-            <label for="directions">Postu přípravy:</label>
-            <textarea name="directions" rows="10" cols="50" maxlength="1000" minlength="3" required placeholder="Zadejte postup"><?php echo isset($_POST['directions']) ? htmlspecialchars($_POST['directions'], ENT_QUOTES) : ''; ?></textarea><br>
-
+            <label for="directions">Postup přípravy:</label>
+            <textarea id="directions" name="directions" rows="10" cols="50" maxlength="1000" minlength="3" required placeholder="Zadejte postup"><?php echo stripcslashes(isset($_POST['directions']) ? htmlspecialchars($_POST['directions'], ENT_QUOTES) : ''); ?></textarea><br>
 
 
             <label for="img">Obrázek:</label>
-            <input type="file" name="img" accept="image/*"><br><br>
+            <input type="file" name="img" id="img" accept="image/*"><br><br>
 
             <!-- meal category -->
 
-
-            <label for="mealCategoryDiv">kategorie jídla</label>
-            <div name="mealCategoryDiv" class="mealCategoryDiv">
+            <p>Kategorie jídla:</p>
+            <div class="mealCategoryDiv">
 
                 <?php
                 $query = "SELECT ID, name FROM mealcategory";
@@ -368,7 +389,7 @@ if ($connect) {
                     $i = 1;
                     while ($row = $result->fetch_assoc()) {
                         $checked = isset($_POST["mealCategory" . $i]) ? "checked " : "";
-                        echo '<input type="checkbox" id="mealCategory' . $i . '"name="mealCategory' . $i . '"' . $checked . ' value =' . $row['ID'] . '>' . $row['name'] . '<br>';
+                        echo '<label hidden for="mealCategory' . $i . '">kategorie:</label> <input type="checkbox" id="mealCategory' . $i . '" name="mealCategory' . $i . '" ' . $checked . ' value =' . $row['ID'] . '>' . $row['name'] . '<br>';
                         $i++;
                     }
                 }
@@ -396,7 +417,7 @@ if ($connect) {
 
             <input type="submit" name="submit">
         </form>
-    </div>
+    </main>
 
     <!--Footer-->
     <footer>
@@ -404,8 +425,8 @@ if ($connect) {
             <a href="mailto:bures.ondrej95@gmail.com">bures.ondrej95@gmail.com</a>
         </p>
     </footer>
+    <script src="Scripts/checkRecipeForm.js"></script>
 </body>
 
-<script type="text/javascript" src="Scripts/checkRecipeForm.js"></script>
 
 </html>

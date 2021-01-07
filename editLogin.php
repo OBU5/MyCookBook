@@ -1,8 +1,20 @@
 <?php
+$bodyClass = "style1";
+if (isset($_COOKIE["style"])) {
+     if ($_COOKIE["style"] == "1") {
+          $bodyClass = "style1";
+     } elseif ($_COOKIE["style"] == "2") {
+          $bodyClass = "style2";
+     } elseif ($_COOKIE["style"] == "3") {
+          $bodyClass = "style3";
+     } elseif ($_COOKIE["style"] == "4") {
+          $bodyClass = "style4";
+     }
+}
 $errorMsgType = "";
 $php_errormsg = "";
 $error = false;
-$connect = mysqli_connect("localhost", "root", "", "test");
+$connect = mysqli_connect("localhost", "bureson1", "webove aplikace", "bureson1");
 // Check connection
 if (!$connect) {
      die("Connection failed: No database found");
@@ -27,7 +39,7 @@ if ($connect) {
           header("location:index.php");
      }
      //get user_id of signed user
-     $query1 = "SELECT ID, role FROM Users WHERE username = '$currentUser'";
+     $query1 = "SELECT ID, role FROM users WHERE username = '$currentUser'";
      $result1 = $connect->query($query1);
      if (mysqli_num_rows($result1) <= 0) {
           $php_errormsg = "Nejste přihlášen";
@@ -141,16 +153,14 @@ if ($connect) {
 
 <head>
      <title>My Cook book</title>
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+     <link rel="icon" href="https://www.flaticon.com/svg/static/icons/svg/3565/3565407.svg" type="image/gif" sizes="16x16">
      <link rel="stylesheet" href="Styles/styles.css">
      <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@300&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body class="<?php echo $bodyClass; ?>">
      <!--Navigation bar-->
-     <div class="topnav">
+     <nav class="topnav">
           <a href="index.php">Domů</a>
           <a href="viewAllRecipes.php">Zobrazit recepty</a>
           <a href="addRecipe.php">Přidat nový recept</a>
@@ -163,42 +173,58 @@ if ($connect) {
                // User is  logged in
                echo '<a class="active" href="userInfo.php">' . $_SESSION["username"] . '</a>';
           } ?>
-     </div>
+          <select onchange="location = this.value;">
+               <option hidden selected disabled>Styl</option>
+               <option value="changeStyle.php?style=1">Zeleninový</option>
+               <option value="changeStyle.php?style=2">Masový</option>
+               <option value="changeStyle.php?style=3">Těstovinový</option>
+               <option value="changeStyle.php?style=4">Ovocný</option>
+          </select>
+     </nav>
      <br /><br />
-     <div class="userDiv">
-          <h3 align="center">Změna uživatelských údajů</h3>
+     <main class="userDiv">
+          <h1>Změna uživatelských údajů</h1>
           <br />
           <form method="post">
-               <label>Zadejte jméno</label>
-               <input type="text" name="name" class="form-control" pattern="[A-Ža-ž]{3,40}" required value=<?php echo $name; ?>>
+               <label for="name">Zadejte jméno</label>
+               <input type="text" id="name" name="name" class="form-control" pattern="[A-Ža-ž]{3,40}" required value=<?php echo $name; ?>>
                <br>
-               <label>Zadejte příjmení </label>
-               <input type="text" name="lastname" class="form-control" pattern="[A-Ža-ž]{3,40}" required value=<?php echo $lastname; ?>>
+               <label for="lastname">Zadejte příjmení </label>
+               <input type="text" id="lastname" name="lastname" class="form-control" pattern="[A-Ža-ž]{3,40}" required value=<?php echo $lastname; ?>>
                <br>
-               <label>Zadejte email</label>
-               <input type="text" name="email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required value=<?php echo $email; ?>>
+               <label for="email">Zadejte email</label>
+               <input type="text" id="email" name="email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required value=<?php echo $email; ?>>
                <br>
-               <label>Zadejte uživatelské jméno</label>
-               <input type="text" name="username" class="form-control" maxlength="40" minlength="3" required value=<?php echo $username; ?>>
+               <label for="username">Zadejte uživatelské jméno</label>
+               <input type="text" id="username" name="username" class="form-control" maxlength="40" minlength="3" required value=<?php echo $username; ?>>
                <br>
                <?php
+               //show role only to admin
                if ($currentUserRole == "Admin") {
                     echo '
-                         <label>Zadejte Roli</label>
-                              <input type="text" name="role" class="form-control" maxlength="20" minlength="3" required value=' . $role . '>
+                         <label for="role">Zadejte Roli</label>
+                              <input type="text" id="role" name="role" class="form-control" maxlength="20" minlength="3" required value=' . $role . '>
                          <br>';
                }
 
-               ?>
-               <label>Zadejte heslo</label>
-               <input type="password" name="password" class="form-control" maxlength="20" minlength="3" required>
-               <br>
+               //hide password of other user to admin... he shouldnt change password of other users... vale is "xxxx" just to pass all tests on filled input
+               if ($currentUserRole == "Admin" && $currentUserID != $editUserID) {
+                    echo '
+                    <label hidden for="password">Zadejte heslo</label>
+                    <input type="hidden" id="password" type="password" name="password" class="form-control" maxlength="20" minlength="3" value = "xxxx">
+                    <br>';
+               } else {
+                    echo '
+                    <label for="password">Zadejte heslo</label>
+                    <input type="password" id="password" name="password" class="form-control" maxlength="20" minlength="3" value ="" required>
+                    <br>';
+               } ?>
 
                <p id="errorMsg" class=<?php echo $errorMsgType; ?>><?php echo $php_errormsg; ?></p>
                <input type="submit" name="register" value="Změnit uživatelské údaje" class="btn btn-info" />
                <br>
           </form>
-     </div>
+     </main>
      <!--Footer-->
      <footer>
           <p>Autor: Ondřej Bureš, Kontakt:
