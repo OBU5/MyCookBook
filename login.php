@@ -61,6 +61,9 @@ if ($connect) {
         } elseif (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
             $php_errormsg = "Zadaný email není platný";
             $errorMsgType = "errorMessage";
+        } elseif (strlen($_POST["email"]) < 3 || strlen($_POST["email"]) > 40) {
+            $php_errormsg = "Zadaný email není platný";
+            $errorMsgType = "errorMessage";
         } else {
             $username = mysqli_real_escape_string($connect, $_POST["username"]);
             $email = mysqli_real_escape_string($connect, $_POST["email"]);
@@ -185,10 +188,10 @@ if ($connect) {
                 <input type="text" id="email" name="email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email'], ENT_QUOTES) : ''; ?>">
                 <br>
                 <label for="username">Zadejte uživatelské jméno</label>
-                <input type="text" id="username" name="username" class="form-control" maxlength="40" minlength="3" required value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username'], ENT_QUOTES) : ''; ?>">
+                <input type="text" id="username" name="username" class="form-control" maxlength="20" minlength="3" required value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username'], ENT_QUOTES) : ''; ?>">
                 <br>
                 <label for="password">Zadejte heslo</label>
-                <input type="password" id="password" name="password" class="form-control" maxlength="20" minlength="3" required>
+                <input type="password" id="password" name="password" class="form-control" maxlength="40" minlength="3" required>
                 <br>
                 <p id="errorMsg" class="<?php echo $errorMsgType; ?>"><?php echo $php_errormsg; ?></p>
                 <input type="submit" name="register" value="Register" class="btn btn-info" />

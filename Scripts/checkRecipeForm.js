@@ -2,7 +2,7 @@ function checkRecipename(e) {
     console.log("checking recipe title");
     console.log(e); //log metadata of the submit event
 
-    //Recipe name can be between 3 and 12 characters
+    //Recipe name can be between 3 and 40 characters
     if (recipename.value.length < 3 || recipename.value.length > 40) {
         recipename.classList.add("errorText");
     } else {
@@ -11,11 +11,23 @@ function checkRecipename(e) {
 
 }
 
+function checkTime(e) {
+    console.log("checking recipe time");
+    console.log(e); //log metadata of the submit event
+
+    //check time
+    if (Number(time.value)!=0 && (time.value >= 1) && (time.value <= 1000)) {
+        time.classList.remove("errorText")
+    } else {
+        time.classList.add("errorText");
+    }
+
+}
+
 function checkDirections(e) {
     console.log("checking recipe directions");
     console.log(e); //log metadata of the submit event
 
-    //Recipe name can be between 3 and 12 characters
     if (directions.value.length < 3 || directions.value.length > 1000) {
         directions.classList.add("errorText");
     } else {
@@ -77,7 +89,15 @@ function checkBeforePost(e) {
         e.preventDefault();
         document.getElementById("errorMsg").innerHTML = "je potřeba vybrat alespoň jednu jídelní kategorii";
         document.getElementById("errorMsg").classList.add("errorMessage");
-    } else {
+    }
+    // check number in time input
+    else if ((Number(time.value)==0)  || !(time.value > 1) || !(time.value < 1000)) {
+        e.preventDefault();
+        time.classList.add("errorText");
+        document.getElementById("errorMsg").innerHTML = "Počet minut musí být mezi 1 až 1000 minutami";
+        document.getElementById("errorMsg").classList.add("errorMessage");
+    }    
+    else {
         if (recipename.value.length < 3 || recipename.value.length > 40) {
             e.preventDefault();
             recipename.classList.add("errorText");
@@ -86,7 +106,7 @@ function checkBeforePost(e) {
         } else if (directions.value.length < 3) {
             e.preventDefault();
             directions.classList.add("errorText");
-            document.getElementById("errorMsg").innerHTML = "pokyny receptu musíobsahovat nějaký text";
+            document.getElementById("errorMsg").innerHTML = "pokyny receptu musí obsahovat nějaký text";
             document.getElementById("errorMsg").classList.add("errorMessage");
         } else if (directions.value.length < 3 || directions.value.length > 1000) {
             e.preventDefault();
@@ -117,6 +137,7 @@ function addRow() {
 let errorText = "";
 
 let recipename = document.querySelector("input[name = recipename]");
+let time = document.querySelector("input[name = time]");
 let directions = document.querySelector("textarea[name = directions]");
 let originCountry = document.querySelector("input[name = originCountry]");
 let ingredients = [];
@@ -132,6 +153,7 @@ let submitButton = document.querySelector("input[name = submit]");
 
 // event - on remove focus of element, function - check()
 recipename.addEventListener("blur", checkRecipename);
+time.addEventListener("blur", checkTime);
 directions.addEventListener("blur", checkDirections);
 submitButton.addEventListener("click", checkBeforePost);
 

@@ -14,6 +14,7 @@ if (isset($_COOKIE["style"])) {
 $errorMsgType = "";
 $php_errormsg = "";
 $error = false;
+$time = 60;
 $connect = mysqli_connect("localhost", "bureson1", "webove aplikace", "bureson1");
 // Check connection
 if (!$connect) {
@@ -45,6 +46,16 @@ if ($connect) {
                     $error = true;
                 } else {
                     $recipename = mysqli_real_escape_string($connect, $_POST["recipename"]);
+                }
+            }
+            // check if recipeName is unique
+            if (!$error) {
+                $query = "SELECT * FROM recipes WHERE name = '$recipename'";
+                $result = $connect->query($query);
+                if (mysqli_num_rows($result) > 0) {
+                    $php_errormsg = "Recept s tímto jménem již existuje";
+                    $errorMsgType = "errorMessage";
+                    $error = true;
                 }
             }
 
@@ -113,7 +124,7 @@ if ($connect) {
             $atLeastOneIngredientExists = false;
             if ((is_array($ingredients) || is_object($ingredients)) && (is_array($quantities) || is_object($quantities)) && (is_array($units) || is_object($units))) {
                 if (!$error && empty($ingredients)) {
-                    echo $ingredients;
+                    //echo $ingredients;
                     //to do not repeat this part
                     $php_errormsg = "Přidejte alespoň jednu ingredienci";
                     $errorMsgType = "errorMessage";
@@ -150,7 +161,16 @@ if ($connect) {
                 $error = true;
             }
 
-
+            //check if filled time is number
+            $atLeastOneIngredientExists = false;
+            if (isset($_POST['time']) && is_numeric($_POST['time']) && ($_POST['time'] > 1) && ($_POST['time'] < 1000)) {
+                $time = $_POST['time'];
+            }
+            else{                    
+                $php_errormsg = "Počet minut musí být mezi 1 až 1000 minutami";
+                $errorMsgType = "errorMessage";
+                $error = true;
+            }
             //check, if at least one meal category was set
             $query = "SELECT ID FROM mealcategory";
             $result = $connect->query($query);
@@ -194,7 +214,7 @@ if ($connect) {
                     if (in_array($type, $extensions)) {
                         if (move_uploaded_file($_FILES["img"]["tmp_name"], $uploadfile)) {
                             $imgUrl = $uploadfile;
-                            echo $imgUrl;
+                            //echo $imgUrl;
                         } else {
                             $php_errormsg = "byl zvolen soubor v chybném formátu";
                             $errorMsgType = "errorMessage";
@@ -222,7 +242,7 @@ if ($connect) {
 
             // store Recipe into database
             if (!$error) {
-                $query = "INSERT INTO recipes(author_id, name, date, directions, originCountry_id, imgUrl) VALUES('$recipeAuthor_id', '$recipename', curdate(), '$directions', '$originCountry_id', '$imgUrl')";
+                $query = "INSERT INTO recipes(author_id, name, date, directions, originCountry_id, time, imgUrl) VALUES('$recipeAuthor_id', '$recipename', curdate(), '$directions', '$originCountry_id', '$time', '$imgUrl')";
                 if (mysqli_query($connect, $query)) {
                     $php_errormsg = "recept byl úspěšně přidán";
                     $errorMsgType = "successMessage";
@@ -371,6 +391,9 @@ if ($connect) {
 
             <label for="directions">Postup přípravy:</label>
             <textarea id="directions" name="directions" rows="10" cols="50" maxlength="1000" minlength="3" required placeholder="Zadejte postup"><?php echo stripcslashes(isset($_POST['directions']) ? htmlspecialchars($_POST['directions'], ENT_QUOTES) : ''); ?></textarea><br>
+            
+            <label for="time">Doba vaření v minutách (1 až 1000):</label>
+            <input type="number" name="time" id="time" min="1" max="1000" value = "<?php echo stripcslashes(isset($_POST['time']) ? htmlspecialchars($_POST['time'], ENT_QUOTES) : ''); ?>"><br><br>
 
 
             <label for="img">Obrázek:</label>

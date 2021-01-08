@@ -69,7 +69,7 @@ if (!$connect) {
         }
 
 
-        $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE ID = '$recipeID' ";
+        $query = "SELECT ID, name, date, directions, author_id, originCountry_id, time, imgUrl FROM recipes WHERE ID = '$recipeID' ";
         $result = $connect->query($query);
 
         // for all recipes
@@ -80,6 +80,7 @@ if (!$connect) {
                 $creation_date = $row["date"];
                 $imgUrl = $row["imgUrl"];
                 $directions = (!empty($row["directions"]) ? $row["directions"] : "Neznámý");
+                $time = (!empty($row["time"]) ? $row["time"] : "Neznámý");
                 $originCountry = "Neznámý";
                 $originCountry_id = $row["originCountry_id"];
                 $author = "Neznámý";
@@ -205,7 +206,7 @@ if (!$connect) {
                     <p> <strong>identifikační číslo receptu:</strong> " . $recipe_id . "</p>
                                         
                     <p><strong>Přidáno dne:</strong> " . $creation_date . "</p>
-            
+                    <p><strong>Doba vaření:</strong> " . $time . " minut</p>
                     <p><strong>Autor:</strong> " . $author . "</p>
                     <p><strong>Země původu:</strong> " . $originCountry . "</p>
             
@@ -223,7 +224,10 @@ if (!$connect) {
                    </main> <br><br>";
             }
         } else {
-            echo "<p> Recept s požadovaným identifikačním číslem neexistuje<p>";
+            echo "                    
+            <main class=fullRecipeDiv>
+                <p> Recept s požadovaným identifikačním číslem neexistuje<p>
+            </main> <br><br>";
         }
     }
     ?>

@@ -211,12 +211,12 @@ if ($connect) {
                if ($currentUserRole == "Admin" && $currentUserID != $editUserID) {
                     echo '
                     <label hidden for="password">Zadejte heslo</label>
-                    <input type="hidden" id="password" type="password" name="password" class="form-control" maxlength="20" minlength="3" value = "xxxx">
+                    <input type="hidden" id="password" type="password" name="password" class="form-control" maxlength="40" minlength="3" value = "xxxx">
                     <br>';
                } else {
                     echo '
                     <label for="password">Zadejte heslo</label>
-                    <input type="password" id="password" name="password" class="form-control" maxlength="20" minlength="3" value ="" required>
+                    <input type="password" id="password" name="password" class="form-control" maxlength="40" minlength="3" value ="" required>
                     <br>';
                } ?>
 

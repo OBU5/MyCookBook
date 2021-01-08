@@ -178,7 +178,7 @@ body.style1 .aboutDiv p {
 }
 
 body.style1 .chooseOptionDiv {
-    width: 50%;
+    width: 90%;
     padding: 20px;
     margin-left: auto;
     margin-right: auto;
@@ -187,17 +187,35 @@ body.style1 .chooseOptionDiv {
     justify-content: center;
 }
 
-body.style1.chooseOptionDiv button {
-    width: 50%;
+body.style1 button.chooseOption {
+    width: 25%;
+    height: 70px;
     padding: 10px;
     background: rgb(44, 138, 44);
     font-size: 100%;
     color: white;
-    border: 1px solid grey;
-    border-left: none;
+    border: 2px solid rgb(1, 71, 0);
+    border-radius: 5px;
     cursor: pointer;
     margin-left: auto;
     margin-right: auto;
+}
+
+body.style1 select.chooseOption {
+    display: inline-block;
+    width: 25%;
+    height: 70px;
+    font-size: 100%;
+    text-align-last: center;
+    cursor: pointer;
+    background-color: rgb(44, 138, 44);
+    border: 2px solid rgb(1, 71, 0);    
+    border-radius: 5px;
+    color: white;
+    padding: 10px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 /* Tables */
@@ -542,7 +560,7 @@ body.style2 .aboutDiv p {
 }
 
 body.style2 .chooseOptionDiv {
-    width: 50%;
+    width: 90%;
     padding: 20px;
     margin-left: auto;
     margin-right: auto;
@@ -551,17 +569,36 @@ body.style2 .chooseOptionDiv {
     justify-content: center;
 }
 
-body.style2 .chooseOptionDiv button {
-    width: 50%;
+
+body.style2 button.chooseOption {
+    width: 25%;
+    height: 70px;
     padding: 10px;
     background: rgb(138, 44, 44);
     font-size: 100%;
     color: white;
-    border: 1px solid grey;
-    border-left: none;
+    border: 2px solid rgb(71, 1, 0);
+    border-radius: 5px;
     cursor: pointer;
     margin-left: auto;
     margin-right: auto;
+}
+
+body.style2 select.chooseOption {
+    display: inline-block;
+    width: 25%;
+    height: 70px;
+    font-size: 100%;
+    text-align-last: center;
+    cursor: pointer;
+    background: rgb(138, 44, 44);
+    border: 2px solid rgb(71, 1, 0);    
+    border-radius: 5px;
+    color: white;
+    padding: 10px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 /* Tables */
@@ -906,7 +943,7 @@ body.style3 .aboutDiv p {
 }
 
 body.style3 .chooseOptionDiv {
-    width: 50%;
+    width: 90%;
     padding: 20px;
     margin-left: auto;
     margin-right: auto;
@@ -915,17 +952,35 @@ body.style3 .chooseOptionDiv {
     justify-content: center;
 }
 
-body.style3 .chooseOptionDiv button {
-    width: 50%;
+body.style3 button.chooseOption {
+    width: 25%;
+    height: 70px;
     padding: 10px;
-    background: rgb(200, 115, 0);
     font-size: 100%;
     color: white;
-    border: 1px solid grey;
-    border-left: none;
+    background: rgb(200, 115, 0);
+    border: 2px solid rgb(71, 37, 0);  
+    border-radius: 5px;
     cursor: pointer;
     margin-left: auto;
     margin-right: auto;
+}
+
+body.style3 select.chooseOption {
+    display: inline-block;
+    width: 25%;
+    height: 70px;
+    font-size: 100%;
+    text-align-last: center;
+    cursor: pointer;
+    background: rgb(200, 115, 0);
+    border: 2px solid rgb(71, 37, 0);    
+    border-radius: 5px;
+    color: white;
+    padding: 10px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 /* Tables */
@@ -1279,7 +1334,7 @@ body.style4 .aboutDiv p {
 }
 
 body.style4 .chooseOptionDiv {
-    width: 50%;
+    width: 90%;
     padding: 20px;
     margin-left: auto;
     margin-right: auto;
@@ -1288,17 +1343,36 @@ body.style4 .chooseOptionDiv {
     justify-content: center;
 }
 
-body.style4.chooseOptionDiv button {
-    width: 50%;
+
+body.style4 button.chooseOption {
+    width: 25%;
+    height: 70px;
     padding: 10px;
     background: rgb(44, 44, 138);
     font-size: 100%;
     color: white;
-    border: 1px solid grey;
-    border-left: none;
+    border: 2px solid rgb(1, 1, 71);
+    border-radius: 5px;
     cursor: pointer;
     margin-left: auto;
     margin-right: auto;
+}
+
+body.style4 select.chooseOption {
+    display: inline-block;
+    width: 25%;
+    height: 70px;
+    font-size: 100%;
+    text-align-last: center;
+    cursor: pointer;
+    background: rgb(44, 44, 138);
+    border: 2px solid rgb(1, 1, 71);  
+    border-radius: 5px;
+    color: white;
+    padding: 10px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 /* Tables */
@@ -1534,7 +1608,7 @@ p.margin0 {
     text-align: center;
 }
 
-input[type=text], input[type=date], input[type=password], input[type=url], select, textarea {
+input[type=text], input[type=date], input[type=number], input[type=password], input[type=url], select, textarea {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -1676,11 +1750,11 @@ img.full {
         color: #000;
     }
     h2 {
-        font-size: 14px;
+        font-size: 14px !important;
         color: #000;
     }
     h3 {
-        font-size: 13px;
+        font-size: 13px !important;
         color: #000;
     }
     ul, li, th, td, p {

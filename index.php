@@ -64,7 +64,6 @@ if (isset($_COOKIE["style"])) {
             <p>Pokud nevíte co zrovna uvařit nebo jen přemýšlíte, co byste si někdy v budoucnu rádi dali, klikněte v navigačním menu na <strong>Zobrazit recepty</strong></p>
             <p>Máte oblíbený pokrm a rádi byste se podělili o jeho tajemství? Pokud ano, klikněte v navigačním menu na <strong>Přidat nový recept</strong></p>
             <p>Zajímáte li se o informace o této stránce, například za jakým účelem vznikla, klikněte v navigačním menu na <strong>About</strong></p>
-            <p>Pokud chcete vidět případně upravit vaše informace, klikněte v navigačním menu na <strong>About</strong></p>
             <?php
             if (isset($_SESSION["username"])) {
                 // User is not logged in

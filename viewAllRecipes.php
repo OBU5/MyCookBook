@@ -76,7 +76,114 @@ if (isset($_COOKIE["style"])) {
 
         if ($sarchedOption != null && $sarchedOption  == "my") {
             $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE author_id = '$currentUserID'";
-        } else {
+        }
+        else if ($sarchedOption != null && $sarchedOption  == "starterOnly") {
+            //get recipe id on selected meal category
+            $sqlCondition = "WHERE ";
+            $query = "SELECT recipe_id FROM recipe_mealcategory WHERE mealCategory_id = '1'";
+            $result = $connect->query($query);
+            if ($result->num_rows > 0) {
+                $i = 1;
+                while ($row = $result->fetch_assoc()) {
+                    $sqlCondition = $sqlCondition . "ID = '".$row['recipe_id']."' ";
+                    if($i < $result->num_rows){
+                        $sqlCondition = $sqlCondition . "OR ";
+                    }
+                    $i++;
+                }
+            }
+
+            $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes ".$sqlCondition;
+            //echo $query;
+        }
+        else if ($sarchedOption != null && $sarchedOption  == "soupOnly") {
+            //get recipe id on selected meal category
+            $sqlCondition = "WHERE ";
+            $query = "SELECT recipe_id FROM recipe_mealcategory WHERE mealCategory_id = '2'";
+            $result = $connect->query($query);
+            if ($result->num_rows > 0) {
+                $i = 1;
+                while ($row = $result->fetch_assoc()) {
+                    $sqlCondition = $sqlCondition . "ID = '".$row['recipe_id']."' ";
+                    if($i < $result->num_rows){
+                        $sqlCondition = $sqlCondition . "OR ";
+                    }
+                    $i++;
+                }
+            }
+
+            $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes ".$sqlCondition;
+            //echo $query;
+        }
+        else if ($sarchedOption != null && $sarchedOption  == "mainOnly") {
+            //get recipe id on selected meal category
+            $sqlCondition = "WHERE ";
+            $query = "SELECT recipe_id FROM recipe_mealcategory WHERE mealCategory_id = '3'";
+            $result = $connect->query($query);
+            if ($result->num_rows > 0) {
+                $i = 1;
+                while ($row = $result->fetch_assoc()) {
+                    $sqlCondition = $sqlCondition . "ID = '".$row['recipe_id']."' ";
+                    if($i < $result->num_rows){
+                        $sqlCondition = $sqlCondition . "OR ";
+                    }
+                    $i++;
+                }
+            }
+
+            $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes ".$sqlCondition;
+            //echo $query;
+        }
+        else if ($sarchedOption != null && $sarchedOption  == "dessertOnly") {
+            //get recipe id on selected meal category
+            $sqlCondition = "WHERE ";
+            $query = "SELECT recipe_id FROM recipe_mealcategory WHERE mealCategory_id = '4'";
+            $result = $connect->query($query);
+            if ($result->num_rows > 0) {
+                $i = 1;
+                while ($row = $result->fetch_assoc()) {
+                    $sqlCondition = $sqlCondition . "ID = '".$row['recipe_id']."' ";
+                    if($i < $result->num_rows){
+                        $sqlCondition = $sqlCondition . "OR ";
+                    }
+                    $i++;
+                }
+            }
+
+            $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes ".$sqlCondition;
+            //echo $query;
+        }
+        else if ($sarchedOption != null && $sarchedOption  == "snackOnly") {
+            //get recipe id on selected meal category
+            $sqlCondition = "WHERE ";
+            $query = "SELECT recipe_id FROM recipe_mealcategory WHERE mealCategory_id = '5'";
+            $result = $connect->query($query);
+            if ($result->num_rows > 0) {
+                $i = 1;
+                while ($row = $result->fetch_assoc()) {
+                    $sqlCondition = $sqlCondition . "ID = '".$row['recipe_id']."' ";
+                    if($i < $result->num_rows){
+                        $sqlCondition = $sqlCondition . "OR ";
+                    }
+                    $i++;
+                }
+            }
+
+            $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes ".$sqlCondition;
+            //echo $query;
+        }else if ($sarchedOption != null && $sarchedOption  == "notKnownOnly") {
+            $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE originCountry_id = '1'";
+        }else if ($sarchedOption != null && $sarchedOption  == "czOnly") {
+            $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE originCountry_id = '2'";
+        }else if ($sarchedOption != null && $sarchedOption  == "vietOnly") {
+            $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE originCountry_id = '3'";
+        }else if ($sarchedOption != null && $sarchedOption  == "itOnly") {
+            $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE originCountry_id = '4'";
+        }else if ($sarchedOption != null && $sarchedOption  == "hungOnly") {
+            $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE originCountry_id = '5'";
+        }else if ($sarchedOption != null && $sarchedOption  == "spainOnly") {
+            $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE originCountry_id = '6'";
+        }else {
             $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes";
         }
         $result = $connect->query($query);
@@ -86,10 +193,27 @@ if (isset($_COOKIE["style"])) {
         // Check if the page number is specified and check if it's a number, if not -> return the default page number which is 1.
         $page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1; ?>
 
-        <main class=recipeDiv>
+        <main class="recipeDiv">
             <div class="chooseOptionDiv">
-                <button type="button" onclick="location.href='viewAllRecipes.php?page=1&option=my'">Zobrazit pouze moje recepty</button>
-                <button type="button" onclick="location.href='viewAllRecipes.php?page=1&option=default'">Zobrazit všechny recepty</button>
+                <button class="chooseOption" type="button" onclick="location.href='viewAllRecipes.php?page=1&option=my'">Pouze moje recepty</button>
+                <button class="chooseOption" type="button" onclick="location.href='viewAllRecipes.php?page=1&option=default'">Všechny recepty</button>
+                <select class="chooseOption" onchange="location = this.value;">
+                    <option hidden selected disabled>Podle kategorie ...</option>
+                    <option value="viewAllRecipes.php?page=1&option=starterOnly">Předkrmy</option>
+                    <option value="viewAllRecipes.php?page=1&option=soupOnly">Polévky</option>
+                    <option value="viewAllRecipes.php?page=1&option=mainOnly">Hlavní jídla</option>
+                    <option value="viewAllRecipes.php?page=1&option=dessertOnly">dezerty</option>
+                    <option value="viewAllRecipes.php?page=1&option=snackOnly">svačiny</option>
+                </select>
+                <select class="chooseOption" onchange="location = this.value;">
+                    <option hidden selected disabled>Podle země původu ...</option>
+                    <option value="viewAllRecipes.php?page=1&option=notKnownOnly">Neznámá</option>
+                    <option value="viewAllRecipes.php?page=1&option=czOnly">Čechy</option>
+                    <option value="viewAllRecipes.php?page=1&option=vietOnly">Vietnam</option>
+                    <option value="viewAllRecipes.php?page=1&option=itOnly">Itálie</option>
+                    <option value="viewAllRecipes.php?page=1&option=hungOnly">Maďarsko</option>
+                    <option value="viewAllRecipes.php?page=1&option=spainOnly">Španělsko</option>
+                </select>
             </div>
             <hr>
 
@@ -99,6 +223,113 @@ if (isset($_COOKIE["style"])) {
 
             if ($sarchedOption != null && $sarchedOption  == "my") {
                 $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE author_id = '$currentUserID' LIMIT ?,?";
+            }
+            else if ($sarchedOption != null && $sarchedOption  == "starterOnly") {
+                //get recipe id on selected meal category
+                $sqlCondition = "WHERE ";
+                $query = "SELECT recipe_id FROM recipe_mealcategory WHERE mealCategory_id = '1'";
+                $result = $connect->query($query);
+                if ($result->num_rows > 0) {
+                    $i = 1;
+                    while ($row = $result->fetch_assoc()) {
+                        $sqlCondition = $sqlCondition . "ID = '".$row['recipe_id']."' ";
+                        if($i < $result->num_rows){
+                            $sqlCondition = $sqlCondition . "OR ";
+                        }
+                        $i++;
+                    }
+                }
+    
+                $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes ".$sqlCondition. "LIMIT ?,?";
+                //echo $query;
+            }
+            else if ($sarchedOption != null && $sarchedOption  == "soupOnly") {
+                //get recipe id on selected meal category
+                $sqlCondition = "WHERE ";
+                $query = "SELECT recipe_id FROM recipe_mealcategory WHERE mealCategory_id = '2'";
+                $result = $connect->query($query);
+                if ($result->num_rows > 0) {
+                    $i = 1;
+                    while ($row = $result->fetch_assoc()) {
+                        $sqlCondition = $sqlCondition . "ID = '".$row['recipe_id']."' ";
+                        if($i < $result->num_rows){
+                            $sqlCondition = $sqlCondition . "OR ";
+                        }
+                        $i++;
+                    }
+                }
+    
+                $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes ".$sqlCondition. "LIMIT ?,?";
+                //echo $query;
+            }
+            else if ($sarchedOption != null && $sarchedOption  == "mainOnly") {
+                //get recipe id on selected meal category
+                $sqlCondition = "WHERE ";
+                $query = "SELECT recipe_id FROM recipe_mealcategory WHERE mealCategory_id = '3'";
+                $result = $connect->query($query);
+                if ($result->num_rows > 0) {
+                    $i = 1;
+                    while ($row = $result->fetch_assoc()) {
+                        $sqlCondition = $sqlCondition . "ID = '".$row['recipe_id']."' ";
+                        if($i < $result->num_rows){
+                            $sqlCondition = $sqlCondition . "OR ";
+                        }
+                        $i++;
+                    }
+                }
+    
+                $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes ".$sqlCondition. "LIMIT ?,?";
+                //echo $query;
+            }
+            else if ($sarchedOption != null && $sarchedOption  == "dessertOnly") {
+                //get recipe id on selected meal category
+                $sqlCondition = "WHERE ";
+                $query = "SELECT recipe_id FROM recipe_mealcategory WHERE mealCategory_id = '4'";
+                $result = $connect->query($query);
+                if ($result->num_rows > 0) {
+                    $i = 1;
+                    while ($row = $result->fetch_assoc()) {
+                        $sqlCondition = $sqlCondition . "ID = '".$row['recipe_id']."' ";
+                        if($i < $result->num_rows){
+                            $sqlCondition = $sqlCondition . "OR ";
+                        }
+                        $i++;
+                    }
+                }
+    
+                $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes ".$sqlCondition. "LIMIT ?,?";
+                //echo $query;
+            }
+            else if ($sarchedOption != null && $sarchedOption  == "snackOnly") {
+                //get recipe id on selected meal category
+                $sqlCondition = "WHERE ";
+                $query = "SELECT recipe_id FROM recipe_mealcategory WHERE mealCategory_id = '5'";
+                $result = $connect->query($query);
+                if ($result->num_rows > 0) {
+                    $i = 1;
+                    while ($row = $result->fetch_assoc()) {
+                        $sqlCondition = $sqlCondition . "ID = '".$row['recipe_id']."' ";
+                        if($i < $result->num_rows){
+                            $sqlCondition = $sqlCondition . "OR ";
+                        }
+                        $i++;
+                    }
+                }
+    
+                $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes ".$sqlCondition. "LIMIT ?,?";
+                //echo $query;
+            } else if ($sarchedOption != null && $sarchedOption  == "notKnownOnly") {
+                $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE originCountry_id = '1' LIMIT ?,?";
+            }else if ($sarchedOption != null && $sarchedOption  == "czOnly") {
+                $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE originCountry_id = '2' LIMIT ?,?";
+            }else if ($sarchedOption != null && $sarchedOption  == "vietOnly") {
+                $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE originCountry_id = '3' LIMIT ?,?";
+            }else if ($sarchedOption != null && $sarchedOption  == "itOnly") {
+                $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE originCountry_id = '4' LIMIT ?,?";
+            }else if ($sarchedOption != null && $sarchedOption  == "hungOnly") {
+                $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE originCountry_id = '5' LIMIT ?,?";
+            }else if ($sarchedOption != null && $sarchedOption  == "spainOnly") {
+                $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE originCountry_id = '6' LIMIT ?,?";
             } else {
                 $query = "SELECT ID, name, date, directions, author_id, originCountry_id, imgUrl FROM recipes LIMIT ?,?";
             }

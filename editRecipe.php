@@ -40,6 +40,7 @@ if ($connect) {
         $recipename;
         $imgUrl;
         $directions;
+        $time;
         $originCountry;
         $originCountry_id;
         $ingredients = array();
@@ -50,7 +51,7 @@ if ($connect) {
 
         //if recipe id is valid
         if ($recipeID > 0) {
-            $query = "SELECT ID, name, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE ID = '$recipeID' ";
+            $query = "SELECT ID, name, directions, author_id, originCountry_id, time, imgUrl FROM recipes WHERE ID = '$recipeID' ";
             $result = $connect->query($query);
 
             // recipe found - id is valid
@@ -194,6 +195,16 @@ if ($connect) {
                             $error = true;
                         }
 
+                        //check if filled time is number
+                        $atLeastOneIngredientExists = false;
+                        if (isset($_POST['time']) && is_numeric($_POST['time']) && ($_POST['time'] > 1) && ($_POST['time'] < 1000)) {
+                            $time = $_POST['time'];
+                        }
+                        else{                    
+                            $php_errormsg = "Počet minut musí být mezi 1 až 1000 minutami";
+                            $errorMsgType = "errorMessage";
+                            $error = true;
+                        }
 
                         //check, if at least one meal category was set
                         $query = "SELECT ID, name FROM mealcategory";
@@ -252,10 +263,10 @@ if ($connect) {
                                 }
 
                                 /*
-                echo '<pre>';
-                echo 'Here is some more debugging info:';
-                print_r($_FILES);
-                print "</pre>";*/
+                                echo '<pre>';
+                                echo 'Here is some more debugging info:';
+                                print_r($_FILES);
+                                print "</pre>";*/
                             } else {
                                 // it is not mandatory to insert image, when we edit the recipe
                             }
@@ -266,10 +277,10 @@ if ($connect) {
                         // update Recipe
                         if (!$error) {
                             if ($imgUrlChanged) {
-                                $query = "UPDATE recipes SET  name = '$recipename', directions = '$directions', originCountry_id = '$originCountry_id', imgUrl = '$imgUrl' WHERE ID = '$recipeID'";
+                                $query = "UPDATE recipes SET  name = '$recipename', directions = '$directions', originCountry_id = '$originCountry_id',time = '$time', imgUrl = '$imgUrl' WHERE ID = '$recipeID'";
                                 echo "changed";
                             } else {
-                                $query = "UPDATE recipes SET  name = '$recipename', directions = '$directions', originCountry_id = '$originCountry_id' WHERE ID = '$recipeID'";
+                                $query = "UPDATE recipes SET  name = '$recipename', directions = '$directions', originCountry_id = '$originCountry_id',time = '$time' WHERE ID = '$recipeID'";
                             }
                             if (mysqli_query($connect, $query)) {
                                 $php_errormsg = "recept byl úspěšně upraven";
@@ -389,7 +400,7 @@ if ($connect) {
                 }
                 //if it is not submited -> load data from database
                 else {
-                    $query = "SELECT ID, name, directions, author_id, originCountry_id, imgUrl FROM recipes WHERE ID = '$recipeID' ";
+                    $query = "SELECT ID, name, directions, author_id, originCountry_id, time, imgUrl FROM recipes WHERE ID = '$recipeID' ";
                     $result = $connect->query($query);
 
                     // output data of each row
@@ -399,6 +410,7 @@ if ($connect) {
                         $directions = (!empty($row["directions"]) ? $row["directions"] : "Neznámý");
                         $originCountry = "Neznámý";
                         $originCountry_id = $row["originCountry_id"];
+                        $time = $row["time"];
                         $author = "Neznámý";
                         $ingredients = array();
                         $quantities = array();
@@ -560,6 +572,9 @@ if ($connect) {
             <br>
             <label for="directions">Postup:</label>
             <textarea name="directions" id="directions" rows="10" cols="50" maxlength="1000" minlength="3" required placeholder="Zadejte postup"><?php echo stripcslashes(isset($directions) ? htmlspecialchars($directions, ENT_QUOTES) : ''); ?></textarea><br>
+            <label for="time">Doba vaření v minutách (1 až 1000):</label>
+            <input type="number" name="time" id="time" min="1" max="1000" value = "<?php echo stripcslashes(isset($time) ? htmlspecialchars($time, ENT_QUOTES) : ''); ?>"><br><br>
+
 
 
 
