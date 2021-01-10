@@ -102,7 +102,7 @@ if ($connect) {
                 while ($row = mysqli_fetch_array($result)) {
                     if (password_verify($password, $row["password"])) {
                         //return true;
-                        $_SESSION["username"] = $username;
+                        $_SESSION["username"] = htmlspecialchars($username,ENT_QUOTES);
                         header("location:index.php");
                     } else {
                         //return false;
@@ -179,13 +179,13 @@ if ($connect) {
             <br>
             <form method="post">
                 <label for="name">Zadejte jméno</label>
-                <input type="text" id="name" name="name" class="form-control" pattern="[A-Ža-ž]{3,40}" required value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name'], ENT_QUOTES) : ''; ?>">
+                <input type="text" id="name" name="name" class="form-control" maxlength="20" minlength="3" pattern="[A-Ža-ž]{3,20}" required value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name'], ENT_QUOTES) : ''; ?>">
                 <br>
                 <label for="lastname">Zadejte příjmení </label>
-                <input type="text" id="lastname" name="lastname" class="form-control" pattern="[A-Ža-ž]{3,40}" required value="<?php echo isset($_POST['lastname']) ? htmlspecialchars($_POST['lastname'], ENT_QUOTES) : ''; ?>">
+                <input type="text" id="lastname" name="lastname" class="form-control" maxlength="20" minlength="3" pattern="[A-Ža-ž]{3,20}" required value="<?php echo isset($_POST['lastname']) ? htmlspecialchars($_POST['lastname'], ENT_QUOTES) : ''; ?>">
                 <br>
                 <label for="email">Zadejte email</label>
-                <input type="text" id="email" name="email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email'], ENT_QUOTES) : ''; ?>">
+                <input type="text" id="email" name="email" class="form-control" maxlength="40" minlength="3" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,40}$" required value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email'], ENT_QUOTES) : ''; ?>">
                 <br>
                 <label for="username">Zadejte uživatelské jméno</label>
                 <input type="text" id="username" name="username" class="form-control" maxlength="20" minlength="3" required value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username'], ENT_QUOTES) : ''; ?>">

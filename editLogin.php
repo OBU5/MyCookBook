@@ -48,7 +48,7 @@ if ($connect) {
      } else {
           $row1 = $result1->fetch_assoc();
           $currentUserID = $row1['ID'];
-          $currentUserRole = $row1['role'];
+          $currentUserRole = htmlspecialchars($row1['role'],ENT_QUOTES);
      }
      //update only if current user is author, of the role of user is "Admin"
      if ($currentUserID == $editUserID || $currentUserRole == "Admin") {
@@ -94,11 +94,11 @@ if ($connect) {
                     if ($result->num_rows > 0) {
                          $row = $result->fetch_assoc();
 
-                         $username = mysqli_real_escape_string($connect, $_POST["username"]);
-                         $email = mysqli_real_escape_string($connect, $_POST["email"]);
-                         $name = mysqli_real_escape_string($connect, $_POST["name"]);
-                         $lastname = mysqli_real_escape_string($connect, $_POST["lastname"]);
-                         $role = isset($_POST["role"]) ? mysqli_real_escape_string($connect, $_POST["role"]) : "";
+                         $username =  htmlspecialchars(mysqli_real_escape_string($connect, $_POST["username"]),ENT_QUOTES);
+                         $email =  htmlspecialchars(mysqli_real_escape_string($connect, $_POST["email"]),ENT_QUOTES);
+                         $name =  htmlspecialchars(mysqli_real_escape_string($connect, $_POST["name"]),ENT_QUOTES);
+                         $lastname =  htmlspecialchars(mysqli_real_escape_string($connect, $_POST["lastname"]),ENT_QUOTES);
+                         $role = isset($_POST["role"]) ?  htmlspecialchars(mysqli_real_escape_string($connect, $_POST["role"]),ENT_QUOTES) : "";
                          // check if the username really doesn't exist
                          // the username is OK
                          $password = mysqli_real_escape_string($connect, $_POST["password"]);
@@ -131,12 +131,12 @@ if ($connect) {
                $result = mysqli_query($connect, $query);
                if ($result->num_rows > 0) {
                     $row = $result->fetch_assoc();
-                    $username = $row["username"];
-                    $email = $row["email"];
-                    $name = $row["name"];
-                    $lastname = $row["lastname"];
-                    $password = $row["password"];
-                    $role = $row["role"];
+                    $username =  htmlspecialchars($row["username"],ENT_QUOTES);
+                    $email =  htmlspecialchars($row["email"],ENT_QUOTES);
+                    $name =  htmlspecialchars($row["name"],ENT_QUOTES);
+                    $lastname =  htmlspecialchars($row["lastname"],ENT_QUOTES);
+                    $password =  htmlspecialchars($row["password"],ENT_QUOTES);
+                    $role =  htmlspecialchars($row["role"],ENT_QUOTES);
                } else {
                     $php_errormsg = "Dané identifikační číslo neexistuje";
                     $errorMsgType = "errorMessage";

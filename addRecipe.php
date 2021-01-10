@@ -357,7 +357,7 @@ if ($connect) {
         <form enctype="multipart/form-data" method="post">
 
             <label for="recipename">Název:</label>
-            <input type="text" id="recipename" name="recipename" value="<?php echo isset($_POST['recipename']) ? htmlspecialchars($_POST['recipename'], ENT_QUOTES) : ''; ?>"><br><br>
+            <input type="text" id="recipename" name="recipename" value="<?php echo isset($_POST['recipename']) ? htmlspecialchars($_POST['recipename'], ENT_QUOTES ) : ''; ?>"><br><br>
 
 
 

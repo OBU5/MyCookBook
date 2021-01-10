@@ -122,23 +122,23 @@ if ($connect) {
                 <table class=userInfo>
                     <tr>
                         <th> jméno </th>
-                        <td><?php echo $row["name"]; ?></td>
+                        <td><?php echo htmlspecialchars($row["name"],ENT_QUOTES); ?></td>
                     </tr>
                     <tr>
                         <th> Příjmení </th>
-                        <td><?php echo $row["lastname"]; ?></td>
+                        <td><?php echo htmlspecialchars($row["lastname"],ENT_QUOTES); ?></td>
                     </tr>
                     <tr>
                         <th> email </th>
-                        <td><?php echo $row["email"]; ?></td>
+                        <td><?php echo htmlspecialchars($row["email"],ENT_QUOTES); ?></td>
                     </tr>
                     <tr>
                         <th> Username </th>
-                        <td><?php echo $row["username"]; ?></td>
+                        <td><?php echo htmlspecialchars($row["username"],ENT_QUOTES); ?></td>
                     </tr>
                     <tr>
                         <th> Role </th>
-                        <td><?php echo $row["role"]; ?></td>
+                        <td><?php echo  htmlspecialchars($row["role"],ENT_QUOTES); ?></td>
                     </tr>
                 </table>
                 <br>

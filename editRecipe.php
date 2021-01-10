@@ -595,7 +595,7 @@ if ($connect) {
                     $i = 1;
                     while ($row = $result->fetch_assoc()) {
                         $checked = !empty($mealCategories[$i]) ? "checked " : "";
-                        echo '<label hidden for="mealCategory' . $i . '">kategorie:</label>   <input type="checkbox" id="mealCategory' . $i . '" name="mealCategory' . $i . '"' . $checked . ' value =' . $row['ID'] . '>' . $row['name'] . '<br>';
+                        echo '<label hidden for="mealCategory' . htmlspecialchars($i, ENT_QUOTES) . '">kategorie:</label>   <input type="checkbox" id="mealCategory' . htmlspecialchars($i, ENT_QUOTES) . '" name="mealCategory' . htmlspecialchars($i, ENT_QUOTES) . '"' . htmlspecialchars($checked, ENT_QUOTES) . ' value =' . htmlspecialchars($row['ID'], ENT_QUOTES)  . '>' .htmlspecialchars($row['name'], ENT_QUOTES)  . '<br>';
                         $i++;
                     }
                 }
@@ -614,7 +614,7 @@ if ($connect) {
                     // output data of each row
                     while ($row = $result->fetch_assoc()) {
                         $selected = (!empty($originCountry) && $originCountry == $row['name']) ? 'selected="selected"' : '';
-                        echo "<option value='" . $row['name'] . "'" . $selected . ">" . $row['name'] . "</option>";
+                        echo "<option value='" . htmlspecialchars($row['name'], ENT_QUOTES) . "'" . $selected . ">" . htmlspecialchars($row['name'], ENT_QUOTES) . "</option>";
                     }
                 }
                 ?>

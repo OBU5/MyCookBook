@@ -68,8 +68,10 @@ if (isset($_COOKIE["style"])) {
                 // Check connection
                 if ($connect->connect_error) {
                     die("Connection failed: " . $connect->connect_error);
-                }
-                $query = "SELECT ID, name, lastname, email, username, role FROM users WHERE username = '$currentUser'";
+                }                
+                // to be able to see results even with chars like" <, >, /, ..."
+                $currentUserDecoded = htmlspecialchars_decode($_SESSION["username"]);
+                $query = "SELECT ID, name, lastname, email, username, role FROM users WHERE username = '$currentUserDecoded'";
                 $result = $connect->query($query);
 
                 if ($result->num_rows > 0) {
@@ -84,23 +86,23 @@ if (isset($_COOKIE["style"])) {
                     echo '<table class = "userInfo">
                               <tr>
                                    <th> jméno </th>
-                                   <td>' . $row["name"] . '</td>
+                                   <td>' . htmlspecialchars($row["name"],ENT_QUOTES) . '</td>
                               <tr/>
                               <tr>
                                    <th> Příjmení </th>
-                                   <td>' . $row["lastname"] . '</td>
+                                   <td>' . htmlspecialchars($row["lastname"],ENT_QUOTES) . '</td>
                               <tr/>
                               <tr>
                                    <th> email </th>
-                                   <td>' . $row["email"] . '</td>
+                                   <td>' . htmlspecialchars($row["email"],ENT_QUOTES) . '</td>
                               <tr/>
                               <tr>
                                    <th> Username </th>
-                                   <td>' . $row["username"] . '</td>
+                                   <td>' . htmlspecialchars($row["username"],ENT_QUOTES) . '</td>
                               <tr/>
                               <tr>
                                    <th> Role </th>
-                                   <td>' . $row["role"] . '</td>
+                                   <td>' . htmlspecialchars($row["role"],ENT_QUOTES) . '</td>
                               <tr/>                              
                          </table>
                          <br><br>

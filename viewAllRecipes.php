@@ -345,10 +345,10 @@ if (isset($_COOKIE["style"])) {
                 if ($result->num_rows > 0) {
                     // output data of each row
                     while ($row = $result->fetch_assoc()) {
-                        $recipe_id = $row["ID"];
-                        $imgUrl = $row["imgUrl"];
+                        $recipe_id = htmlspecialchars($row["ID"], ENT_QUOTES);
+                        $imgUrl = htmlspecialchars($row["imgUrl"], ENT_QUOTES);
                         $originCountry = "Neznámá";
-                        $originCountry_id = $row["originCountry_id"];
+                        $originCountry_id = htmlspecialchars($row["originCountry_id"], ENT_QUOTES);
                         $author = "Neznámý";
                         $ingredients = array();
                         $quantities = array();
@@ -364,7 +364,7 @@ if (isset($_COOKIE["style"])) {
                                 //echo $row['author_id'] ." ". $row2['ID']." ". $row2['username'];
 
                                 if ($row['author_id'] == $row2['ID']) {
-                                    $author = $row2['username'];
+                                    $author = htmlspecialchars($row2['username'], ENT_QUOTES);
                                 }
                             }
                         }
@@ -374,7 +374,7 @@ if (isset($_COOKIE["style"])) {
                         $result2 = $connect->query($query2);
                         if ($result2->num_rows > 0) {
                             $row2 = $result2->fetch_assoc();
-                            $originCountry = $row2["name"];
+                            $originCountry = htmlspecialchars($row2["name"], ENT_QUOTES);
                         }
 
                         // get MealCategory
@@ -389,7 +389,7 @@ if (isset($_COOKIE["style"])) {
                                 $result3 = $connect->query($query3);
                                 if ($result3->num_rows > 0) {
                                     $row3 = $result3->fetch_assoc();
-                                    $mealCategories[$i] =  $row3["name"];
+                                    $mealCategories[$i] =  htmlspecialchars($row3["name"], ENT_QUOTES);
                                 }
                                 $i++;
                             }
@@ -412,7 +412,7 @@ if (isset($_COOKIE["style"])) {
                         // echo HTML div of 1 recipe
             ?>
 
-                        <h1><?php echo $row["name"]; ?> </h1>
+                        <h1><?php echo htmlspecialchars($row["name"], ENT_QUOTES); ?> </h1>
 
                         <p> <strong>Identifikační číslo receptu:</strong> <?php echo $recipe_id; ?></p>
 
@@ -423,7 +423,7 @@ if (isset($_COOKIE["style"])) {
 
                         <p> <strong>Náhled obrázku</strong></p>
                         <p><img class=preview src=" <?php echo $imgUrl  ?>" alt=Obrázek> </p>
-                        <button type=button onclick="location.href='viewRecipe.php?id=<?php echo $row['ID'] ?>'">Více informací&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-search'></i></button>
+                        <button type=button onclick="location.href='viewRecipe.php?id=<?php echo htmlspecialchars($row['ID'], ENT_QUOTES)    ?>'">Více informací&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-search'></i></button>
                         <hr>
         <?php
                     }

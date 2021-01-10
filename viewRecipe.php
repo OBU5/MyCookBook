@@ -76,13 +76,13 @@ if (!$connect) {
         if ($result->num_rows > 0) {
             // output data of each row
             while ($row = $result->fetch_assoc()) {
-                $recipe_id = $row["ID"];
-                $creation_date = $row["date"];
-                $imgUrl = $row["imgUrl"];
-                $directions = (!empty($row["directions"]) ? $row["directions"] : "Neznámý");
-                $time = (!empty($row["time"]) ? $row["time"] : "Neznámý");
+                $recipe_id = htmlspecialchars($row["ID"], ENT_QUOTES);
+                $creation_date = htmlspecialchars($row["date"], ENT_QUOTES);
+                $imgUrl = htmlspecialchars($row["imgUrl"], ENT_QUOTES);
+                $directions = (!empty($row["directions"]) ? htmlspecialchars($row["directions"], ENT_QUOTES) : "Neznámý");
+                $time = (!empty($row["time"]) ? htmlspecialchars($row["time"], ENT_QUOTES) : "Neznámý");
                 $originCountry = "Neznámý";
-                $originCountry_id = $row["originCountry_id"];
+                $originCountry_id = htmlspecialchars($row["originCountry_id"], ENT_QUOTES);
                 $author = "Neznámý";
                 $recipeAuthor_id = "Neznámý";
                 $ingredients = array();
@@ -99,8 +99,8 @@ if (!$connect) {
                         //echo $row['author_id'] ." ". $row2['ID']." ". $row2['username'];
 
                         if ($row['author_id'] == $row2['ID']) {
-                            $author = $row2['username'];
-                            $recipeAuthor_id = $row2['ID'];
+                            $author = htmlspecialchars($row2['username'], ENT_QUOTES);
+                            $recipeAuthor_id = htmlspecialchars($row2['ID'], ENT_QUOTES);
                         }
                     }
                 }
@@ -121,9 +121,9 @@ if (!$connect) {
                             $j = 0;
                             while ($row3 = $result3->fetch_assoc()) {
                                 //echo $row['author_id'] ." ". $row2['ID']." ". $row2['username'];
-                                $ingredients[$i] =  $row3['name'];
-                                $quantities[$i] =  $row3['quantity'];
-                                $units[$i] =  $row3['unit'];
+                                $ingredients[$i] =  htmlspecialchars($row3['name'], ENT_QUOTES);
+                                $quantities[$i] =  htmlspecialchars($row3['quantity'], ENT_QUOTES);
+                                $units[$i] =  htmlspecialchars($row3['unit'], ENT_QUOTES);
                                 $j++;
                             }
                         }
@@ -137,7 +137,7 @@ if (!$connect) {
                 $result2 = $connect->query($query2);
                 if ($result2->num_rows > 0) {
                     $row2 = $result2->fetch_assoc();
-                    $originCountry = $row2["name"];
+                    $originCountry = htmlspecialchars($row2["name"], ENT_QUOTES);
                 }
 
                 // get MealCategory
@@ -152,7 +152,7 @@ if (!$connect) {
                         $result3 = $connect->query($query3);
                         if ($result3->num_rows > 0) {
                             $row3 = $result3->fetch_assoc();
-                            $mealCategories[$i] =  $row3["name"];
+                            $mealCategories[$i] =  htmlspecialchars($row3["name"], ENT_QUOTES);
                         }
                         $i++;
                     }
@@ -188,8 +188,8 @@ if (!$connect) {
                 if (mysqli_num_rows($result1) <= 0) {
                 } else {
                     $row1 = $result1->fetch_assoc();
-                    $currentUserID = $row1['ID'];
-                    $currentUserRole = $row1['role'];
+                    $currentUserID = htmlspecialchars($row1['ID'], ENT_QUOTES);
+                    $currentUserRole = htmlspecialchars($row1['role'], ENT_QUOTES);
                     //show buttons only if current user is author, of the role of user is "Admin"
                     if ($currentUserID == $recipeAuthor_id || $currentUserRole == "Admin") {
                         $htmlButtonText = "<button type=button onclick=location.href='editRecipe.php?id=" . $recipe_id . "'>Upravit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-edit'></i></button>             
@@ -201,7 +201,7 @@ if (!$connect) {
                 // echo HTML div of 1 recipe
                 echo "    
                     <main class=fullRecipeDiv>
-                    <h1>" . $row["name"] . "</h1>
+                    <h1>" . htmlspecialchars($row["name"], ENT_QUOTES) . "</h1>
          
                     <p> <strong>identifikační číslo receptu:</strong> " . $recipe_id . "</p>
                                         
