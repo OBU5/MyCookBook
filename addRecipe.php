@@ -76,7 +76,8 @@ if ($connect) {
 
             // get user_id of signed user
             if (!$error) {
-                $query = "SELECT ID FROM users WHERE username = '$recipeAuthor'";
+                $currentUserDecoded = htmlspecialchars_decode($_SESSION["username"]);
+                $query = "SELECT ID FROM users WHERE username = '$currentUserDecoded'";
                 $result = $connect->query($query);
                 if (mysqli_num_rows($result) <= 0) {
                     $php_errormsg = "Nejste přihlášen";

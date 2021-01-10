@@ -183,7 +183,9 @@ if (!$connect) {
 
                 $htmlButtonText = "";
                 // get user_id of signed user
-                $query1 = "SELECT ID, role FROM users WHERE username = '$currentUser'";
+                $currentUserDecoded = htmlspecialchars_decode($_SESSION["username"]);
+
+                $query1 = "SELECT ID, role FROM users WHERE username = '$currentUserDecoded'";
                 $result1 = $connect->query($query1);
                 if (mysqli_num_rows($result1) <= 0) {
                 } else {
