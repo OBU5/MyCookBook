@@ -178,12 +178,12 @@ if (!$connect) {
                 }
                 $htmlMealCategories = $htmlMealCategories . "</ul>";
                 if (!@getimagesize($imgUrl)) {
-                    $imgUrl = 'http://' . $_SERVER['SERVER_NAME'] . '/MyCookBook/Uploads/default.jpg';
+                    $imgUrl = 'Uploads/default.jpg';
                 }
 
                 $htmlButtonText = "";
                 // get user_id of signed user
-                $currentUserDecoded = htmlspecialchars_decode($_SESSION["username"]);
+                $currentUserDecoded = isset($_SESSION["username"]) ? htmlspecialchars_decode($_SESSION["username"]): '';
 
                 $query1 = "SELECT ID, role FROM users WHERE username = '$currentUserDecoded'";
                 $result1 = $connect->query($query1);
