@@ -51,7 +51,7 @@ if (isset($_COOKIE["style"])) {
 
     <?php
 
-    $connect = mysqli_connect("localhost", "bureson1", "webove aplikace", "bureson1");
+    $connect = mysqli_connect("localhost", "root", "", "myCookBook");
     // Check connection
     if (!$connect) {
         die("Connection failed: No database found");
@@ -405,9 +405,9 @@ if (isset($_COOKIE["style"])) {
                         $htmlMealCategories = $htmlMealCategories . "</ul>";
                         //check if image url doesn't exists show default image
                         if (!@getimagesize($imgUrl)) {
-                            $imgUrl = 'http://' . $_SERVER['SERVER_NAME'] . '/~bureson1/Uploads/default.jpg';
+                            $imgUrl = 'http://' . $_SERVER['SERVER_NAME'] . '/MyCookBook/Uploads/default.jpg';
                         } else {
-                            $imgUrl = 'http://' . $_SERVER['SERVER_NAME'] . '/~bureson1/' . $imgUrl;
+                            $imgUrl = 'http://' . $_SERVER['SERVER_NAME'] . '/MyCookBook/' . $imgUrl;
                         }
                         // echo HTML div of 1 recipe
             ?>

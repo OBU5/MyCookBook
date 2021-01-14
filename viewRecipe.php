@@ -12,7 +12,7 @@ if (isset($_COOKIE["style"])) {
     }
 }
 
-$connect = mysqli_connect("localhost", "bureson1", "webove aplikace", "bureson1");
+$connect = mysqli_connect("localhost", "root", "", "myCookBook");
 // Check connection
 if (!$connect) {
     die("Connection failed: No database found");
@@ -177,8 +177,11 @@ if (!$connect) {
                     $htmlMealCategories = $htmlMealCategories . "<li>" . $mealCategories[$i] . "</li>";
                 }
                 $htmlMealCategories = $htmlMealCategories . "</ul>";
+                //check if image url doesn't exists show default image
                 if (!@getimagesize($imgUrl)) {
-                    $imgUrl = 'Uploads/default.jpg';
+                    $imgUrl = 'http://' . $_SERVER['SERVER_NAME'] . '/MyCookBook/Uploads/default.jpg';
+                } else {
+                    $imgUrl = 'http://' . $_SERVER['SERVER_NAME'] . '/MyCookBook/' . $imgUrl;
                 }
 
                 $htmlButtonText = "";
@@ -217,7 +220,7 @@ if (!$connect) {
                     <p> " . nl2br($directions) . "</p>
                     <h3> Vhodné jako:</h3> " . $htmlMealCategories . "
 
-                    <p> <img class=full src=https://wa.toad.cz/~bureson1/" . $imgUrl . " alt=Obrázek> </p>
+                    <p> <img class=full src='" . $imgUrl . "' alt=Obrázek> </p>
                     
                     " . $htmlButtonText . "
                     <button onclick='window.print();'>

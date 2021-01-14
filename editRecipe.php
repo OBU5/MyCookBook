@@ -103,7 +103,7 @@ if (isset($_COOKIE["style"])) {
 $errorMsgType = "";
 $php_errormsg = "";
 $error = false;
-$connect = mysqli_connect("localhost", "bureson1", "webove aplikace", "bureson1");
+$connect = mysqli_connect("localhost", "root", "", "myCookBook");
 // Check connection
 if (!$connect) {
     die("Connection failed: No database found");
